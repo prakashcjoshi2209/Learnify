@@ -22,7 +22,7 @@ const Card: React.FC<CardProps> = ({
   originalPrice,
   description,
   buttonLabel,
-  dateRange,
+  // dateRange,
 }) => {
   return (
     <div className="w-full max-w-[320px] bg-white rounded-lg shadow-lg border hover:shadow-xl transform hover:scale-105 transition-transform duration-300 flex flex-col h-full">
@@ -45,10 +45,10 @@ const Card: React.FC<CardProps> = ({
         </div>
       </div>
 
-      {/* Date Range */}
+      {/* Date Range
       <div className="text-sm font-medium text-gray-500 text-left ml-4 mt-4">
         {dateRange}
-      </div>
+      </div> */}
 
       {/* Content Section */}
       <div className="p-4 flex flex-col justify-between flex-grow">

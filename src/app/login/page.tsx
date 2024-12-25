@@ -3,15 +3,35 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-
+import { signIn } from "next-auth/react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e:any) => {
     e.preventDefault();
-    console.log("Logging in with:", { email, password });
+    // setError("");
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false, // Prevents automatic redirection to a new page
+    });
+
+    if (result?.error) {
+      console.log("Login failed", result.error);
+    } else {
+      // Handle successful login
+      console.log("Login successful!");
+      window.location.href = "/DashBoard";
+    }
+  };
+  const handleGoogleSignIn = () => {
+    signIn("google", { callbackUrl: "/DashBoard" }); 
+  };
+  const handleGithubSignIn = () => {
+    signIn("github", { callbackUrl: "/DashBoard" }); 
   };
 
   return (
@@ -112,6 +132,7 @@ const Login = () => {
               <button
                 type="button"
                 className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
+                onClick={handleGoogleSignIn}
               >
                 <Image
                   src="/images/google.png" // Local image in public/images
@@ -125,6 +146,7 @@ const Login = () => {
               <button
                 type="button"
                 className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
+                onClick={handleGithubSignIn} 
               >
                 <Image
                   src="/images/github.png" // Local image in public/images

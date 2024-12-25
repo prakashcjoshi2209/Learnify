@@ -87,7 +87,11 @@ import React from "react";
 import Link from "next/link";
 import { BsGear, BsInbox, BsBook, BsCheckSquare, BsBoxArrowRight } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
+import { signOut } from "next-auth/react";
 
+const handleLogout = async () => {
+  await signOut({ redirect: true, callbackUrl: '/login' }); // You can specify a callback URL after logout
+};
 // Define the sidebar items in JSON format
 const sidebarConfig = {
   logo: "LEARNIFY",
@@ -105,7 +109,7 @@ const sidebarConfig = {
   ],
   accountSection: [
     { label: "Settings", icon: <BsGear className="text-gray-500" />, href: "/settings" },
-    { label: "Logout", icon: <BsBoxArrowRight className="text-gray-500" />, href: "/logout" },
+    { label: "Logout", icon: <BsBoxArrowRight className="text-gray-500" />, href: "/login" ,onClick: {handleLogout} },
   ],
 };
 

@@ -1,84 +1,71 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Card from "./ExploreData/Card";
 
-
 interface Course {
-  id: number;
-  title: string;
+  _id: string;
+  name: string;
   image: string;
-  students: number;
-  price: number;
-  originalPrice: number;
-  description: string;
-  dateRange: string;
+  studentsEnrolled: number;
+  price: {
+    current: number;
+    original: number;
+  };
+  shortDescription: string;
+  // duration: string;
 }
 
-// Data source (imported from `Courses` file or directly used here)
-const courses: Course[] = [
-  {
-    id: 1,
-    title: "Product Management Basics",
-    image: "https://tse4.mm.bing.net/th?id=OIP.uO_Bh9tvWjr1yzqR9HhICQHaE-&pid=Api&P=0&h=180",
-    students: 40,
-    price: 380,
-    originalPrice: 500,
-    description: "Master Product Management basics with this beginner-friendly course.",
-    dateRange: "1-20 July",
-  },
-  {
-    id: 2,
-    title: "IBM Data Science Professional Certificate",
-    image: "https://tse1.mm.bing.net/th?id=OIP.72XNGfGgLcoukXFzxhl9-QHaEK&pid=Api&P=0&h=180",
-    students: 11,
-    price: 678,
-    originalPrice: 1500,
-    description: "Learn data science skills from IBM with hands-on case studies.",
-    dateRange: "5-25 August",
-  },
-  {
-    id: 3,
-    title: "The Science of Well-Being",
-    image: "https://tse4.mm.bing.net/th?id=OIP.uO_Bh9tvWjr1yzqR9HhICQHaE-&pid=Api&P=0&h=180",
-    students: 234,
-    price: 123,
-    originalPrice: 500,
-    description: "Learn the science behind well-being and happiness with practical tips.",
-    dateRange: "10-30 September",
-  },
-  {
-    id: 4,
-    title: "Python for Everybody Specialization",
-    image: "https://tse1.mm.bing.net/th?id=OIP.72XNGfGgLcoukXFzxhl9-QHaEK&pid=Api&P=0&h=180",
-    students: 342,
-    price: 567,
-    originalPrice: 800,
-    description: "Master Python programming with this beginner-friendly course.",
-    dateRange: "15 October - 5 November",
-  },
-];
-
 const PopularCourses: React.FC = () => {
-  // Get the top 4 courses based on the number of students
-  const topCourses = [...courses]
-    .sort((a, b) => b.students - a.students) // Sort by students in descending order
-    .slice(0, 4); // Get the top 4 courses
+  const [courses, setCourses] = useState<Course[]>([]); // Ensure courses is always an array
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+        try {
+            const response = await fetch("/api/courses"); // Replace with your API URL
+            const result = await response.json();
+
+            // Check if response contains the expected data structure
+            if (result.success && Array.isArray(result.data)) {
+                setCourses(result.data); // Extract the 'data' array
+            } else {
+                console.error("API response is not an array:", result);
+                setCourses([]); // Fallback to an empty array
+            }
+        } catch (error) {
+            console.error("Error fetching courses:", error);
+            setCourses([]); // Fallback to an empty array
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    fetchCourses();
+}, []);
+
+  // Safely sort and get the top 4 courses by students enrolled
+  const topCourses = [...courses] // Create a shallow copy to avoid mutating the state
+    .sort((a, b) => {
+      const studentsA = a.studentsEnrolled || 0; // Ensure valid number
+      const studentsB = b.studentsEnrolled || 0; // Ensure valid number
+      return studentsB - studentsA;
+    })
+    .slice(0, 4);
+
+  if (isLoading) {
+    return <div className="text-center">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-purple-800">Popular Courses</h1>
-        {/* Curved Line */}
         <div className="flex justify-center mt-2">
-          <svg
-            width="130"
-            height="20"
-            viewBox="0 0 120 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg width="130" height="20" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M0 10 Q60 30 120 10"
-              stroke="#7c3aed" /* Purple color */
+              stroke="#7c3aed"
               strokeWidth="3"
               fill="none"
             />
@@ -90,14 +77,14 @@ const PopularCourses: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {topCourses.map((course) => (
           <Card
-            key={course.id}
-            title={course.title}
+            key={course._id}
+            title={course.name}
             image={course.image}
-            students={course.students}
-            price={course.price}
-            originalPrice={course.originalPrice}
-            description={course.description}
-            dateRange={course.dateRange}
+            students={course.studentsEnrolled}
+            price={course.price.current}
+            originalPrice={course.price.original}
+            description={course.shortDescription}
+            // dateRange={course.duration}
             buttonLabel="Enroll Now"
           />
         ))}
