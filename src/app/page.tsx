@@ -4,6 +4,8 @@ import Footer from './Footer/page'
 import BenefitsSection from './BenifitsSection'
 import PopularCourses from './PopularCourses'
 import Consist from './Consist'
+import dotenv from "dotenv";
+dotenv.config();
 
 const page = () => {
   return (

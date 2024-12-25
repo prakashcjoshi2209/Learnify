@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineBell, AiOutlineMail, AiOutlineSetting } from "react-icons/ai";
+import { useSession } from "next-auth/react";
 
 // Define types for progress data
-type ProgressData = { day: string; progress: number };
-
 const ProfileSection: React.FC = () => {
+  const { data: session } = useSession();
+  
   // Static progress data
-  const progressData: ProgressData[] = [
+  const progressData: { day: string; progress: number }[] = [
     { day: "Mon", progress: 100 },
     { day: "Tue", progress: 120 },
     { day: "Wed", progress: 80 },
@@ -34,14 +35,18 @@ const ProfileSection: React.FC = () => {
     }
   };
 
+  if (!session) {
+    return <p>Loading...</p>; // Optional: Show loading if session is not yet available
+  }
+
   return (
     <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg w-80 space-y-6">
       {/* Profile and Greeting */}
       <div className="flex flex-col items-center">
         <div className="relative w-24 h-24 rounded-full border-4 border-purple-500 overflow-hidden">
-          {profileImage ? (
+          {profileImage || session.user.image ? (
             <img
-              src={profileImage}
+              src={profileImage || session.user.image} // Use session image if available
               alt="Profile"
               className="w-full h-full object-cover"
             />
@@ -57,7 +62,7 @@ const ProfileSection: React.FC = () => {
           />
         </div>
         <h2 className="text-lg font-semibold text-gray-800 mt-3">
-          Good Morning, Prashant
+          Good Morning, {session.user.name || "User"} {/* Use session name */}
         </h2>
         <p className="text-sm text-gray-500 text-center">
           Continue Your Journey And Achieve Your Target
