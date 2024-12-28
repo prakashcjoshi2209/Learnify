@@ -9,6 +9,9 @@ import VideoCard from "./VideoCard";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 
+
+
+
 const DashboardContent = () => {
   const [followed, setFollowed] = useState([true, false, true]); // Follow/unfollow state for mentors
   const [sidebarOpen, setSidebarOpen] = useState(false); // Toggle sidebar state
@@ -33,7 +36,7 @@ const DashboardContent = () => {
         <div className="flex justify-between items-center mb-6">
           <input
             type="text"
-            placeholder="Search your course here..."
+            placeholder="Search your Course here..."
             className="w-full md:max-w-md p-3 rounded-lg border border-gray-300 focus:outline-none"
           />
           <button className="ml-4 p-3 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200">
