@@ -7,7 +7,6 @@ import Sidebar from "./Sidebar";
 import ProfileSection from "./ProfileSection";
 import VideoCard from "./VideoCard";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
 
 
 
@@ -15,13 +14,6 @@ import { useSession } from "next-auth/react";
 const DashboardContent = () => {
   const [followed, setFollowed] = useState([true, false, true]); // Follow/unfollow state for mentors
   const [sidebarOpen, setSidebarOpen] = useState(false); // Toggle sidebar state
-  const {data: session, status} = useSession();
-  console.log(session);
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      window.location.href = "/login";
-    }
-  }, [status]);
 
   return (
     <div className="flex min-h-screen bg-white">

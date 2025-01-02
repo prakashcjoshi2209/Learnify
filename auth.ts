@@ -24,7 +24,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Validate the password
         if (user && bcrypt.compareSync(password, user.password)) {
-          return { id: user._id, name: user.name, email: user.email };
+          return { id: user._id.toString(), name: user.name, email: user.email };
         }
 
         return null; // Invalid credentials
@@ -41,20 +41,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: {
     strategy: 'jwt', // Use JWT for sessions
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  pages: {
+    signIn: '/login',
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (account?.provider === 'github') {
-        await dbConnect();
+      await dbConnect();
 
+      if (account?.provider === 'github') {
         const existingUser = await User.findOne({ githubId: profile.id });
 
         if (!existingUser) {
-          // Create a new user for first-time login
           const newUser = new User({
             name: profile.name || profile.login,
             email: profile.email || `${profile.id}@github.com`, // Fallback email
-            githubAvatar: profile.avatar_url,
+            avatar: profile.avatar_url,
             githubId: profile.id,
           });
           await newUser.save();
@@ -62,16 +65,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (account?.provider === 'google') {
-        await dbConnect();
-
         const existingUser = await User.findOne({ email: profile.email });
 
         if (!existingUser) {
-          // Create a new user for first-time login
           const newUser = new User({
             name: profile.name,
             email: profile.email,
-            googleAvatar: profile.picture,
+            avatar: profile.picture,
             googleId: profile.sub,
           });
           await newUser.save();
@@ -81,24 +81,48 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     async jwt({ token, user, account, profile }) {
+      await dbConnect();
+
+      let dbUser = null;
+
+      // Check if we are dealing with GitHub or Google OAuth
+      if (account?.provider === 'github' && profile?.id) {
+        dbUser = await User.findOne({ githubId: profile.id });
+
+        // Use the avatar from the database if it exists, otherwise fallback to the provider's avatar
+        token.image = dbUser?.avatar || profile?.avatar_url || null;
+      } else if (account?.provider === 'google' && profile?.sub) {
+        dbUser = await User.findOne({ googleId: profile.sub });
+        // Use the avatar from the database if it exists, otherwise fallback to the provider's avatar
+        token.image = dbUser?.avatar || profile?.picture || null;
+      }
+
+      // credential user or not?
+      if (!dbUser && user) {
+        dbUser = await User.findOne({ email: user.email });
+
+        // Use the avatar from the database if it exists
+        token.image = dbUser?.avatar || null;
+      }
+
+      if (dbUser) {
+        token.id = dbUser._id.toString(); // MongoDB ObjectId
+      } else if (user?.id) {
+        token.id = user.id; // Fallback
+      }
+
+      if (!token.id) {
+        console.error('No valid user ID found during JWT callback');
+        throw new Error('Invalid user data in JWT callback');
+      }
+
       if (user) {
-        token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        
-        // Check if the user is from Google or GitHub and use the correct avatar
-        if (account?.provider === 'github' && profile?.avatar_url) {
-          token.image = profile.avatar_url;
-        } else if (account?.provider === 'google' && profile?.picture) {
-          token.image = profile.picture; 
-        } else if (user.googleAvatar) {
-          token.image = user.googleAvatar; // Use the googleAvatar saved in DB for Google users
-        } else if (user.githubAvatar) {
-          token.image = user.githubAvatar; // Use the githubAvatar saved in DB for GitHub users
-        } else if (user.avatar) {
-          token.image = user.avatar; // Fallback if the user has a general avatar
-        }
       }
+
+      token.provider = account?.provider || null;
+
       return token;
     },
     async session({ session, token }) {
@@ -106,7 +130,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
-        session.user.image = token.image
+        session.user.image = token.image;
+        session.user.provider = token.provider;
       }
       return session;
     },
