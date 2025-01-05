@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import Image from "next/image";
@@ -6,15 +8,14 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // Handles email or phone
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e:any) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // setError("");
 
     const result = await signIn("credentials", {
-      email,
+      identifier, // Unified identifier for email or phone
       password,
       redirect: false, // Prevents automatic redirection to a new page
     });
@@ -22,16 +23,17 @@ const Login = () => {
     if (result?.error) {
       console.log("Login failed", result.error);
     } else {
-      // Handle successful login
       console.log("Login successful!");
       window.location.href = "/DashBoard";
     }
   };
+
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/DashBoard" }); 
+    signIn("google", { callbackUrl: "/DashBoard" });
   };
+
   const handleGithubSignIn = () => {
-    signIn("github", { callbackUrl: "/DashBoard" }); 
+    signIn("github", { callbackUrl: "/DashBoard" });
   };
 
   return (
@@ -40,7 +42,7 @@ const Login = () => {
         {/* Left Section: Illustration */}
         <div className="hidden md:block bg-blue-100 p-8 w-1/2">
           <Image
-            src="/signuppageimage.png" // Local image in public/images
+            src="/signuppageimage.png"
             alt="Login Illustration"
             width={400}
             height={400}
@@ -54,20 +56,20 @@ const Login = () => {
           <div className="w-full max-w-sm">
             <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Welcome Back!</h2>
             <form onSubmit={handleLogin}>
-              {/* Email Input */}
+              {/* Identifier Input */}
               <div className="mb-4">
                 <label
-                  htmlFor="email"
+                  htmlFor="identifier"
                   className="block text-sm font-medium text-gray-600"
                 >
-                  Email
+                  Email or Phone Number
                 </label>
                 <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  type="text"
+                  id="identifier"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="Enter your email or phone number"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -95,10 +97,7 @@ const Login = () => {
               {/* Remember Me and Forgot Password */}
               <div className="flex items-center justify-between mb-4">
                 <label className="flex items-center text-gray-600 text-sm">
-                  <input
-                    type="checkbox"
-                    className="form-checkbox mr-2"
-                  />
+                  <input type="checkbox" className="form-checkbox mr-2" />
                   Remember me
                 </label>
                 <Link href="/forgot-password" className="text-blue-500 hover:underline text-sm">
@@ -108,7 +107,6 @@ const Login = () => {
 
               {/* Login Button */}
               <button
-               
                 type="submit"
                 className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
               >
@@ -135,7 +133,7 @@ const Login = () => {
                 onClick={handleGoogleSignIn}
               >
                 <Image
-                  src="/images/google.png" // Local image in public/images
+                  src="/google1.png"
                   alt="Google"
                   width={20}
                   height={20}
@@ -146,10 +144,10 @@ const Login = () => {
               <button
                 type="button"
                 className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
-                onClick={handleGithubSignIn} 
+                onClick={handleGithubSignIn}
               >
                 <Image
-                  src="/images/github.png" // Local image in public/images
+                  src="/github.png"
                   alt="GitHub"
                   width={20}
                   height={20}
@@ -166,3 +164,4 @@ const Login = () => {
 };
 
 export default Login;
+
