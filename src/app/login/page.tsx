@@ -1,15 +1,16 @@
 
-
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [identifier, setIdentifier] = useState(""); // Handles email or phone
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -54,7 +55,7 @@ const Login = () => {
         {/* Right Section: Login Form */}
         <div className="flex-1 flex justify-center items-center p-8">
           <div className="w-full max-w-sm">
-            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Welcome Back!</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center text-purple-800">Welcome Back!</h2>
             <form onSubmit={handleLogin}>
               {/* Identifier Input */}
               <div className="mb-4">
@@ -83,15 +84,24 @@ const Login = () => {
                 >
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"} // Toggle between text and password
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+                    className="absolute right-3 top-2 text-gray-600 hover:text-gray-800 focus:outline-none"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Conditional rendering of icons */}
+                  </button>
+                </div>
               </div>
 
               {/* Remember Me and Forgot Password */}
@@ -108,7 +118,7 @@ const Login = () => {
               {/* Login Button */}
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
+                className="w-full bg-purple-700 text-white py-2 rounded-md hover:bg-purple-800 transition-colors"
               >
                 Log In
               </button>
