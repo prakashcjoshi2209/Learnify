@@ -76,7 +76,7 @@ const Page = () => {
     signIn("google", { callbackUrl: "/DashBoard" }); // Replace '/' with your desired post-login URL
   };
   const handleGithubSignup = () => {
-    signIn("github", { callbackUrl: "/Dashboard" }); // Replace '/' with your desired post-login URL
+    signIn("github", { callbackUrl: "/DashBoard" }); // Replace '/' with your desired post-login URL
   };
 
   return (

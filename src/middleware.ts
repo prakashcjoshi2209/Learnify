@@ -40,7 +40,7 @@
 //   matcher: []
 // }
 
-// middleware.ts
+
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
@@ -50,14 +50,25 @@ export async function middleware(req: NextRequest) {
 
   const isAuth = !!token; // Check if the user has a valid token
   const isLoginPage = req.nextUrl.pathname === '/login';
+  const isForgetPasswordPage = req.nextUrl.pathname=== '/ForgetPassword';
 
   // If the user is authenticated and tries to access the login page, redirect them to the dashboard
   if (isAuth && isLoginPage) {
     return NextResponse.redirect(new URL('/DashBoard', req.url));
   }
+  
+  // If the user is authenticated and tries to access the Forget Password page, redirect them to the dashboard
+  if (isAuth && isForgetPasswordPage) {
+    return NextResponse.redirect(new URL('/DashBoard', req.url));
+  }
 
   // If the user is not authenticated and tries to access a protected route, redirect them to the login page
   if (!isAuth && req.nextUrl.pathname.startsWith('/DashBoard')) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  // For testing purposes
+  if (!isAuth && req.nextUrl.pathname.startsWith('/pay')) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
@@ -67,5 +78,5 @@ export async function middleware(req: NextRequest) {
 
 // Define the paths where the middleware should run
 export const config = {
-  matcher: ['/DashBoard/:path*', '/login'], 
+  matcher: ['/DashBoard/:path*', '/login', "/pay/:path*", "/ForgetPassword"], 
 };

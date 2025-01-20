@@ -22,6 +22,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Find the user in the database
         const user = await User.findOne({ email });
 
+        if(!user){
+          return 
+        }
+
         // Validate the password
         if (user && bcrypt.compareSync(password, user.password)) {
           return { id: user._id.toString(), name: user.name, email: user.email };
@@ -59,6 +63,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: profile.email || `${profile.id}@github.com`, // Fallback email
             avatar: profile.avatar_url,
             githubId: profile.id,
+            coursesBought: [],
           });
           await newUser.save();
         }
@@ -73,6 +78,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: profile.email,
             avatar: profile.picture,
             googleId: profile.sub,
+            coursesBought: [],  
           });
           await newUser.save();
         }

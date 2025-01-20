@@ -2,6 +2,7 @@
 
 import React from "react";
 import { FaUser, FaUsers } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 interface CardProps {
   title: string;
@@ -11,7 +12,8 @@ interface CardProps {
   originalPrice: number;
   description: string;
   buttonLabel: string;
-  dateRange: string;
+  dateRange?: string;
+  courseId: number;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -23,7 +25,12 @@ const Card: React.FC<CardProps> = ({
   description,
   buttonLabel,
   // dateRange,
+  courseId
 }) => {
+  const router = useRouter();
+  const handleClick = ()=>{
+    router.push(`/CourseContent/${courseId}`);
+  }
   return (
     <div className="w-full max-w-[320px] bg-white rounded-lg shadow-lg border hover:shadow-xl transform hover:scale-105 transition-transform duration-300 flex flex-col h-full">
       {/* Image Section */}
@@ -73,7 +80,7 @@ const Card: React.FC<CardProps> = ({
           </div>
 
           {/* Enroll Button */}
-          <button className="px-4 py-1 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 shadow">
+          <button className="px-4 py-1 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 shadow" onClick={handleClick}>
             {buttonLabel}
           </button>
         </div>

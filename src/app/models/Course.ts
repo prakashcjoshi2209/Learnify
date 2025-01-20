@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { any } from 'zod';
 
 // Interfaces for nested objects
 interface IAuthor {
@@ -47,6 +48,7 @@ interface IMediaContent {
 
 // Main interface for the Course document
 export interface ICourse extends Document {
+  courseId: number;
   name: string;
   image: string;
   studentsEnrolled: number;
@@ -113,7 +115,8 @@ const MediaContentSchema: Schema = new Schema({
 });
 
 // Main Course schema
-const CourseSchema: Schema = new Schema({
+export const CourseSchema: Schema = new Schema({
+  courseId: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
   image: { type: String, required: true },
   studentsEnrolled: { type: Number, required: true },
@@ -126,13 +129,15 @@ const CourseSchema: Schema = new Schema({
   requirements: { type: [String], required: true },
   prerequisites: { type: [String], required: true },
   ratings: { type: RatingSchema, required: true },
-  reviews: { type: [ReviewSchema], required: true },
+  reviews: { type: [ReviewSchema], default: [] },
   rewards: { type: RewardSchema, required: true },
   category: { type: String, required: true },
   tags: { type: [String], required: true },
-  lastUpdated: { type: Date, required: true },
-  mediaContent: { type: [MediaContentSchema], required: true },
+  lastUpdated: { type: Date, required: true, default: Date.now },
+  mediaContent: { type: [MediaContentSchema], default: [] },
 });
+
+// CourseSchema.index({ courseId: 1 });
 
 // Export the model
 export default mongoose.models.Course || mongoose.model<ICourse>('Course', CourseSchema);
