@@ -2,36 +2,36 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Loader from "@/components/ui/loader";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // Handles email or phone
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const redirectPath = searchParams.get("redirect") || "/DashBoard";
-  console.log(redirectPath);
-  const handleLogin = async (e: any) => {
+
+  const handleLogin = async (e) => {
     setIsProcessing(true);
     e.preventDefault();
     setMessage("");
 
     const result = await signIn("credentials", {
-      email,
+      identifier, // Unified identifier for email or phone
       password,
       redirect: false,
       callbackUrl: redirectPath,
     });
-
-    // setIsProcessing(false);
 
     if (result?.error) {
       setIsProcessing(false);
@@ -47,14 +47,15 @@ const Login = () => {
     setIsProcessing(true);
     signIn("google", { callbackUrl: redirectPath });
   };
+
   const handleGithubSignIn = () => {
     setIsProcessing(true);
     signIn("github", { callbackUrl: redirectPath });
   };
 
-  const handleLoaderForLink = ()=>{
+  const handleLoaderForLink = () => {
     setIsProcessing(true);
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
@@ -89,17 +90,17 @@ const Login = () => {
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <label
-                  htmlFor="email"
+                  htmlFor="identifier"
                   className="block text-sm font-medium text-gray-600"
                 >
-                  Email
+                  Email or Phone Number
                 </label>
                 <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  type="text"
+                  id="identifier"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="Enter your email or phone number"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -111,15 +112,24 @@ const Login = () => {
                 >
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"} // Toggle between text and password
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+                    className="absolute right-3 top-2 text-gray-600 hover:text-gray-800 focus:outline-none"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
               </div>
               <div className="flex items-center justify-between mb-4">
                 <label className="flex items-center text-gray-600 text-sm">
@@ -144,7 +154,11 @@ const Login = () => {
             </form>
             <p className="text-center text-gray-600 mt-4">
               Don’t have an account?{" "}
-              <Link onClick={handleLoaderForLink} href="/signup" className="text-blue-500 hover:underline">
+              <Link
+                onClick={handleLoaderForLink}
+                href="/signup"
+                className="text-blue-500 hover:underline"
+              >
                 Signup
               </Link>
             </p>
