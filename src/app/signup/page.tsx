@@ -175,12 +175,12 @@ const Signup = () => {
                   )}
                 />
 
-                <button
+                <Button
                   type="submit"
                   className="w-full bg-purple-700 text-white py-2 rounded-md hover:bg-purple-800 transition-colors"
                 >
                   Sign Up
-                </button>
+                </Button>
               </form>
             </Form>
 
@@ -193,13 +193,19 @@ const Signup = () => {
 
             <div className="my-4 text-center text-gray-400">- OR -</div>
 
-            {/* <div className="flex gap-4">
+            <div className="flex gap-4">
               <button
                 type="button"
                 className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
                 onClick={handleGoogleSignup}
               >
-                <FaGoogle className="mr-2" />
+                <Image
+                  src="/google1.png"
+                  alt="Google"
+                  width={20}
+                  height={20}
+                  className="mr-2"
+                />
                 Google
               </button>
               <button
@@ -207,45 +213,16 @@ const Signup = () => {
                 className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
                 onClick={handleGithubSignup}
               >
-                <FaGithub className="mr-2" />
+                <Image
+                  src="/github.png"
+                  alt="GitHub"
+                  width={20}
+                  height={20}
+                  className="mr-2"
+                />
                 GitHub
               </button>
-            </div> */}
-         
-
-         <div className="flex gap-4">
-                       <button
-                         type="button"
-                         className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
-                         onClick={handleGoogleSignup}
-                       >
-                         <Image
-                           src="/google1.png"
-                           alt="Google"
-                           width={20}
-                           height={20}
-                           className="mr-2"
-                         />
-                         Google
-                       </button>
-                       <button
-                         type="button"
-                         className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
-                         onClick={handleGithubSignup}
-                       >
-                         <Image
-                           src="/github.png"
-                           alt="GitHub"
-                           width={20}
-                           height={20}
-                           className="mr-2"
-                         />
-                         GitHub
-                       </button>
-                     </div>
-
-
-
+            </div>
           </div>
         </div>
       </div>
