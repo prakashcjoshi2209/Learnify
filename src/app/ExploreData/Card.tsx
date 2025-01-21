@@ -1,8 +1,9 @@
+"use client";
 
-
-import React from "react";
+import React, { useState } from "react";
 import { FaUser, FaUsers } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/ui/Loader";
 
 interface CardProps {
   title: string;
@@ -27,8 +28,10 @@ const Card: React.FC<CardProps> = ({
   // dateRange,
   courseId
 }) => {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleClick = ()=>{
+    setLoading(true);
     router.push(`/CourseContent/${courseId}`);
   }
   return (
@@ -81,7 +84,7 @@ const Card: React.FC<CardProps> = ({
 
           {/* Enroll Button */}
           <button className="px-4 py-1 bg-purple-600 text-white text-sm font-medium rounded-md hover:bg-purple-700 shadow" onClick={handleClick}>
-            {buttonLabel}
+            {loading? <Loader />: buttonLabel}
           </button>
         </div>
       </div>
