@@ -99,7 +99,7 @@ import ProfileSection from "./ProfileSection";
 import ImageCard from "./ImageCard";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import NoCoursesAvailable from "./NoCoursesAvailable";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 
 
 

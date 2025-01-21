@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 import { useRouter } from "next/navigation";
 
 const ForgetPassword: React.FC = () => {
@@ -80,7 +80,7 @@ const ForgetPassword: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 text-gray-700"
+                className="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 text-gray-700"
               />
             </div>
 

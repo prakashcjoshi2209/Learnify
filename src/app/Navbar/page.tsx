@@ -1,16 +1,43 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { MagnifyingGlassIcon, ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { usePathname, useRouter } from "next/navigation"; // Correct imports for Next.js 13+
+import {
+  MagnifyingGlassIcon,
+  ShoppingCartIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { signOut, useSession } from "next-auth/react";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 
 const Navbar: React.FC = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
+  const [loading, setLoading] = useState(false); // Loader state
   const { data: session, status } = useSession();
+  const router = useRouter();
+  const pathname = usePathname(); // Get the current path dynamically
 
+  /**
+   * Handle navigation with Loader
+   * @param {string} targetPath - The path to navigate to
+   */
+  const handleNavigation = (targetPath: string) => {
+    // Only show loader and navigate if going to a different page
+    if (pathname !== targetPath) {
+      setLoading(true); // Show loader
+      router.push(targetPath); // Navigate to the target path
+      setTimeout(() => setLoading(false), 500); // Hide loader after navigation (simulate delay)
+    }
+  };
+
+  /**
+   * Handle user logout
+   */
   const handleLogout = async () => {
+    setLoading(true); // Show loader on logout
     await signOut({ redirect: true, callbackUrl: "/login" });
+    setLoading(false); // Hide loader after logout
   };
 
   return (
@@ -22,6 +49,9 @@ const Navbar: React.FC = () => {
           <div className="text-2xl font-bold">
             <Link href="/">Learnify</Link>
           </div>
+
+          {/* Loader (centered in navbar during loading) */}
+          {loading && <Loader />}
 
           {/* Search Bar */}
           <div className="hidden md:flex items-center bg-white text-gray-700 rounded-full px-3 py-2 mx-4 flex-grow max-w-[300px]">
@@ -35,45 +65,61 @@ const Navbar: React.FC = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="hover:underline">
+            <button
+              onClick={() => handleNavigation("/")}
+              className={`hover:underline ${
+                pathname === "/" ? "text-yellow-300" : ""
+              }`}
+            >
               Home
-            </Link>
-            <Link href="/ExploreData" className="hover:underline">
+            </button>
+            <button
+              onClick={() => handleNavigation("/ExploreData")}
+              className={`hover:underline ${
+                pathname === "/ExploreData" ? "text-yellow-300" : ""
+              }`}
+            >
               Explore
-            </Link>
-            <Link href="/DashBoard" className="hover:underline">
+            </button>
+            <button
+              onClick={() => handleNavigation("/DashBoard")}
+              className={`hover:underline ${
+                pathname === "/DashBoard" ? "text-yellow-300" : ""
+              }`}
+            >
               Dashboard
-            </Link>
+            </button>
           </div>
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
             {/* Cart Icon */}
-            <Link href="/cart" className="relative">
-              <div className="bg-white text-purple-600 p-2 rounded-full">
-                <ShoppingCartIcon className="h-5 w-5" />
-              </div>
-            </Link>
+            <button
+              onClick={() => handleNavigation("/cart")}
+              className="relative bg-white text-purple-600 p-2 rounded-full"
+            >
+              <ShoppingCartIcon className="h-5 w-5" />
+            </button>
 
             {/* Buttons */}
-            {status === "loading" ?
-            <div className="relative w-[100px] h-[40px] flex justify-center items-center">
-              <Loader />
-            </div> 
-            : !session ? (
+            {status === "loading" ? (
+              <div className="relative w-[100px] h-[40px] flex justify-center items-center">
+                <Loader />
+              </div>
+            ) : !session ? (
               <div className="hidden md:flex space-x-2">
-                <Link
-                  href="/signup"
+                <button
+                  onClick={() => handleNavigation("/signup")}
                   className="bg-white text-purple-700 px-4 py-2 rounded-full hover:bg-gray-200 transition"
                 >
                   Sign Up
-                </Link>
-                <Link
-                  href="/login"
+                </button>
+                <button
+                  onClick={() => handleNavigation("/login")}
                   className="bg-white text-purple-700 px-4 py-2 rounded-full hover:bg-gray-200 transition"
                 >
                   Login
-                </Link>
+                </button>
               </div>
             ) : (
               <div className="hidden md:flex space-x-2">
@@ -114,33 +160,42 @@ const Navbar: React.FC = () => {
 
             {/* Sidebar Links */}
             <div className="flex flex-col p-4 space-y-4">
-              <Link href="/" className="text-gray-800 hover:text-purple-600">
+              <button
+                onClick={() => handleNavigation("/")}
+                className={`text-gray-800 hover:text-purple-600 ${
+                  pathname === "/" ? "font-bold" : ""
+                }`}
+              >
                 Home
-              </Link>
-              <Link
-                href="/ExploreData"
-                className="text-gray-800 hover:text-purple-600"
+              </button>
+              <button
+                onClick={() => handleNavigation("/ExploreData")}
+                className={`text-gray-800 hover:text-purple-600 ${
+                  pathname === "/ExploreData" ? "font-bold" : ""
+                }`}
               >
                 Explore
-              </Link>
-              <Link
-                href="/DashBoard"
-                className="text-gray-800 hover:text-purple-600"
+              </button>
+              <button
+                onClick={() => handleNavigation("/DashBoard")}
+                className={`text-gray-800 hover:text-purple-600 ${
+                  pathname === "/DashBoard" ? "font-bold" : ""
+                }`}
               >
                 Dashboard
-              </Link>
-              <Link
-                href="/signup"
+              </button>
+              <button
+                onClick={() => handleNavigation("/signup")}
                 className="text-gray-800 hover:text-purple-600"
               >
                 Sign Up
-              </Link>
-              <Link
-                href="/login"
+              </button>
+              <button
+                onClick={() => handleNavigation("/login")}
                 className="text-gray-800 hover:text-purple-600"
               >
                 Login
-              </Link>
+              </button>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 import { useState } from "react";
 
 const NoCoursesAvailable = () => {

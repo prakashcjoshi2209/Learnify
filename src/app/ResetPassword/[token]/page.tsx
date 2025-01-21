@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Loader from "@/components/ui/loader";
+import Loader from "@/components/ui/Loader";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useParams } from "next/navigation";
