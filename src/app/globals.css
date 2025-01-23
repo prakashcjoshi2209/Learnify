@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Irish+Grover&display=swap');
+
 
 .bg-dark-blue {
   background-color: #1a1a2e;

@@ -43,10 +43,26 @@ const Navbar: React.FC = () => {
   return (
     <>
       {/* Main Navbar */}
-      <nav className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-4 px-6 shadow-lg">
+      <nav className="bg-custom-gradient text-white py-4 px-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo Section */}
-          <div className="text-2xl font-bold">
+
+          {/* <div className="text-2xl font-bold">
+            <Link href="/">Learnify</Link>
+          </div> */}
+
+          <div
+            className="text-2xl font-bold"
+            style={{
+              fontFamily: "'Irish Grover', cursive",
+              fontSize: "19px",
+              fontWeight: 400,
+              lineHeight: "19px",
+              textAlign: "left",
+              textUnderlinePosition: "from-font",
+              textDecorationSkipInk: "none",
+            }}
+          >
             <Link href="/">Learnify</Link>
           </div>
 
@@ -63,29 +79,34 @@ const Navbar: React.FC = () => {
             />
           </div>
 
-          {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-6">
             <button
               onClick={() => handleNavigation("/")}
-              className={`hover:underline ${
-                pathname === "/" ? "text-yellow-300" : ""
-              }`}
+              className={`${
+                pathname === "/"
+                  ? "underline decoration-2 decoration-pink-300"
+                  : ""
+              } hover:underline decoration-2 decoration-white text-white`}
             >
               Home
             </button>
             <button
               onClick={() => handleNavigation("/ExploreData")}
-              className={`hover:underline ${
-                pathname === "/ExploreData" ? "text-yellow-300" : ""
-              }`}
+              className={`${
+                pathname === "/ExploreData"
+                  ? "underline decoration-2 decoration-white-300"
+                  : ""
+              } hover:underline decoration-2 decoration-white text-white`}
             >
               Explore
             </button>
             <button
               onClick={() => handleNavigation("/DashBoard")}
-              className={`hover:underline ${
-                pathname === "/DashBoard" ? "text-yellow-300" : ""
-              }`}
+              className={`${
+                pathname === "/DashBoard"
+                  ? "underline decoration-2 decoration-yellow-300"
+                  : ""
+              } hover:underline decoration-2 decoration-white text-white`}
             >
               Dashboard
             </button>

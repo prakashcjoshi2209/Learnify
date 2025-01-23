@@ -50,17 +50,17 @@ const Signup = () => {
     },
   });
 
-  const handleGithubSignIn = ()=> {
-    signIn("github", {callbackUrl: "/DashBoard"})
-  }
+  const handleGithubSignIn = () => {
+    signIn("github", { callbackUrl: "/DashBoard" });
+  };
 
-  const handleGoogleSignIn = ()=> {
-    signIn("google", {callbackUrl: "/DashBoard"})
-  }
-  
-  const handleLoader = ()=>{
+  const handleGoogleSignIn = () => {
+    signIn("google", { callbackUrl: "/DashBoard" });
+  };
+
+  const handleLoader = () => {
     setLoading(true);
-  }
+  };
 
   const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
     setApiError(null);
@@ -89,13 +89,14 @@ const Signup = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg w-full max-w-4xl overflow-hidden">
         {/* Left Section */}
-        <div className="hidden md:block bg-purple-500 p-8 w-1/2">
+
+        <div className="hidden md:flex bg-purple-500 p-8 w-1/2 items-center justify-center">
           <Image
             src="/signup.png"
             alt="Signup Illustration"
             width={400}
             height={400}
-            className="mt-14 w-full h-auto object-cover"
+            className="w-full h-auto object-cover"
             priority
           />
         </div>
@@ -105,6 +106,39 @@ const Signup = () => {
           <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
             Create Your Account
           </h2>
+
+          <div className="flex gap-4">
+            <button
+              type="button"
+              className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
+              onClick={handleGoogleSignIn}
+            >
+              <Image
+                src="/google1.png"
+                alt="Google"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              Google
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
+              onClick={handleGithubSignIn}
+            >
+              <Image
+                src="/github.png"
+                alt="GitHub"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
+              GitHub
+            </button>
+          </div>
+
+          <div className="my-4 text-center text-gray-400">- OR -</div>
 
           {apiError && (
             <div className="text-red-600 text-center mb-4">{apiError}</div>
@@ -214,43 +248,14 @@ const Signup = () => {
 
           <p className="text-center text-gray-600 mt-4">
             Already have an account?{" "}
-            <Link href="/login" onClick={handleLoader} className="text-purple-600 hover:underline">
-              {loading? <Loader /> : "Log In"}
+            <Link
+              href="/login"
+              onClick={handleLoader}
+              className="text-purple-600 hover:underline"
+            >
+              {loading ? <Loader /> : "Log In"}
             </Link>
           </p>
-
-          <div className="my-4 text-center text-gray-400">- OR -</div>
-
-          <div className="flex gap-4">
-            <button
-              type="button"
-              className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
-              onClick = {handleGoogleSignIn}
-            >
-              <Image
-                src="/google1.png"
-                alt="Google"
-                width={20}
-                height={20}
-                className="mr-2"
-              />
-              Google
-            </button>
-            <button
-              type="button"
-              className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
-              onClick = {handleGithubSignIn}
-            >
-              <Image
-                src="/github.png"
-                alt="GitHub"
-                width={20}
-                height={20}
-                className="mr-2"
-              />
-              GitHub
-            </button>
-          </div>
         </div>
       </div>
     </div>
