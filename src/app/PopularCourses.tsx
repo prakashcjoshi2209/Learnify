@@ -12,17 +12,17 @@ interface Course {
     original: number;
   };
   shortDescription: string;
-  // duration: string;
+  // duration: string; //Since the courses are pre-recorded then there should be no time duration.
 }
 
 const PopularCourses: React.FC = () => {
-  const [courses, setCourses] = useState<Course[]>([]); // Ensure courses is always an array
+  const [courses, setCourses] = useState<Course[]>([]); //course need to be an array only in this case.
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCourses = async () => {
         try {
-            const response = await fetch("/api/courses"); // Replace with your API URL
+            const response = await fetch("/api/courses");
             const result = await response.json();
 
             // Check if response contains the expected data structure

@@ -308,12 +308,12 @@ const CourseContentPage = () => {
       </div>
 
       {/* Reuse Components */}
-      {/* <CoursePage course={course} />
-      <CourseContentData modules={course.modules} />
-      <RewardsData rewards={course.rewards} />
-      <PublishHome authors={course.authors} />
-      <ReviewsHome reviews={course.reviews} />
-      <Footer /> */}
+      <CoursePage />
+      <CourseContentData />
+      <RewardsData />
+      <PublishHome />
+      <ReviewsHome />
+      <Footer />
     </>
   );
 };

@@ -172,7 +172,7 @@ const Login = () => {
                 href="/signup"
                 className="text-purple-600 hover:underline"
               >
-                Signup
+                Sign Up
               </Link>
             </p>
             <div className="my-4 text-center text-gray-400">- OR -</div>

@@ -5,12 +5,14 @@ import BenefitsSection from './BenifitsSection'
 import PopularCourses from './PopularCourses'
 import Consist from './Consist'
 import dotenv from "dotenv";
+import { auth } from '../../auth';
 dotenv.config();
 
-const page = () => {
+const page = async () => {
+  const session = await auth();
   return (
     <div>
-      <Navbar/>
+      <Navbar session = {session}/>
       <Consist/>
       <PopularCourses/>
       <BenefitsSection/>
