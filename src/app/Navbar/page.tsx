@@ -106,11 +106,7 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
             </button>
 
             {/* Buttons */}
-            {status === "loading" ? (
-              <div className="relative w-[100px] h-[40px] flex justify-center items-center">
-                <Loader />
-              </div>
-            ) : !session ? (
+            {!session ? (
               <div className="hidden md:flex space-x-2">
                 <button
                   onClick={() => handleNavigation("/signup")}
