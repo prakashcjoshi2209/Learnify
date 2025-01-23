@@ -176,11 +176,13 @@ const DashboardContent = () => {
         <h3 className="text-xl font-semibold mb-6">Available Courses</h3>
         {
         isEmpty? <NoCoursesAvailable /> : 
-        fetchingUserCourses? <Loader /> : 
+        // fetchingUserCourses? <Loader /> : 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {courses.map((course) => (
+          {fetchingUserCourses ? <Loader /> : 
+          courses.map((course) => (
             <ImageCard key={course._id} course={course} />
-          ))}
+          ))
+          }
         </div>
         }
         
