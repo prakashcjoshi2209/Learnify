@@ -10,15 +10,11 @@ const ProfileSection: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [imgUrl, setImgUrl] = useState(null);
-  console.log(session);
+  // console.log(session);
   useEffect(() => {
     setProfileImage(session?.user?.image || null);
   }, [session]);
 
-  const refreshSession = async () => {
-    const session = await getSession(); // Fetch the latest session
-    console.log(session);
-  };
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
   
@@ -73,7 +69,7 @@ const ProfileSection: React.FC = () => {
       <div className="flex flex-col items-center">
         <div className="relative w-24 h-24 rounded-full border-4 border-purple-500 overflow-hidden">
           {loading ? (
-            <div className="loader">Loading...</div> // Replace with a spinner component if needed
+            <div className="loader">Loading...</div>
           ) : profileImage ? (
             <img
               src={profileImage}

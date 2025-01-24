@@ -100,14 +100,18 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
             >
               Explore
             </button>
-            <button
-              onClick={() => handleNavigation("/DashBoard")}
-              className={`hover:underline ${
-                pathname === "/DashBoard" ? "text-yellow-300" : ""
-              }`}
-            >
-              Dashboard
-            </button>
+           { session? 
+              <button
+                onClick={() => handleNavigation("/DashBoard")}
+                className={`hover:underline ${
+                  pathname === "/DashBoard" ? "text-yellow-300" : ""
+                }`}
+              >
+                Dashboard
+              </button>
+              :
+              ""
+            }
           </div>
 
           {/* Right Section */}
@@ -191,14 +195,17 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
               >
                 Explore
               </button>
-              <button
-                onClick={() => handleNavigation("/DashBoard")}
-                className={`text-gray-800 hover:text-purple-600 ${
-                  pathname === "/DashBoard" ? "font-bold" : ""
-                }`}
-              >
-                Dashboard
-              </button>
+              { session ? 
+                <button
+                  onClick={() => handleNavigation("/DashBoard")}
+                  className={`text-gray-800 hover:text-purple-600 ${
+                    pathname === "/DashBoard" ? "font-bold" : ""
+                  }`}
+                >
+                  Dashboard
+                </button>:
+                ""
+              }
               <button
                 onClick={() => handleNavigation("/signup")}
                 className="text-gray-800 hover:text-purple-600"
