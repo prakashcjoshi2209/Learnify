@@ -22,7 +22,7 @@ const Login = () => {
 
   const redirectPath = searchParams.get("redirect") || "/DashBoard";
 
-  const handleLogin = async (e:any) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     setMessage("");
     setIsProcessing(true);
@@ -53,28 +53,29 @@ const Login = () => {
       setMessage("Social login failed. Please try again.");
     } finally {
       setLoader(false);
+    }
   };
-}
 
   // const handleLoaderForLink = () => {
   //   setIsProcessing(true);
   // };
 
-  const handleLoader = ()=>{
+  const handleLoader = () => {
     setLoader(true);
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg w-full max-w-4xl overflow-hidden">
         {/* Left Section: Image */}
-        <div className="hidden md:block bg-purple-500 p-8 w-1/2">
+
+        <div className="hidden md:flex bg-purple-500 p-8 w-1/2 items-center justify-center">
           <Image
             src="/LoginImage.png"
             alt="Login Illustration"
             width={400}
             height={400}
-            className="mt-14 w-full h-auto object-cover"
+            className="w-full h-auto object-cover"
             priority
           />
         </div>
@@ -85,6 +86,40 @@ const Login = () => {
             <h2 className="text-2xl font-bold text-center text-purple-600 mb-6">
               Welcome Back!
             </h2>
+
+            <div className="flex gap-4">
+              <button
+                type="button"
+                className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
+                onClick={() => handleSocialSignIn("google")}
+              >
+                <Image
+                  src="/google1.png"
+                  alt="Google"
+                  width={20}
+                  height={20}
+                  className="mr-2"
+                />
+                Google
+              </button>
+              <button
+                type="button"
+                className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
+                onClick={() => handleSocialSignIn("github")}
+              >
+                <Image
+                  src="/github.png"
+                  alt="GitHub"
+                  width={20}
+                  height={20}
+                  className="mr-2"
+                />
+                GitHub
+              </button>
+            </div>
+
+            <div className="my-4 text-center text-gray-400">- OR -</div>
+
             {message && (
               <p
                 className={`text-center py-2 rounded-md ${
@@ -142,7 +177,10 @@ const Login = () => {
               </div>
               <div className="flex items-center justify-between mb-4">
                 <label className="flex items-center text-gray-600 text-sm">
-                  <input type="checkbox" className="form-checkbox mr-2 focus:ring-purple-500" />
+                  <input
+                    type="checkbox"
+                    className="form-checkbox mr-2 focus:ring-purple-500"
+                  />
                   Remember me
                 </label>
                 <Link
@@ -150,7 +188,7 @@ const Login = () => {
                   href="/ForgetPassword"
                   className="text-purple-600 hover:underline text-sm"
                 >
-                  {loader? <Loader /> : "Forgot Password?"}
+                  {loader ? <Loader /> : "Forgot Password?"}
                 </Link>
               </div>
               <button
@@ -175,37 +213,6 @@ const Login = () => {
                 Sign Up
               </Link>
             </p>
-            <div className="my-4 text-center text-gray-400">- OR -</div>
-            <div className="flex gap-4">
-              <button
-                type="button"
-                className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
-                onClick={() => handleSocialSignIn("google")}
-              >
-                <Image
-                  src="/google1.png"
-                  alt="Google"
-                  width={20}
-                  height={20}
-                  className="mr-2"
-                />
-                Google
-              </button>
-              <button
-                type="button"
-                className="flex items-center justify-center w-1/2 py-2 px-4 border rounded-md hover:bg-gray-100 transition"
-                onClick={() => handleSocialSignIn("github")}
-              >
-                <Image
-                  src="/github.png"
-                  alt="GitHub"
-                  width={20}
-                  height={20}
-                  className="mr-2"
-                />
-                GitHub
-              </button>
-            </div>
           </div>
         </div>
       </div>
