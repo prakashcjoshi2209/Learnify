@@ -70,7 +70,7 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
           {loading && <Loader />}
 
           {/* Search Bar */}
-          <div className="hidden md:flex items-center bg-white text-gray-700 rounded-full px-3 py-2 mx-4 flex-grow max-w-[300px]">
+          <div className="hidden md:flex items-center bg-white text-gray-700 rounded-full px-3 py-2 mx-4 flex-grow max-w-[500px]">
             <MagnifyingGlassIcon className="h-5 w-5 text-gray-500 mr-2" />
             <input
               type="text"
@@ -115,7 +115,7 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
             {/* Cart Icon */}
             <button
               onClick={() => handleNavigation("/cart")}
-              className="relative bg-white text-purple-600 p-2 rounded-full"
+              className="relative bg-white text-black font-semibold p-2 rounded-full"
             >
               <ShoppingCartIcon className="h-5 w-5" />
             </button>
@@ -125,13 +125,13 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
               <div className="hidden md:flex space-x-2">
                 <button
                   onClick={() => handleNavigation("/signup")}
-                  className="bg-white text-purple-700 px-4 py-2 rounded-full hover:bg-gray-200 transition"
+                  className="bg-white  text-black font-semibold px-4 py-2 rounded-full hover:bg-gray-200 transition"
                 >
                   Sign Up
                 </button>
                 <button
                   onClick={() => handleNavigation("/login")}
-                  className="bg-white text-purple-700 px-4 py-2 rounded-full hover:bg-gray-200 transition"
+                  className="bg-white  text-black font-semibold px-4 py-2 rounded-full hover:bg-gray-200 transition"
                 >
                   Login
                 </button>
