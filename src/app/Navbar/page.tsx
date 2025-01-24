@@ -8,13 +8,13 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ session: any | null }> = ({session}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
   const [loading, setLoading] = useState(false); // Loader state
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname(); // Get the current path dynamically
 
@@ -102,11 +102,9 @@ const Navbar: React.FC = () => {
             </button>
             <button
               onClick={() => handleNavigation("/DashBoard")}
-              className={`${
-                pathname === "/DashBoard"
-                  ? "underline decoration-2 decoration-yellow-300"
-                  : ""
-              } hover:underline decoration-2 decoration-white text-white`}
+              className={`hover:underline ${
+                pathname === "/DashBoard" ? "text-yellow-300" : ""
+              }`}
             >
               Dashboard
             </button>
