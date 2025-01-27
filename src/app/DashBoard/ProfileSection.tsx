@@ -5,8 +5,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineBell, AiOutlineMail, AiOutlineSetting } from "react-icons/ai";
 import { useSession, signIn,signOut, getSession } from "next-auth/react";
 
-const ProfileSection: React.FC = () => {
-  const { data: session , update} = useSession();
+const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
+  // const { data: session , update} = useSession();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [imgUrl, setImgUrl] = useState(null);
