@@ -81,8 +81,7 @@ const Quizzes = () => {
 
       {/* Profile Section */}
       <div className="w-72 bg-white border-l border-gray-200">
-        <ProfileSection
-         />
+       <ProfileSection/>
       
       
     </div>
