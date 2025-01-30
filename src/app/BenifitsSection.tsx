@@ -56,9 +56,9 @@ const BenefitsSection: React.FC = () => {
           elit id imperdiet et. Cras eu sit dignissim lorem nibh et. Ac cum eget
           habitasse in velit fringilla feugiat senectus in.
         </p>
-        <button className="mt-4 text-sm font-medium text-gray-800 border text-right border-gray-400 px-4 py-2 rounded-full hover:bg-gray-200 transition">
+        {/* <button className="mt-4 text-sm font-medium text-gray-800 border text-right border-gray-400 px-4 py-2 rounded-full hover:bg-gray-200 transition">
           View All
-        </button>
+        </button> */}
       </div>
 
       {/* Benefits Grid */}
