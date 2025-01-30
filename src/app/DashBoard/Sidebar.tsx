@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BsGear, BsInbox, BsBook, BsCheckSquare, BsBoxArrowRight } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
 import { signOut } from "next-auth/react";
@@ -31,6 +32,8 @@ const sidebarConfig = {
 };
 
 const Sidebar: React.FC = () => {
+  const pathname = usePathname(); // Get the current route
+
   return (
     <div className="w-64 h-screen bg-white text-gray-800 border-r border-gray-200 flex flex-col overflow-y-auto">
       {/* Top Section */}
@@ -46,18 +49,25 @@ const Sidebar: React.FC = () => {
         {sidebarConfig.mainSections.map((section, index) => (
           <div key={index} className="mb-6">
             <h3 className="text-gray-400 text-sm uppercase mb-4">{section.title}</h3>
-            <ul className="space-y-6">
-              {section.items.map((item, itemIndex) => (
-                <li
-                  key={itemIndex}
-                  className="flex items-center space-x-3 hover:text-purple-600 cursor-pointer"
-                >
-                  {item.icon}
-                  <Link href={item.href}>
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-2">
+              {section.items.map((item, itemIndex) => {
+                const isActive = pathname === item.href; // Check if current route is active
+                return (
+                  <li key={itemIndex}>
+                    <Link href={item.href}>
+                      <div
+                        className={`flex items-center space-x-3 px-4 py-2 cursor-pointer rounded-md 
+                          transition-all duration-200
+                          ${isActive ? "bg-purple-600 text-white" : "text-gray-800"}
+                          hover:bg-yellow-300`}
+                      >
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
@@ -67,22 +77,29 @@ const Sidebar: React.FC = () => {
       <div className="p-6 mt-auto">
         <ul className="space-y-4">
           {/* Settings Link */}
-          {sidebarConfig.accountSection.map((item, itemIndex) => (
-            <li
-              key={itemIndex}
-              className="flex items-center space-x-3 hover:text-purple-600 cursor-pointer"
-            >
-              {item.icon}
-              <Link href={item.href}>
-                <span>{item.label}</span>
-              </Link>
-            </li>
-          ))}
+          {sidebarConfig.accountSection.map((item, itemIndex) => {
+            const isActive = pathname === item.href; // Check if settings is active
+            return (
+              <li key={itemIndex}>
+                <Link href={item.href}>
+                  <div
+                    className={`flex items-center space-x-3 px-4 py-2 cursor-pointer rounded-md 
+                      transition-all duration-200
+                      ${isActive ? "bg-purple-600 text-white" : "text-gray-800"}
+                      hover:bg-yellow-300`}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
 
           {/* Logout Button */}
           <li
-            className="flex items-center space-x-3 hover:text-purple-600 cursor-pointer"
-            onClick={handleLogout} // Attach the handleLogout function here
+            className="flex items-center space-x-3 px-4 py-2 cursor-pointer rounded-md text-gray-800 hover:bg-yellow-300"
+            onClick={handleLogout}
           >
             <BsBoxArrowRight className="text-gray-500" />
             <span>Logout</span>

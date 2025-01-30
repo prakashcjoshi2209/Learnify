@@ -57,7 +57,7 @@ const PopularCourses: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-6">
+    <div className=" bg-gray-100 py-10 px-6">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-purple-800">Popular Courses</h1>
@@ -74,7 +74,7 @@ const PopularCourses: React.FC = () => {
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
         {topCourses.map((course) => (
           <Card
             key={course._id}
