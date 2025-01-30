@@ -1,22 +1,21 @@
+
+
 "use client";
 
 import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import ProfileSection from "./ProfileSection";
-// import VideoCard from "./VideoCard";
 import ImageCard from "./ImageCard";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import NoCoursesAvailable from "./NoCoursesAvailable";
 import Loader from "@/components/ui/Loader";
-
-
-
 
 const DashboardContent = () => {
   const [courses, setCourses] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [isEmpty, setIsEmpty] = useState<boolean>(false);
   const [fetchingUserCourses, setFetchingUserCourses] = useState<boolean>(false);
+
   useEffect(() => {
     setFetchingUserCourses(true);
     const fetchCourses = async () => {
@@ -24,10 +23,9 @@ const DashboardContent = () => {
         const response = await fetch("/api/userCourses");
         if (response.ok) {
           const data = await response.json();
-          if(data.length > 0){
+          if (data.length > 0) {
             setCourses(data);
-          }
-          else{
+          } else {
             setIsEmpty(true);
           }
         } else {
@@ -35,8 +33,7 @@ const DashboardContent = () => {
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
-      }
-      finally {
+      } finally {
         setFetchingUserCourses(false);
       }
     };
@@ -80,25 +77,20 @@ const DashboardContent = () => {
           </button>
         </div>
 
-        {/* Continue Watching */}
+        {/* Available Courses */}
         <h3 className="text-xl font-semibold mb-6">Available Courses</h3>
-        {
-        isEmpty? <NoCoursesAvailable /> : 
-        // fetchingUserCourses? <Loader /> : 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {fetchingUserCourses ? <Loader /> : 
-          courses.map((course) => (
-            <ImageCard key={course._id} course={course} />
-          ))
-          }
-        </div>
-        }
-        
+        {isEmpty ? (
+          <NoCoursesAvailable />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {fetchingUserCourses ? (
+              <Loader />
+            ) : (
+              courses.map((course) => <ImageCard key={course._id} course={course} />)
+            )}
+          </div>
+        )}
       </div>
-      {/* Profile Section */}
-      {/* <div className="hidden md:block w-72 bg-white border-l border-gray-200">
-        <ProfileSection />
-      </div> */}
     </div>
   );
 };
