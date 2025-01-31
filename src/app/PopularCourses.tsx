@@ -12,7 +12,7 @@ interface Course {
     original: number;
   };
   shortDescription: string;
-  // duration: string; //Since the courses are pre-recorded then there should be no time duration.
+  
 }
 
 const PopularCourses: React.FC = () => {
@@ -74,7 +74,7 @@ const PopularCourses: React.FC = () => {
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {topCourses.map((course) => (
           <Card
             key={course._id}
