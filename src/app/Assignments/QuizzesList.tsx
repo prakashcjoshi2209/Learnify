@@ -22,7 +22,7 @@ const QuizzesList = () => {
 
       {/* Main Content */}
       <div className="flex-1 p-6">
-        {/* 🟢 Ensure heading is properly positioned */}
+        
         <h1 className="text-xl font-bold text-purple-600 mb-6">Quizzes</h1>
 
         {/* Quizzes List */}

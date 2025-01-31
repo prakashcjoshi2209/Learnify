@@ -11,7 +11,7 @@ const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [imgUrl, setImgUrl] = useState(null);
   // console.log(session);
-  useEffect(() => {
+  useEffect(() => { 
     setProfileImage(session?.user?.image || null);
   }, [session]);
 
