@@ -65,9 +65,9 @@ const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
   }
 
   return (
-    <div className="flex flex-col bg-white p-6 rounded-lg shadow-lg w-80 space-y-6">
+    <div className="w-74 h-screen  bg-white text-gray-800 border-r border-gray-200 flex flex-col overflow-y-auto">
       <div className="flex flex-col items-center">
-        <div className="relative w-24 h-24 rounded-full border-4 border-purple-500 overflow-hidden">
+        <div className="relative w-24 h-24 mt-3 rounded-full border-4 border-purple-500 overflow-hidden">
           {loading ? (
             <div className="loader">Loading...</div>
           ) : profileImage ? (
@@ -93,7 +93,7 @@ const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
           Continue Your Journey And Achieve Your Target
         </p>
       </div>
-      <div className="flex justify-around">
+      <div className="flex justify-around ">
         <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200">
           <AiOutlineBell className="text-xl text-gray-600" />
         </button>

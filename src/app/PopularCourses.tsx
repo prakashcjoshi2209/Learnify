@@ -57,7 +57,7 @@ const PopularCourses: React.FC = () => {
   }
 
   return (
-    <div className=" bg-gray-100 py-10 px-6">
+    <div className=" bg-gray-100 py-10 px-6 ">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-purple-800">Popular Courses</h1>
