@@ -1,5 +1,3 @@
-
-
 import { auth } from "../../../auth";
 import RewardsContainer from "./RewardsContainer"; 
 
