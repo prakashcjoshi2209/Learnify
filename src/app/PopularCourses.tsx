@@ -59,10 +59,10 @@ const PopularCourses: React.FC = () => {
   return (
     <div className=" bg-gray-100 py-1 px-6">
       {/* Header */}
-      <div className="text-center mb-10 pt-10">
+      <div className="text-center mb-10 pt-5">
         <h1 className="text-4xl font-bold text-purple-800">Popular Courses</h1>
         <div className="flex justify-center mt-2">
-          <svg width="130" height="40" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg">
+          <svg width="130" height="25" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M0 10 Q60 30 120 10"
               stroke="#7c3aed"

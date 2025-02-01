@@ -94,15 +94,13 @@
 
 // pagex.tsx
 
-"use client";
-
 import ProfileSection from "@/app/DashBoard/ProfileSection";
 import QuizzesList from "./QuizzesList";
-import { useSession } from "next-auth/react";
+import { auth } from "../../../auth";
 
-const Quizzes = () => {
-  const { data: session } = useSession(); // Fetch session here
 
+const Quizzes = async () => {
+  const session = await auth();
   return (
     <div className="flex flex-row w-full h-screen">
       {/* Main Content */}
