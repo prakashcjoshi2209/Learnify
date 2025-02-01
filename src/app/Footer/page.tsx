@@ -2,7 +2,8 @@
 import React from "react";
 import Link from "next/link";
 // import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
-import { FaFacebookF, FaTwitterSquare, FaLinkedinIn } from "react-icons/fa";
+import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
+import {FaXTwitter} from "react-icons/fa6"
 
 import { MdEmail, MdPhone } from "react-icons/md";
 
@@ -93,7 +94,7 @@ const Footer: React.FC = () => {
               <FaFacebookF className="text-xl hover:text-gray-300" />
             </Link>
             <Link href="https://twitter.com" aria-label="Twitter">
-              <FaTwitterSquare className="text-xl hover:text-gray-300" />
+              <FaXTwitter className="text-xl hover:text-gray-300" />
             </Link>
             <Link href="https://linkedin.com" aria-label="LinkedIn">
               <FaLinkedinIn className="text-xl hover:text-gray-300" />
