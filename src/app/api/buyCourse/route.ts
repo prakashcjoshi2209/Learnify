@@ -32,6 +32,8 @@ export async function POST(request: NextRequest) {
             if (!user.coursesBought.includes(cId)) {
                 user.coursesBought.push(cId);
                 await user.save();
+                course.studentsEnrolled +=1;
+                await course.save();
             }
             return NextResponse.json({ message: `Payment successful and ${course.name} course added.` }, { status: 200 });
         } else {
