@@ -139,6 +139,13 @@ const CourseContentPage = () => {
     }
   };
 
+  const handleScroll = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       {session && <Script src="https://checkout.razorpay.com/v1/checkout.js" />}
@@ -211,30 +218,40 @@ const CourseContentPage = () => {
           </div>
         </section>
 
-        <footer className="bg-purple-500 text-center text-white py-4">
+      <footer className="bg-purple-500 text-center text-white py-4">
           <div className="flex justify-center space-x-8">
-            <a href="#about" className="hover:underline">
+            <button onClick={() => handleScroll("about-course")} className="hover:underline">
               About Course
-            </a>
-            <a href="#content" className="hover:underline">
+            </button>
+            <button onClick={() => handleScroll("course-content")} className="hover:underline">
               Course Content
-            </a>
-            <a href="#publisher" className="hover:underline">
+            </button>
+            <button onClick={() => handleScroll("about-publisher")} className="hover:underline">
               About Publisher
-            </a>
-            <a href="#faq" className="hover:underline">
+            </button>
+            <button onClick={() => handleScroll("faq")} className="hover:underline">
               FAQs
-            </a>
+            </button>
           </div>
         </footer>
       </div>
 
-      {/* Reuse Components */}
-      <CoursePage />
-      <CourseContentData />
-      <RewardsData />
-      <PublishHome />
-      <ReviewsHome />
+  <section id="about-course">
+        <CoursePage />
+      </section>
+
+      <section id="course-content">
+        <CourseContentData />
+      </section>
+
+      <section id="about-publisher">
+        <PublishHome />
+      </section>
+
+      <section id="faq">
+        <ReviewsHome />
+      </section>
+
       <Footer />
     </>
   );
