@@ -9,10 +9,10 @@ const CoursePage: React.FC = () => {
       </h1>
 
       {/* Course Introduction Section */}
-      <DynamicSection title="Course Introduction" initialFields={["Demo", "Topic", "Description", "Rating", "Publisher"]} />
+      <DynamicSection title="Course Introduction" initialFields={["Demo", "Topic", "Description", "Publisher"]} />
 
       {/* Course Details Section */}
-      <DynamicSection title="Course Details" initialFields={["Content Duration", "No. of Assignment", "Video Lectures", "Students Enrolled"]} />
+      <DynamicSection title="Course Details" initialFields={["Content Duration", "No. of Assignment", "Video Lectures"]} />
 
       {/* About Course Section */}
       <DynamicSection title="About Course" initialFields={["Topic", "Details", "Properties", "Syllabus"]} />
