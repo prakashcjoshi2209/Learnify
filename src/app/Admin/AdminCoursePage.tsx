@@ -1,7 +1,8 @@
 
 "use client";
 import React, { useState } from "react";
-import Breakdown from "./Breakdown";  // Import Breakdown component
+import Breakdown from "./Breakdown";  
+import CoursePage from "./CoursePage";
 
 const AdminCoursePage: React.FC = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
@@ -26,7 +27,7 @@ const AdminCoursePage: React.FC = () => {
   return (
     <div className="flex h-screen w-full bg-gray-50">
       {/* Main Content */}
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-2">
         {/* Top Navigation */}
         <div className="flex items-center justify-between mb-6">
           <input
@@ -150,7 +151,8 @@ const AdminCoursePage: React.FC = () => {
         {activeTabIndex === 1 && (
           <div>
             <h2 className="text-xl font-bold text-gray-700 mb-4">Intro Page</h2>
-            <p>Set up your introduction page here...</p>
+            {/* <p>Intro page here .....</p> */}
+            <CoursePage />
           </div>
         )}
 
@@ -162,9 +164,11 @@ const AdminCoursePage: React.FC = () => {
         )}
 
         {/* Update Button */}
-        <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <div className="flex justify-center items-center">
+        <button className="px-4 py-2 my-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
           Update
         </button>
+        </div>
       </main>
     </div>
   );

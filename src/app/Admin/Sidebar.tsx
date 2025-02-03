@@ -3,9 +3,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Import usePathname hook
+import { usePathname } from "next/navigation"; 
 import { BsGear, BsInbox, BsBook, BsCheckSquare, BsBoxArrowRight } from "react-icons/bs";
-import { FaUserFriends } from "react-icons/fa";
 import { signOut } from "next-auth/react";
 
 // Logout handler
@@ -23,7 +22,7 @@ const sidebarConfig = {
         { label: "Rewards", icon: <BsInbox className="text-lg" />, href: "/Rewards" },
         { label: "Assignments", icon: <BsBook className="text-lg" />, href: "/Assignments" },
         { label: "Notifications", icon: <BsCheckSquare className="text-lg" />, href: "/notification" },
-        { label: "Group", icon: <FaUserFriends className="text-lg" />, href: "/group" },
+        
       ],
     },
   ],
