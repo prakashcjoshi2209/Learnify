@@ -18,10 +18,10 @@ const sidebarConfig = {
     {
       title: "Overview",
       items: [
-        { label: "Dashboard", icon: <BsInbox className="text-lg" />, href: "/DashBoard" },
-        { label: "Rewards", icon: <BsInbox className="text-lg" />, href: "/Rewards" },
-        { label: "Assignments", icon: <BsBook className="text-lg" />, href: "/Assignments" },
-        { label: "Notifications", icon: <BsCheckSquare className="text-lg" />, href: "/notification" },
+        { label: "New Course", icon: <BsInbox className="text-lg" />, href: "/New course" },
+        { label: "Rewards", icon: <BsInbox className="text-lg" />, href: "/rewards" },
+        { label: "Assignments", icon: <BsBook className="text-lg" />, href: "/assignments" },
+        
         
       ],
     },

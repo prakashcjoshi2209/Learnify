@@ -25,11 +25,11 @@ const AdminCoursePage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-full bg-gray-50">
+    <div className="min-h-screen w-full bg-gray-100">
       {/* Main Content */}
       <main className="flex-1 p-2">
         {/* Top Navigation */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center  justify-between mb-6">
           <input
             type="text"
             placeholder="Search your course here..."
@@ -54,7 +54,7 @@ const AdminCoursePage: React.FC = () => {
               className={`flex-1 mx-2 px-4 py-2 text-center rounded-lg ${
                 activeTabIndex === index
                   ? "bg-purple-700 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-purple-100 hover:text-purple-700"
+                  : "bg-purple-200 text-gray-700 hover:bg-purple-100 hover:text-purple-700"
               }`}
               onClick={() => setActiveTabIndex(index)}
             >

@@ -30,7 +30,7 @@ const AdminDashboard: React.FC = () => {
 
 <div className="flex">
   {/* Sidebar */}
-  <div className="w-1/5 h-screen bg-gray-50">
+  <div className="w-1/5 min-h-screen bg-white">
     <Sidebar />
   </div>
 
