@@ -1,4 +1,5 @@
 
+
 "use client";
 import React, { useState } from "react";
 
@@ -120,4 +121,3 @@ const Table: React.FC<{
 );
 
 export default CoursePage;
-
