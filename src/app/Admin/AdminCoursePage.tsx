@@ -1,35 +1,21 @@
 
+
 "use client";
 import React, { useState } from "react";
-import Breakdown from "./Breakdown";  
+import Breakdown from "./Breakdown";
 import CoursePage from "./CoursePage";
+import CardTemplateForm from "./CardTemplateForm"; // Importing CardTemplateForm
 
 const AdminCoursePage: React.FC = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const tabs = ["Card Template", "Intro Page", "Breakdown"];
-  const [fields, setFields] = useState([
-    { heroImg: "", duration: "", topic: "", description: "", price: "" },
-  ]);
-
-  const addField = () => {
-    setFields([
-      ...fields,
-      { heroImg: "", duration: "", topic: "", description: "", price: "" },
-    ]);
-  };
-
-  const handleInputChange = (index: number, field: string, value: string) => {
-    const updatedFields = [...fields];
-    updatedFields[index][field as keyof typeof fields[0]] = value;
-    setFields(updatedFields);
-  };
 
   return (
     <div className="min-h-screen w-full bg-gray-100">
       {/* Main Content */}
       <main className="flex-1 p-2">
         {/* Top Navigation */}
-        <div className="flex items-center  justify-between mb-6">
+        <div className="flex items-center justify-between mb-6">
           <input
             type="text"
             placeholder="Search your course here..."
@@ -73,85 +59,13 @@ const AdminCoursePage: React.FC = () => {
         {activeTabIndex === 0 && (
           <div>
             <h2 className="text-2xl font-bold text-purple-700 mb-4">Card Template</h2>
-            <div className="w-full border border-gray-300 rounded-md mb-4">
-              <table className="w-full">
-                <tbody>
-                  {fields.map((field, index) => (
-                    <React.Fragment key={index}>
-                      <tr>
-                        <td className="bg-gray-100 text-purple-700 font-bold px-4 py-2">Hero IMG</td>
-                        <td className="px-4 py-2">
-                          <input
-                            type="file"
-                            className="w-full p-1 border border-gray-300 rounded-md"
-                            onChange={(e) => handleInputChange(index, "heroImg", e.target.value)}
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="bg-gray-100 text-purple-700 font-bold px-4 py-2">Duration</td>
-                        <td className="px-4 py-2">
-                          <input
-                            type="text"
-                            value={field.duration}
-                            onChange={(e) => handleInputChange(index, "duration", e.target.value)}
-                            className="w-full p-1 border border-gray-300 rounded-md"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="bg-gray-100 text-purple-700 font-bold px-4 py-2">Topic</td>
-                        <td className="px-4 py-2">
-                          <input
-                            type="text"
-                            value={field.topic}
-                            onChange={(e) => handleInputChange(index, "topic", e.target.value)}
-                            className="w-full p-1 border border-gray-300 rounded-md"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="bg-gray-100 text-purple-700 font-bold px-4 py-2">
-                          Description
-                        </td>
-                        <td className="px-4 py-2">
-                          <input
-                            type="text"
-                            value={field.description}
-                            onChange={(e) => handleInputChange(index, "description", e.target.value)}
-                            className="w-full p-1 border border-gray-300 rounded-md"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="bg-gray-100 text-purple-700 font-bold px-4 py-2">Price</td>
-                        <td className="px-4 py-2">
-                          <input
-                            type="text"
-                            value={field.price}
-                            onChange={(e) => handleInputChange(index, "price", e.target.value)}
-                            className="w-full p-1 border border-gray-300 rounded-md"
-                          />
-                        </td>
-                      </tr>
-                    </React.Fragment>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <button
-              onClick={addField}
-              className="px-4 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800 mb-4"
-            >
-              Add Field
-            </button>
+            <CardTemplateForm /> {/* Render the CardTemplateForm component */}
           </div>
         )}
 
         {activeTabIndex === 1 && (
           <div>
             <h2 className="text-xl font-bold text-gray-700 mb-4">Intro Page</h2>
-            {/* <p>Intro page here .....</p> */}
             <CoursePage />
           </div>
         )}
@@ -159,15 +73,15 @@ const AdminCoursePage: React.FC = () => {
         {activeTabIndex === 2 && (
           <div>
             <h2 className="text-xl font-bold text-gray-700 mb-4">Breakdown</h2>
-            <Breakdown /> {/* Render the Breakdown component here */}
+            <Breakdown />
           </div>
         )}
 
         {/* Update Button */}
         <div className="flex justify-center items-center">
-        <button className="px-4 py-2 my-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          Update
-        </button>
+          <button className="px-4 py-2 my-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Update
+          </button>
         </div>
       </main>
     </div>

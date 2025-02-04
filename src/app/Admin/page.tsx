@@ -28,17 +28,17 @@ const AdminDashboard: React.FC = () => {
     // </div>
 
 
-<div className="flex">
-  {/* Sidebar */}
-  <div className="w-1/5 min-h-screen bg-white">
-    <Sidebar />
-  </div>
+   <div className="flex">
+  
+    <div className="w-1/5 min-h-screen bg-white">
+     <Sidebar />
+    </div>
 
-  {/* Main Content */}
-  <div className="w-4/5 p-0"> 
-    <AdminCoursePage />
+  
+    <div className="w-4/5 p-0"> 
+     <AdminCoursePage />
+    </div>
   </div>
-</div>
 
 
     // <div className="flex">
