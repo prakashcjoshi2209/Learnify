@@ -11,7 +11,7 @@ import {
 import { signOut } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
 
-const Navbar: React.FC<{ session: any | null }> = ({session}) => {
+const Navbar: React.FC<{ session: any | null }> = ({ session }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
   const [loading, setLoading] = useState(false); // Loader state
   // const { data: session, status } = useSession();
@@ -100,7 +100,7 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
             >
               Explore
             </button>
-           { session? 
+            {session ? (
               <button
                 onClick={() => handleNavigation("/DashBoard")}
                 className={`hover:underline ${
@@ -109,9 +109,9 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
               >
                 Dashboard
               </button>
-              :
+            ) : (
               ""
-            }
+            )}
           </div>
 
           {/* Right Section */}
@@ -195,7 +195,7 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
               >
                 Explore
               </button>
-              { session ? 
+              {session ? (
                 <button
                   onClick={() => handleNavigation("/DashBoard")}
                   className={`text-gray-800 hover:text-purple-600 ${
@@ -203,21 +203,34 @@ const Navbar: React.FC<{ session: any | null }> = ({session}) => {
                   }`}
                 >
                   Dashboard
-                </button>:
+                </button>
+              ) : (
                 ""
-              }
-              <button
-                onClick={() => handleNavigation("/signup")}
-                className="text-gray-800 hover:text-purple-600"
-              >
-                Sign Up
-              </button>
-              <button
-                onClick={() => handleNavigation("/login")}
-                className="text-gray-800 hover:text-purple-600"
-              >
-                Login
-              </button>
+              )}
+              {!session ? (
+                <div className = "flex flex-col space-y-4">
+                  <button
+                    onClick={() => handleNavigation("/signup")}
+                    className="text-gray-800 hover:text-purple-600"
+                  >
+                    Sign Up
+                  </button>
+
+                  <button
+                    onClick={() => handleNavigation("/login")}
+                    className="text-gray-800 hover:text-purple-600"
+                  >
+                    Login
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleLogout}
+                  className="text-gray-800 hover:text-purple-600"
+                >
+                  Logout
+                </button>
+              )}
             </div>
           </div>
         </div>
