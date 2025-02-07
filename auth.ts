@@ -11,7 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       async authorize(credentials) {
-        const { email, password } = credentials || {};
+        const { email, password, rememberMe } = credentials || {};
 
         if (!email || !password) {
           return null; // Missing credentials
@@ -28,7 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Validate the password
         if (user && bcrypt.compareSync(password, user.password)) {
-          return { id: user._id.toString(), name: user.name, email: user.email };
+          return { id: user._id.toString(), name: user.name, email: user.email, rememberMe };
         }
 
         return null; // Invalid credentials
@@ -123,6 +123,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (user) {
+        token.rememberMe = user.rememberMe || false;
         token.name = user.name;
         token.email = user.email;
       }
@@ -139,6 +140,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.image = token.image;
         session.user.provider = token.provider;
       }
+      session.expires = token.rememberMe
+      ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+      : new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
+
       return session;
     },
   },
