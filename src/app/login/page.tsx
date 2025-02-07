@@ -16,6 +16,7 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -32,6 +33,7 @@ const Login = () => {
       password,
       redirect: false,
       callbackUrl: redirectPath,
+      rememberMe
     });
 
     if (result?.error) {
@@ -179,6 +181,8 @@ const Login = () => {
                 <label className="flex items-center text-gray-600 text-sm">
                   <input
                     type="checkbox"
+                    checked= {rememberMe}
+                    onChange={()=> setRememberMe(!rememberMe)}
                     className="form-checkbox mr-2 focus:ring-purple-500"
                   />
                   Remember me
