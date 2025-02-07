@@ -142,7 +142,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       session.expires = token.rememberMe
       ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-      : new Date(Date.now() + 60 * 1000).toISOString(); // 1 hour
+      : new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
 
       return session;
     },
