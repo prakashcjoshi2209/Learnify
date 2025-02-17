@@ -7,12 +7,15 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import NoCoursesAvailable from "./NoCoursesAvailable";
 import Loader from "@/components/ui/Loader";
 import { ICourse } from "../models/Course";
+import { useRouter } from "next/navigation";
 
 const DashboardContent = () => {
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [isEmpty, setIsEmpty] = useState<boolean>(false);
   const [fetchingUserCourses, setFetchingUserCourses] = useState<boolean>(false);
+  const router = useRouter(); 
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setFetchingUserCourses(true);
@@ -68,15 +71,18 @@ const DashboardContent = () => {
         {/* Header Section */}
         <div className="bg-purple-600 text-white p-4 rounded-lg mb-6">
           <h2 className="text-xl font-bold mb-4">
-            Sharpen Your Skills With Professional Online Courses
+          Elevate Your Skills with Expert-Led Courses!
           </h2>
-          <button className="bg-black text-white px-6 py-2 rounded-lg flex items-center space-x-2">
-            Join Now
+          <button className="bg-black text-white px-6 py-2 rounded-lg flex items-center space-x-2" onClick={()=> {
+            setLoading(true);
+            router.push("ExploreData")
+          }}>
+            {loading ? "Loading..." : "More Courses"}
           </button>
         </div>
 
         {/* Available Courses */}
-        <h3 className="text-xl font-semibold mb-6">Available Courses</h3>
+        <h3 className="text-xl font-semibold mb-6">Enrolled Courses</h3>
         {isEmpty ? (
           <NoCoursesAvailable />
         ) : (
