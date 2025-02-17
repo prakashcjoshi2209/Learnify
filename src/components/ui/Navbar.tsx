@@ -11,6 +11,7 @@ import {
 import { signOut } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
 import { Session } from "next-auth";
+import SearchBar from "./SearchBar";
 
 const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
@@ -71,14 +72,15 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
           {loading && <Loader />}
 
           {/* Search Bar */}
-          <div className="hidden md:flex items-center bg-white text-gray-700 rounded-full px-3 py-2 mx-4 flex-grow max-w-[500px]">
+          {/* <div className="hidden md:flex items-center bg-white text-gray-700 rounded-full px-3 py-2 mx-4 flex-grow max-w-[500px]">
             <MagnifyingGlassIcon className="h-5 w-5 text-gray-500 mr-2" />
             <input
               type="text"
               placeholder="Search for Anything..."
               className="w-full bg-transparent text-sm focus:outline-none"
             />
-          </div>
+          </div> */}
+          <SearchBar />
 
           <div className="hidden md:flex items-center space-x-6">
             <button
