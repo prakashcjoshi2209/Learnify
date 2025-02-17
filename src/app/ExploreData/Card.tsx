@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface CardProps {
   title: string;
@@ -12,7 +13,7 @@ interface CardProps {
   originalPrice: number;
   description: string;
   buttonLabel: string;
-  dateRange: string;
+  dateRange?: string;
   courseId: number;
 }
 
@@ -50,9 +51,11 @@ const Card: React.FC<CardProps> = ({
     <div className="w-full max-w-[360px] bg-white rounded-lg shadow-lg border hover:shadow-xl transform hover:scale-105 transition-transform duration-300 flex flex-col">
       {/* Image Section */}
       <div className="relative">
-        <img
+        <Image
           src={image}
           alt={title}
+          width={200}
+          height={200}
           className="w-full h-[200px] object-cover rounded-t-lg"
         />
         {/* Students Badge */}

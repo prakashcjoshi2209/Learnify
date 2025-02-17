@@ -3,42 +3,63 @@
 import React, { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineBell, AiOutlineMail, AiOutlineSetting } from "react-icons/ai";
-import { useSession, signIn,signOut, getSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
+import Image from "next/image";
 
-const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
+const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
   // const { data: session , update} = useSession();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [imgUrl, setImgUrl] = useState(null);
+  const [currentTime, setCurrentTime] = useState<string>("Good Morning");
+  // const [imgUrl, setImgUrl] = useState(null);
   // console.log(session);
-  useEffect(() => { 
+  useEffect(() => {
     setProfileImage(session?.user?.image || null);
+
+    const getISTHour = () => {
+      const now = new Date();
+      const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+      const istTime = new Date(now.getTime() + istOffset);
+      return istTime.getUTCHours();
+    };
+
+    const hour = getISTHour();
+    if (hour >= 5 && hour < 12) {
+      setCurrentTime("Good Morning");
+    } else if (hour >= 12 && hour < 17) {
+      setCurrentTime("Good Afternoon");
+    } else {
+      setCurrentTime("Good Evening");
+    }
+    
   }, [session]);
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
-  
+
     if (!file || !file.type.startsWith("image/")) {
       alert("Please upload a valid image file");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("file", file);
-  
+
     try {
       setLoading(true);
-  
+
       const res = await fetch("/api/updateProfileImg", {
         method: "PUT",
         body: formData,
       });
-      const data = await res.json();  
+      const data = await res.json();
       if (!res.ok) {
         throw new Error(data.message);
-      }
-      else{
-        console.log("Executing what you wanted!!");
+      } else {
+        // console.log("Executing what you wanted!!");
         // await update({
         //   ...session,
         //   user: {
@@ -49,7 +70,7 @@ const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
         // refreshSession();
         // session.user.image = data.imageUrl;
         // window.location.reload();
-       await signOut();
+        await signOut();
         setProfileImage(data.imageUrl);
       }
     } catch (error) {
@@ -59,7 +80,7 @@ const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
       setLoading(false);
     }
   };
-  
+
   if (!session) {
     return <p>Loading...</p>;
   }
@@ -71,9 +92,11 @@ const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
           {loading ? (
             <div className="loader">Loading...</div>
           ) : profileImage ? (
-            <img
+            <Image
               src={profileImage}
               alt="Profile"
+              width={200}
+              height={200}
               className="w-full h-full object-cover"
             />
           ) : (
@@ -87,7 +110,7 @@ const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
           />
         </div>
         <h2 className="text-lg font-semibold text-gray-800 mt-3">
-          Good Morning, {session.user?.name || "User"}  
+          {currentTime}, {session.user?.name || "User"}
         </h2>
         <p className="text-sm text-gray-500 text-center">
           Continue Your Journey And Achieve Your Target

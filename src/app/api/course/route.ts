@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/dbConnect';
 import Course from '@/app/models/Course';
 import User from '@/app/models/User';
-import { auth } from '../../../../../auth';
+import { auth } from '../../../../auth';
 
-export async function GET(req: NextRequest, { params }: { params: { courseId: string } }) {
+export async function POST(req: NextRequest) {
   const session = await auth();
-  const { courseId } = await params;
+
+  const { courseId } = await req.json();
+
+  // const { courseId } = await params;  
 
   try {
     await connectDB(); // Ensure the database connection

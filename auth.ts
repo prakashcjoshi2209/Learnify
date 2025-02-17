@@ -22,14 +22,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Find the user in the database
         const user = await User.findOne({ email });
 
-        if(!user){
-          return 
+        if(!user || typeof password !== "string"){
+          return null;
         }
 
         // Validate the password
         if (user && bcrypt.compareSync(password, user.password)) {
           return { id: user._id.toString(), name: user.name, email: user.email, rememberMe };
         }
+
 
         return null; // Invalid credentials
       },
@@ -47,22 +48,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt', // Use JWT for sessions
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+  // cookies: {
+  //   sessionToken: {
+  //     name: `__Secure-next-auth.session-token`,
+  //     options: {
+  //       httpOnly: true,
+  //       secure: process.env.NODE_ENV === "production",
+  //       sameSite: "lax",
+  //       path: "/",
+  //     },
+  //   },
+  // },
   pages: {
     signIn: '/login',
   },
   callbacks: {
     async signIn({ user, account, profile }) {
+
+      // if(!profile){
+      //   return false;
+      // }
+
       await dbConnect();
 
       if (account?.provider === 'github') {
-        const existingUser = await User.findOne({ githubId: profile.id });
+        const existingUser = await User.findOne({ githubId: profile?.id });
 
         if (!existingUser) {
           const newUser = new User({
-            name: profile.name || profile.login,
-            email: profile.email || `${profile.id}@github.com`, // Fallback email
-            avatar: profile.avatar_url,
-            githubId: profile.id,
+            name: profile?.name || profile?.login,
+            email: profile?.email || `${profile?.id}@github.com`, // Fallback email
+            avatar: profile?.avatar_url,
+            githubId: profile?.id,
             coursesBought: [],
           });
           await newUser.save();
@@ -70,14 +87,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (account?.provider === 'google') {
-        const existingUser = await User.findOne({ email: profile.email });
+        const existingUser = await User.findOne({ email: profile?.email });
 
         if (!existingUser) {
           const newUser = new User({
-            name: profile.name,
-            email: profile.email,
-            avatar: profile.picture,
-            googleId: profile.sub,
+            name: profile?.name,
+            email: profile?.email,
+            avatar: profile?.picture,
+            googleId: profile?.sub,
             coursesBought: [],  
           });
           await newUser.save();
@@ -123,7 +140,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       if (user) {
-        token.rememberMe = user.rememberMe || false;
+        token.rememberMe = (user as any).rememberMe || false;
         token.name = user.name;
         token.email = user.email;
       }
@@ -134,18 +151,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
+        session.user.id = token.id as string;
         session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.image = token.image;
-        session.user.provider = token.provider;
+        session.user.email = token.email as string;
+        session.user.image = token.image as string;
+        (session.user as any).provider = token.provider as string;
       }
       session.expires = token.rememberMe
-      ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-      : new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
+      ? (new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()  as unknown as string & Date) // 30 days
+      : (new Date(Date.now() + 60 * 60 * 1000).toISOString()  as unknown as string & Date) // 1 hour
 
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
 });

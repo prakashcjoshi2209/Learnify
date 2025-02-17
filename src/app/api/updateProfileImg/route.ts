@@ -53,10 +53,10 @@ export async function PUT(req: NextRequest) {
       { message: "Profile image updated successfully", imageUrl: uploadResponse.secure_url },
       { status: 200 }
     );
-  } catch (error:any) {
+  } catch (error: unknown) {
     console.error("Error updating profile image:", error);
     return NextResponse.json(
-      { message: "Internal server error", error: error.message },
+      { message: "Internal server error", error: error instanceof Error ? error.message : "An unexpected error occurred" },
       { status: 500 }
     );
   }

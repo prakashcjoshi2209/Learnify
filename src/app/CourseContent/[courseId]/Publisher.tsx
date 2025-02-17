@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useState } from "react";
 
 interface PublisherProps {
@@ -36,9 +37,11 @@ const Publisher: React.FC<PublisherProps> = ({
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Section */}
         <div className="flex flex-col items-center lg:w-1/3">
-          <img
+          <Image
             src={imageUrl}
             alt={`${name}'s profile`}
+            width={144}
+            height={144}
             className="w-36 h-36 rounded-full mb-4"
           />
           <div className="text-sm text-gray-700 space-y-2">

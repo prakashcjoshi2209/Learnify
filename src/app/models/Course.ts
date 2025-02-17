@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { any } from 'zod';
 
 // Interfaces for nested objects
 interface IAuthor {

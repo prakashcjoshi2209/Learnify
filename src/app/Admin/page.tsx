@@ -1,11 +1,7 @@
 
 import React from 'react';
 import Sidebar from "./Sidebar";
-import CardTemplateForm from "./CardTemplateForm";
-import QuizManagement from "./QuizManagement";
 import AdminCoursePage from "./AdminCoursePage";
-import NewCaseStudy from "./NewCaseStudy";
-import CoursePage from './CoursePage';
 const AdminDashboard: React.FC = () => {
   return (
     // <div className="flex h-screen">

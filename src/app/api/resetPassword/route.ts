@@ -17,7 +17,10 @@ export async function POST(req: Request) {
         await existingUser.save();
         return new NextResponse("User's password is updated.", {status: 200});
     }
-    catch(err:any){
-        return new NextResponse(err, {status: 200});
-    }
+    catch (err: unknown) {
+        return NextResponse.json({
+            error: err instanceof Error ? err.message : "Unexpected Error Occurred!"},
+          { status: 200 }
+        );
+      }
 }

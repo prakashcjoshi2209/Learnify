@@ -62,7 +62,7 @@ const CourseContentData: React.FC = () => {
                         <span>{lesson.title}</span>
                       </p>
                       <div className="flex items-center space-x-2">
-                        {lesson.link && (
+                        {lesson?.link && (
                           <a href="#" className="text-blue-500 underline">
                             {lesson.link}
                           </a>

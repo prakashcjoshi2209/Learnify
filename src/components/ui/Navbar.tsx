@@ -1,18 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation"; // Correct imports for Next.js 13+
+import { usePathname, useRouter } from "next/navigation";
 import {
-  MagnifyingGlassIcon,
   ShoppingCartIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { signOut } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
+import { Session } from "next-auth";
 import SearchBar from "./SearchBar";
 
-const Navbar: React.FC<{ session: any | null }> = ({ session }) => {
+const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
   const [loading, setLoading] = useState(false); // Loader state
   // const { data: session, status } = useSession();

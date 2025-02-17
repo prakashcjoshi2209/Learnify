@@ -39,8 +39,8 @@ export async function POST(request: NextRequest) {
         } else {
             return NextResponse.json({ error: "Payment verification failed." }, { status: 400 });
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Error verifying payment:", error);
-        return NextResponse.json({ error: "Error verifying payment." }, { status: 500 });
+        return NextResponse.json({ error: error instanceof Error ? error : "Error verifying payment." }, { status: 500 });
     }
 }

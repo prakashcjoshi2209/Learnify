@@ -2,7 +2,6 @@
 
 import React from "react";
 import { FaStar, FaRegStar } from "react-icons/fa";
-import Sidebar from "@/app/DashBoard/Sidebar";
 
 interface Assessment {
   id: number;

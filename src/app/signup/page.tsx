@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -80,8 +79,12 @@ const Signup = () => {
       if (!response.ok) throw new Error(data.error || "Something went wrong!");
 
       router.push("/login");
-    } catch (error: any) {
-      setApiError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setApiError(error.message);
+      } else {
+        setApiError("An unexpected error occurred.");
+      }
     }
   };
 

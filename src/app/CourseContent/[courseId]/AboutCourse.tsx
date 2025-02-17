@@ -1,12 +1,5 @@
-
-
 import React from "react";
 import {
-  FaCertificate,
-  FaCoins,
-  FaInfinity,
-  FaLevelUpAlt,
-  FaClosedCaptioning,
   FaDownload,
 } from "react-icons/fa";
 
