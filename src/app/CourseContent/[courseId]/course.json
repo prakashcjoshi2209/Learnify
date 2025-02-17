@@ -14,11 +14,11 @@
         "sections": 5,
         "duration": "15 minutes",
         "lessons": [
-          { "title": "Subheading 1", "duration": "10 minutes" },
-          { "title": "Subheading 2", "duration": "12 minutes" },
-          { "title": "Subheading 3", "duration": "14 minutes" },
-          { "title": "Subheading 4", "duration": "13 minutes" },
-          { "title": "Subheading 5", "duration": "16 minutes" }
+          { "title": "Subheading 1", "duration": "10 minutes", "link": "" },
+          { "title": "Subheading 2", "duration": "12 minutes", "link": "" },
+          { "title": "Subheading 3", "duration": "14 minutes", "link": "" },
+          { "title": "Subheading 4", "duration": "13 minutes", "link": "" },
+          { "title": "Subheading 5", "duration": "16 minutes", "link": "" }
         ]
       },
       {
@@ -26,11 +26,11 @@
         "sections": 5,
         "duration": "30 minutes",
         "lessons": [
-          { "title": "Subheading 1", "duration": "10 minutes" },
-          { "title": "Subheading 2", "duration": "10 minutes" },
-          { "title": "Subheading 3", "duration": "5 minutes" },
-          { "title": "Subheading 4", "duration": "8 minutes" },
-          { "title": "Subheading 5", "duration": "7 minutes" }
+          { "title": "Subheading 1", "duration": "10 minutes", "link": ""},
+          { "title": "Subheading 2", "duration": "10 minutes" , "link": ""},
+          { "title": "Subheading 3", "duration": "5 minutes" , "link": ""},
+          { "title": "Subheading 4", "duration": "8 minutes", "link": "" },
+          { "title": "Subheading 5", "duration": "7 minutes" , "link": ""}
         ]
       },
       {
@@ -38,11 +38,11 @@
         "sections": 5,
         "duration": "120 minutes",
         "lessons": [
-          { "title": "Exercise: Turning Information Priority into an IA Model", "duration": "6 minutes" },
-          { "title": "IA Models: Which One’s Right for My Site?", "duration": "8 minutes" },
-          { "title": "Hierarchical Tree IA Model", "duration": "15 minutes" },
-          { "title": "Combining IA Models", "duration": "20 minutes" },
-          { "title": "Tools for Creating IA Models", "duration": "40 minutes" }
+          { "title": "Exercise: Turning Information Priority into an IA Model", "duration": "6 minutes" , "link": ""},
+          { "title": "IA Models: Which One’s Right for My Site?", "duration": "8 minutes" , "link": ""},
+          { "title": "Hierarchical Tree IA Model", "duration": "15 minutes" , "link": ""},
+          { "title": "Combining IA Models", "duration": "20 minutes" , "link": ""},
+          { "title": "Tools for Creating IA Models", "duration": "40 minutes", "link": ""}
         ]
       },
       {
@@ -50,11 +50,11 @@
         "sections": 5,
         "duration": "89 minutes",
         "lessons": [
-          { "title": "Subheading 1", "duration": "15 minutes" },
-          { "title": "Subheading 2", "duration": "20 minutes" },
-          { "title": "Subheading 3", "duration": "18 minutes" },
-          { "title": "Subheading 4", "duration": "22 minutes" },
-          { "title": "Subheading 5", "duration": "14 minutes" }
+          { "title": "Subheading 1", "duration": "15 minutes" , "link": ""},
+          { "title": "Subheading 2", "duration": "20 minutes", "link": "" },
+          { "title": "Subheading 3", "duration": "18 minutes" , "link": ""},
+          { "title": "Subheading 4", "duration": "22 minutes" , "link": ""},
+          { "title": "Subheading 5", "duration": "14 minutes" , "link": ""}
         ]
       },
       {
@@ -62,11 +62,11 @@
         "sections": 5,
         "duration": "60 minutes",
         "lessons": [
-          { "title": "Subheading 1", "duration": "12 minutes" },
-          { "title": "Subheading 2", "duration": "14 minutes" },
-          { "title": "Subheading 3", "duration": "8 minutes" },
-          { "title": "Subheading 4", "duration": "10 minutes" },
-          { "title": "Subheading 5", "duration": "16 minutes" }
+          { "title": "Subheading 1", "duration": "12 minutes" , "link": ""},
+          { "title": "Subheading 2", "duration": "14 minutes" , "link": ""},
+          { "title": "Subheading 3", "duration": "8 minutes" , "link": ""},
+          { "title": "Subheading 4", "duration": "10 minutes" , "link": ""},
+          { "title": "Subheading 5", "duration": "16 minutes" , "link": ""}
         ]
       },
       {
@@ -74,11 +74,11 @@
         "sections": 5,
         "duration": "58 minutes",
         "lessons": [
-          { "title": "Subheading 1", "duration": "12 minutes" },
-          { "title": "Subheading 2", "duration": "14 minutes" },
-          { "title": "Subheading 3", "duration": "6 minutes" },
-          { "title": "Subheading 4", "duration": "8 minutes" },
-          { "title": "Subheading 5", "duration": "18 minutes" }
+          { "title": "Subheading 1", "duration": "12 minutes" , "link": ""},
+          { "title": "Subheading 2", "duration": "14 minutes" , "link": ""},
+          { "title": "Subheading 3", "duration": "6 minutes" , "link": ""},
+          { "title": "Subheading 4", "duration": "8 minutes" , "link": ""},
+          { "title": "Subheading 5", "duration": "18 minutes" , "link": ""}
         ]
       },
       {
@@ -86,11 +86,11 @@
         "sections": 5,
         "duration": "32 minutes",
         "lessons": [
-          { "title": "Subheading 1", "duration": "8 minutes" },
-          { "title": "Subheading 2", "duration": "10 minutes" },
-          { "title": "Subheading 3", "duration": "7 minutes" },
-          { "title": "Subheading 4", "duration": "5 minutes" },
-          { "title": "Subheading 5", "duration": "2 minutes" }
+          { "title": "Subheading 1", "duration": "8 minutes" , "link": ""},
+          { "title": "Subheading 2", "duration": "10 minutes" , "link": ""},
+          { "title": "Subheading 3", "duration": "7 minutes" , "link": ""},
+          { "title": "Subheading 4", "duration": "5 minutes" , "link": ""},
+          { "title": "Subheading 5", "duration": "2 minutes" , "link": ""}
         ]
       },
       {
@@ -98,11 +98,11 @@
         "sections": 5,
         "duration": "84 minutes",
         "lessons": [
-          { "title": "Subheading 1", "duration": "14 minutes" },
-          { "title": "Subheading 2", "duration": "18 minutes" },
-          { "title": "Subheading 3", "duration": "10 minutes" },
-          { "title": "Subheading 4", "duration": "20 minutes" },
-          { "title": "Subheading 5", "duration": "22 minutes" }
+          { "title": "Subheading 1", "duration": "14 minutes" , "link": ""},
+          { "title": "Subheading 2", "duration": "18 minutes" , "link": ""},
+          { "title": "Subheading 3", "duration": "10 minutes" , "link": ""},
+          { "title": "Subheading 4", "duration": "20 minutes" , "link": ""},
+          { "title": "Subheading 5", "duration": "22 minutes" , "link": ""}
         ]
       }
     ]

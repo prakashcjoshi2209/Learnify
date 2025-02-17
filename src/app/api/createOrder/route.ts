@@ -13,6 +13,10 @@ const razorpay = new Razorpay({
 export async function POST(request: NextRequest){
     const {amt} = await request.json();
 
+    if (!amt || amt <= 0) {
+        return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+      }
+
     // await connectDB();
     // const course = await Course.findOne({courseId: cId});
     // if (!course) {
@@ -28,8 +32,8 @@ export async function POST(request: NextRequest){
         
         return NextResponse.json({orderId: order.id}, {status: 200})
     }
-    catch(error:any){
+    catch(error:unknown){
         console.error("Error creating orders: ", error);
-        return NextResponse.json({error: "Error creating order"}, {status: 500})
+        return NextResponse.json({error: error instanceof Error ? error : "Error creating order"}, {status: 500})
     }
 }

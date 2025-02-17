@@ -5,12 +5,13 @@ import Loader from "@/components/ui/Loader";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useParams } from "next/navigation";
+import { IUser } from "@/app/models/User";
 
 const ResetPassword: React.FC = () => {
   const {token} = useParams();
   const [password, setPassword] = useState<string>("");
-  const [verified, setVerified] = useState<boolean>(false);
-  const [user, setUser] = useState(null);
+  // const [verified, setVerified] = useState<boolean>(false);
+  const [user, setUser] = useState<IUser>(); //i changed null to nothing inside the parenthesis of useState.
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState<boolean>(false);
@@ -35,11 +36,11 @@ const ResetPassword: React.FC = () => {
           });
           if(res.status === 400) {
             setError("Invalid token or has expired");
-            setVerified(true);
+            // setVerified(true);
           }
           if(res.status === 200) {
             setError("");
-            setVerified(true);
+            // setVerified(true);
             const userData = await res.json();
             setUser(userData);
           }

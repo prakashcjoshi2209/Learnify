@@ -1,17 +1,15 @@
-
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
-import ProfileSection from "./ProfileSection";
 import ImageCard from "./ImageCard";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import NoCoursesAvailable from "./NoCoursesAvailable";
 import Loader from "@/components/ui/Loader";
+import { ICourse } from "../models/Course";
 
 const DashboardContent = () => {
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState<ICourse[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [isEmpty, setIsEmpty] = useState<boolean>(false);
   const [fetchingUserCourses, setFetchingUserCourses] = useState<boolean>(false);
@@ -86,7 +84,7 @@ const DashboardContent = () => {
             {fetchingUserCourses ? (
               <Loader />
             ) : (
-              courses.map((course) => <ImageCard key={course._id} course={course} />)
+              courses.map((course) => <ImageCard key={course.courseId} course={course} />)
             )}
           </div>
         )}

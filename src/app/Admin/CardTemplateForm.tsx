@@ -1,7 +1,13 @@
-
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+
+interface SubField {
+  id: number;
+  name: string;
+  type: string;
+  placeholder: string;
+}
 
 interface Field {
   id: number;
@@ -11,15 +17,10 @@ interface Field {
   subFields?: SubField[];
 }
 
-interface SubField {
-  id: number;
-  name: string;
-  type: string;
-  placeholder: string;
-}
 
 const CardTemplateForm: React.FC = () => {
-  const [fields, setFields] = useState<Field[]>([
+
+  const fields: Field[] = [
     { id: 1, name: "Hero IMG", type: "file", placeholder: "" },
     { id: 2, name: "Duration", type: "text", placeholder: "Enter Duration" },
     { id: 3, name: "Topic", type: "text", placeholder: "Enter Topic" },
@@ -35,14 +36,14 @@ const CardTemplateForm: React.FC = () => {
         { id: 53, name: "Discount Percentage", type: "number", placeholder: "Enter Discount %" },
       ],
     },
-  ]);
+  ];
 
-  const addField = () => {
-    setFields([
-      ...fields,
-      { id: Date.now(), name: "New Field", type: "text", placeholder: "Enter Field Value" },
-    ]);
-  };
+  // const addField = () => {
+  //   setFields([
+  //     ...fields,
+  //     { id: Date.now(), name: "New Field", type: "text", placeholder: "Enter Field Value" },
+  //   ]);
+  // };
 
   return (
     <div className="bg-white shadow-md p-6 rounded-lg">

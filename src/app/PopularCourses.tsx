@@ -1,22 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Card from "./ExploreData/Card";
+import { ICourse } from "./models/Course";
 
-interface Course {
-  _id: string;
-  name: string;
-  image: string;
-  studentsEnrolled: number;
-  price: {
-    current: number;
-    original: number;
-  };
-  shortDescription: string;
-  
-}
+// interface Course {
+//   _id: string;
+//   name: string;
+//   image: string;
+//   studentsEnrolled: number;
+//   price: {
+//     current: number;
+//     original: number;
+//   };
+//   shortDescription: string;
+// }
 
 const PopularCourses: React.FC = () => {
-  const [courses, setCourses] = useState<Course[]>([]); //course need to be an array only in this case.
+  const [courses, setCourses] = useState<ICourse[]>([]); //course need to be an array only in this case.
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const PopularCourses: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {topCourses.map((course) => (
           <Card
-            key={course._id}
+            key={course.courseId}
             title={course.name}
             image={course.image}
             students={course.studentsEnrolled}

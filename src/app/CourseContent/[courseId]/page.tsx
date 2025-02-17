@@ -1,33 +1,53 @@
-
-
 "use client";
 
 import { useEffect, useState } from "react";
 import Footer from "../../Footer/page";
 import ReviewsHome from "../../Reviews/page";
-import RewardsPage from "../../Rewards/page";
 import { useParams, useRouter } from "next/navigation";
 import CoursePage from "./About2";
 import CourseContentData from "./CourseContentData";
 import PublishHome from "./Publisher";
-import RewardsData from "./Rewards";
 import Script from "next/script";
 import { useSession } from "next-auth/react";
+import Loader from "@/components/ui/Loader";
+import { ICourse } from "@/app/models/Course";
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay:  new (options: RazorpayOptions) => RazorpayInstance;
   }
 }
 
-const CourseContentPage = () => {
+interface RazorpayOptions {
+  key: string ;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id?: string;
+  handler: (response: { razorpay_payment_id: string }) => void;
+  prefill?: {
+    name?: string;
+    email?: string;
+  };
+  theme?: {
+    color: string;
+  };
+}
+
+interface RazorpayInstance {
+  open: () => void;
+}
+
+
+const CourseContentPage: React.FC = () => {
 
   // courses part
   const { data: session } = useSession();
   const { courseId } = useParams();
 
   const [courseIncluded, setCourseIncluded] = useState(false);
-  const [course, setCourse] = useState<any | null>(null); // State to store course data
+  const [course, setCourse] = useState<ICourse | null>(null) // State to store course data
   const [loading, setLoading] = useState(true); // State to indicate loading
   const [error, setError] = useState<string | null>(null); // State to handle errors
   const [isProcessing, setIsProcessing] = useState(false);
@@ -36,15 +56,26 @@ const CourseContentPage = () => {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        const response = await fetch(`/api/course/${courseId}`);
+        // const response = await fetch(`/api/course/${courseId}`);
+        const response = await fetch("/api/course", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ courseId }),
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch course data");
         }
         const data = await response.json();
         setCourse(data.course);
         setCourseIncluded(data.courseIncluded);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unexpected error occurred.");
+        }
       } finally {
         setLoading(false);
       }
@@ -56,7 +87,7 @@ const CourseContentPage = () => {
   }, [courseId]);
 
   if (loading) {
-    return <div>Loading...</div>; // Display a loading state
+    return <div className="flex items-center justify-center min-h-screen bg-white opacity-100"> <Loader /> </div>; // Display a loading state
   }
 
   if (error) {
@@ -92,14 +123,14 @@ const CourseContentPage = () => {
       const data = await response.json();
 
       // Initialize Razorpay
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      const options: RazorpayOptions = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
         amount: amount * 100, // amount in paise
         currency: "INR",
         name: "Learnify",
         description: `Buying course ${courseName}`,
         order_id: data.orderId,
-        handler: async function (response: any) {
+        handler: async function (response: { razorpay_payment_id: string }) {
           const paymentId = response.razorpay_payment_id;
           console.log("Payment successful!", response);
 
@@ -132,8 +163,8 @@ const CourseContentPage = () => {
 
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
-    } catch (error: any) {
-      console.error("Payment Failed: ", error);
+    } catch (error: unknown) {
+      console.error("Payment Failed: ", error instanceof Error ? error.message : error);
     } finally {
       setIsProcessing(false);
     }

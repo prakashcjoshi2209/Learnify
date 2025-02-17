@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "./Card";
 import Footer from "../Footer/page";
-import { PresentationChartBarIcon } from "@heroicons/react/24/outline";
+import { ICourse } from "../models/Course";
 
 interface Course {
   id: number;
@@ -13,7 +13,7 @@ interface Course {
   price: number;
   originalPrice: number;
   description: string;
-  dateRange: string;
+  dateRange?: string;
   courseId: number;
   category: string;
 }
@@ -22,42 +22,46 @@ const Courses: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeCategory, setActiveCategory] = useState<string>("All Programmes");
-  const [categories, setCategories ]= useState<any>([]);
+  const [categories, setCategories ]= useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await fetch("/api/courses");
-        const data = await response.json();
-        if (data.success) {
-          const formattedCourses = data.data.map((course: any) => ({
-            id: course.courseId,
-            title: course.name,
-            image: course.image,
-            students: course.studentsEnrolled,
-            price: course.price.current,
-            originalPrice: course.price.original,
-            description: course.shortDescription,
-            dateRange: course.duration,
-            courseId: course.courseId,
-            category: course.category, // Assuming category exists in API response
-          }));
-          setCourses(formattedCourses);
-          const allCategories = data.data.map((course:any )=> course.category);
-          console.log(allCategories);
-          const uniqueCategories = Array.from(new Set(allCategories)).filter(Boolean);          
-          setCategories(["All Programmes", ...uniqueCategories]);
-        }
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      } finally {
-        setLoading(false);
+  const fetchCourses = async () => {
+    try {
+      const response = await fetch("/api/courses");
+      const data = await response.json();
+      if (data.success) {
+        const formattedCourses = data.data.map((course: ICourse) => ({
+          id: course.courseId,
+          title: course.name,
+          image: course.image,
+          students: course.studentsEnrolled,
+          price: course.price.current,
+          originalPrice: course.price.original,
+          description: course.shortDescription,
+          dateRange: course.duration,
+          courseId: course.courseId,
+          category: course.category,
+        }));
+        setCourses(formattedCourses);
+        
+        const allCategories: string[] = data.data.map((course: ICourse) => course.category);
+        const uniqueCategories: string[] = Array.from(new Set(allCategories)).filter(Boolean);
+        setCategories(["All Programmes", ...uniqueCategories]);
       }
-    };
-
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error fetching courses:", error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
     fetchCourses();
   }, []);
-
+  
   // Filter courses based on the selected category
   const filteredCourses =
     activeCategory === "All Programmes"

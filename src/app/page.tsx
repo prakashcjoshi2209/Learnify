@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from './Navbar/page'
+import Navbar from '../components/ui/Navbar'
 import Footer from './Footer/page'
 import BenefitsSection from './BenifitsSection'
 import PopularCourses from './PopularCourses'

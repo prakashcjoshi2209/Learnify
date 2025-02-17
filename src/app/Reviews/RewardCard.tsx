@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 interface ReviewCardProps {
@@ -23,9 +24,11 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ name, imageUrl, review, rating 
 
   return (
     <div className="flex items-center border border-purple-800 rounded-lg p-4 shadow-sm bg-white">
-      <img
+      <Image
         src={imageUrl}
         alt={`${name}'s profile`}
+        width={36}
+        height={36}
         className="w-12 h-12 rounded-full object-cover mr-4 "
       />
       <div>

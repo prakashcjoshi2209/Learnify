@@ -1,7 +1,7 @@
 import React from 'react'
 import Courses from "@/app/ExploreData/Courses";
 import dotenv from "dotenv";
-import Navbar from '../Navbar/page';
+import Navbar from '../../components/ui/Navbar';
 import { auth } from '../../../auth';
 dotenv.config();
 

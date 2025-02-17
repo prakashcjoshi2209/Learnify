@@ -3,6 +3,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import Sidebar from "@/app/DashBoard/Sidebar";
+import { Session } from "next-auth";
 
 // Dynamically import RewardsPage and ProfileSection
 const RewardsPage = dynamic(() => import("./RewardsPage"), { ssr: false });
@@ -10,7 +11,7 @@ const ProfileSection = dynamic(() => import("@/app/DashBoard/ProfileSection"), {
   ssr: false,
 });
 
-const RewardsContainer = ({ session }: { session: any }) => {
+const RewardsContainer: React.FC<{ session: Session | null }> = ({ session }) => {
   return (
     <div className="flex min-h-screen">
       {/* Left Sidebar */}

@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineBell, AiOutlineMail, AiOutlineSetting } from "react-icons/ai";
-import { useSession, signIn,signOut, getSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
+import Image from "next/image";
 
-const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
+const ProfileSection: React.FC<{ session: Session | null }> = ({session}) => {
   // const { data: session , update} = useSession();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [imgUrl, setImgUrl] = useState(null);
+  // const [imgUrl, setImgUrl] = useState(null);
   // console.log(session);
   useEffect(() => { 
     setProfileImage(session?.user?.image || null);
@@ -71,9 +73,11 @@ const ProfileSection: React.FC<{ session: any | null }> = ({session}) => {
           {loading ? (
             <div className="loader">Loading...</div>
           ) : profileImage ? (
-            <img
+            <Image
               src={profileImage}
               alt="Profile"
+              width={200}
+              height={200}
               className="w-full h-full object-cover"
             />
           ) : (

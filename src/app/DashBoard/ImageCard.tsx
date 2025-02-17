@@ -1,7 +1,11 @@
 import Image from "next/image";
-import { CourseSchema } from "../models/Course";
+import { ICourse } from "../models/Course";
 
-const ImageCard = ({ course}) => {
+interface ImageCardProps {
+  course: ICourse;
+}
+
+const ImageCard:  React.FC<ImageCardProps> = ({ course }) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <div className="relative w-full h-40 mb-4">

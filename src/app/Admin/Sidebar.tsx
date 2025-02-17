@@ -4,7 +4,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; 
-import { BsGear, BsInbox, BsBook, BsCheckSquare, BsBoxArrowRight } from "react-icons/bs";
+import { BsGear, BsInbox, BsBook, BsBoxArrowRight } from "react-icons/bs";
 import { signOut } from "next-auth/react";
 
 // Logout handler
