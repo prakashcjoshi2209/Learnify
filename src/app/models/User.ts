@@ -1,5 +1,27 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 // import { CourseSchema, ICourse } from './Course'; // Assuming the Course schema is exported properly.
+
+export interface ISubmoduleProgress {
+  submoduleId: number; // Unique
+  completed: boolean; // true if completed
+  // watchedPercentage?: number;
+  // timeSpent?: number; // In seconds
+}
+
+export interface IModuleProgress {
+  moduleId: number; // Identifier for the module
+  submodules: ISubmoduleProgress[];
+}
+
+export interface ICourseProgress {
+  courseId: number;
+  modules: IModuleProgress[];
+  overallCompletionPercentage: number; // Calculated percentage
+  completionStatus: boolean; // True if overallCompletionPercentage === 100
+  dateStarted: Date;
+  dateCompleted?: Date;
+  lastUpdated: Date;
+}
 
 export interface IUser extends Document {
   name: string;
@@ -9,9 +31,35 @@ export interface IUser extends Document {
   githubId?: string;
   googleId?: string;
   // coursesBought?: ICourse[];
-  coursesBought?: number; 
+  coursesBought?: number;
   reviews?: string[];
+  courseProgress?: ICourseProgress[];
+  resetToken?: string;
+  resetTokenExpiry?: Date;
 }
+
+const SubmoduleProgressSchema: Schema = new Schema({
+  submoduleId: { type: Number, required: true },
+  completed: { type: Boolean, default: false },
+  // Optionally, you can include:
+  // watchedPercentage: { type: Number, default: 0 },
+  // timeSpent: { type: Number, default: 0 },
+});
+
+const ModuleProgressSchema: Schema = new Schema({
+  moduleId: { type: Number, required: true },
+  submodules: { type: [SubmoduleProgressSchema], required: true },
+});
+
+const CourseProgressSchema: Schema = new Schema({
+  courseId: { type: Number, required: true },
+  modules: { type: [ModuleProgressSchema], required: true },
+  overallCompletionPercentage: { type: Number, default: 0 },
+  completionStatus: { type: Boolean, default: false },
+  dateStarted: { type: Date, default: Date.now },
+  dateCompleted: { type: Date },
+  lastUpdated: { type: Date, default: Date.now },
+});
 
 const UserSchema: Schema = new Schema(
   {
@@ -27,15 +75,19 @@ const UserSchema: Schema = new Schema(
     githubId: { type: String, unique: true, sparse: true },
     googleId: { type: String, unique: true, sparse: true },
     coursesBought: {
-      type: [Number], // Embedding just the courseId 
+      type: [Number], // Embedding just the courseId
       default: [],
     },
     reviews: { type: [String], default: [] },
-    resetToken: {type:String, required: false},
-    resetTokenExpiry: {type: Date, required: false},
+    courseProgress: {
+      type: [CourseProgressSchema],
+      default: [],
+    },
+    resetToken: { type: String, required: false },
+    resetTokenExpiry: { type: Date, required: false },
   },
   { timestamps: true }
 );
 
-
-export default mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+export default mongoose.models.User ||
+  mongoose.model<IUser>("User", UserSchema);

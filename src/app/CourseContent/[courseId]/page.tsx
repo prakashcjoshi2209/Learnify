@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import CoursePage from "./About2";
 import CourseContentData from "./CourseContentData";
 import PublishHome from "./Publisher";
-import Script from "next/script";
+// import Script from "next/script";
 import { useSession } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
 import { ICourse } from "@/app/models/Course";
@@ -103,14 +103,102 @@ const CourseContentPage: React.FC = () => {
   const courseName = course.name;
   const cId = courseId;
 
+  // const handlePayment = async () => {
+  //   setIsProcessing(true);
+  //   if(!session){
+  //     const currentPath = window.location.pathname; // Get the current route
+  //     router.push(`/login?redirect=${currentPath}`); // Redirect to login with the current path as a query param
+  //     // http://localhost:3000/login?redirect=/CourseContent/4
+  //   }
+  //   try {
+  //     // Create order
+  //     const response = await fetch("/api/createOrder", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ amt: amount }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     // Initialize Razorpay
+  //     const options: RazorpayOptions = {
+  //       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
+  //       amount: amount * 100, // amount in paise
+  //       currency: "INR",
+  //       name: "Learnify",
+  //       description: `Buying course ${courseName}`,
+  //       order_id: data.orderId,
+  //       handler: async function (response: { razorpay_payment_id: string }) {
+  //         const paymentId = response.razorpay_payment_id;
+  //         console.log("Payment successful!", response);
+
+  //         // Save course to user account
+  //         const resp = await fetch("/api/buyCourse", {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({ cId, paymentId }),
+  //         });
+
+  //         const dta = await resp.json();
+  //         if (resp.ok) {
+  //           alert(`${dta.message}`);
+  //           setCourseIncluded(true);
+  //           router.push("/DashBoard");
+  //         } else {
+  //           alert(`Error: ${dta.error}`);
+  //         }
+  //       },
+  //       prefill: {
+  //         name: session?.user?.name || "Guest User",
+  //         email: session?.user?.email || "guest@example.com",
+  //       },
+  //       theme: {
+  //         color: "#8A2BE2",
+  //       },
+  //     };
+
+  //     const rzp1 = new window.Razorpay(options);
+  //     rzp1.open();
+  //   } catch (error: unknown) {
+  //     console.error("Payment Failed: ", error instanceof Error ? error.message : error);
+  //   } finally {
+  //     setIsProcessing(false);
+  //   }
+  // };
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+  
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+  
   const handlePayment = async () => {
     setIsProcessing(true);
-    if(!session){
-      const currentPath = window.location.pathname; // Get the current route
-      router.push(`/login?redirect=${currentPath}`); // Redirect to login with the current path as a query param
-      // http://localhost:3000/login?redirect=/CourseContent/4
+  
+    if (!session) {
+      const currentPath = window.location.pathname; 
+      router.push(`/login?redirect=${currentPath}`);
+      return;
     }
+  
     try {
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Failed to load Razorpay script.");
+      }
+  
       // Create order
       const response = await fetch("/api/createOrder", {
         method: "POST",
@@ -119,13 +207,17 @@ const CourseContentPage: React.FC = () => {
         },
         body: JSON.stringify({ amt: amount }),
       });
-
+  
       const data = await response.json();
-
+  
+      if (!window.Razorpay) {
+        throw new Error("Razorpay is not available.");
+      }
+  
       // Initialize Razorpay
       const options: RazorpayOptions = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
-        amount: amount * 100, // amount in paise
+        amount: amount * 100,
         currency: "INR",
         name: "Learnify",
         description: `Buying course ${courseName}`,
@@ -133,7 +225,7 @@ const CourseContentPage: React.FC = () => {
         handler: async function (response: { razorpay_payment_id: string }) {
           const paymentId = response.razorpay_payment_id;
           console.log("Payment successful!", response);
-
+  
           // Save course to user account
           const resp = await fetch("/api/buyCourse", {
             method: "POST",
@@ -142,7 +234,7 @@ const CourseContentPage: React.FC = () => {
             },
             body: JSON.stringify({ cId, paymentId }),
           });
-
+  
           const dta = await resp.json();
           if (resp.ok) {
             alert(`${dta.message}`);
@@ -157,10 +249,10 @@ const CourseContentPage: React.FC = () => {
           email: session?.user?.email || "guest@example.com",
         },
         theme: {
-          color: "#3399cc",
+          color: "#8A2BE2",
         },
       };
-
+  
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error: unknown) {
@@ -169,7 +261,7 @@ const CourseContentPage: React.FC = () => {
       setIsProcessing(false);
     }
   };
-
+  
   const handleScroll = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -179,7 +271,7 @@ const CourseContentPage: React.FC = () => {
 
   return (
     <>
-      {session && <Script src="https://checkout.razorpay.com/v1/checkout.js" />}
+      {/* {session && <Script src="https://checkout.razorpay.com/v1/checkout.js" />} */}
       <div className="bg-dark-blue text-white">
         <header className="text-center py-8 flex">
           <div className="max-w-4xl mx-auto">

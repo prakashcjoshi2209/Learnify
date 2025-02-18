@@ -48,6 +48,8 @@ import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  // const session = await auth();
+
   console.log("Middleware Debug - Token:", token);
   console.log("Request Path:", req.nextUrl.pathname);
 
@@ -55,6 +57,7 @@ export async function middleware(req: NextRequest) {
   const isAuth = !!token; // Check if the user has a valid token
   const isLoginPage = req.nextUrl.pathname === '/login';
   const isForgetPasswordPage = req.nextUrl.pathname=== '/ForgetPassword';
+  const isDashboardPage = req.nextUrl.pathname === '/DashBoard';
 
   // If the user is authenticated and tries to access the login page, redirect them to the dashboard
   if (isAuth && isLoginPage) {
@@ -69,7 +72,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // If the user is not authenticated and tries to access a protected route, redirect them to the login page
-  if (!isAuth && req.nextUrl.pathname.startsWith('/DashBoard')) {
+  if (!isAuth && isDashboardPage) {
     console.log("Redirecting to /login due to missing auth");
     return NextResponse.redirect(new URL('/login', req.url));
   }
