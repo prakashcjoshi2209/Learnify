@@ -6,6 +6,7 @@ import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
 import {FaXTwitter} from "react-icons/fa6"
 
 import { MdEmail, MdPhone } from "react-icons/md";
+import page from "../ExploreData/Courses";
 
 const Footer: React.FC = () => {
   return (
@@ -30,7 +31,7 @@ const Footer: React.FC = () => {
             <h2 className="text-lg font-semibold mb-4">About Us</h2>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/courses" className="hover:underline">
+                <Link href="/ExploreData" className="hover:underline">
                   Courses
                 </Link>
               </li>

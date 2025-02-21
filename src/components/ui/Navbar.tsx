@@ -130,7 +130,7 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
             {!session ? (
               <div className="hidden md:flex space-x-2">
                 <button
-                  onClick={() => handleNavigation("/signup")}
+                  onClick={() => handleNavigation("/EmailVerify")}
                   className="bg-white  text-black font-semibold px-4 py-2 rounded-full hover:bg-gray-200 transition"
                 >
                   Sign Up
