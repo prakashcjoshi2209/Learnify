@@ -44,17 +44,18 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
-// import { auth } from '../auth';
+import { auth } from '../auth';
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-  // const session = await auth();
-
-  console.log("Middleware Debug - Token:", token);
+  // const token = await getToken({ req, secret: process.env.AUTH_SECRET})
+  const session = await auth();
+  // console.log("Middleware Debug - Token:", token);
+  console.log("Middleware Debug - Token:", session);
   console.log("Request Path:", req.nextUrl.pathname);
 
 
   const isAuth = !!token; // Check if the user has a valid token
+  // const isAuth = !!session; // Check if the user has a valid token
   const isLoginPage = req.nextUrl.pathname === '/login';
   const isForgetPasswordPage = req.nextUrl.pathname=== '/ForgetPassword';
   const isDashboardPage = req.nextUrl.pathname === '/DashBoard';
@@ -86,7 +87,19 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Define the paths where the middleware should run
 export const config = {
   matcher: ['/DashBoard/:path*', '/login', "/pay/:path*", "/ForgetPassword"], 
 };
+
+
+// import { auth } from "../auth";
+
+// export default auth((req)=> {
+//   const isLoggedIn = !!req.auth;
+//   console.log(req.nextUrl.pathname);
+//   console.log("Is Logged in? : ", isLoggedIn);
+// })
+
+// export const config = {
+//     matcher: ['/DashBoard/:path*', '/login', "/pay/:path*", "/ForgetPassword"], 
+//   };
