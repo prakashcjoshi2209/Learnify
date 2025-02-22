@@ -4,7 +4,7 @@ import Link from "next/link";
 // import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
 import {FaXTwitter} from "react-icons/fa6"
-import page from '../ExploreData/page'
+// import page from '../ExploreData/page'
 
 
 import { MdEmail, MdPhone } from "react-icons/md";

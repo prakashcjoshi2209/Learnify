@@ -16,13 +16,13 @@ const NoCoursesAvailable = () => {
   return (
     <div className="flex flex-col items-center justify-center text-center p-6 bg-gray-50 rounded-lg shadow-md">
       {isLoading && <Loader />}
-      <Image
+      {/* <Image
         src="https://res.cloudinary.com/dtfe8o5ny/image/upload/v1735977856/Course-not-Found_a8br1j.jpg"
         alt="No Courses Available"
         width={300}
         height={300}
         className="mb-6"
-      />
+      /> */}
       <h2 className="text-2xl font-bold text-gray-700 mb-4">
         No Courses Available
       </h2>

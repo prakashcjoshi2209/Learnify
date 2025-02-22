@@ -209,7 +209,7 @@ const Login = () => {
               Don’t have an account?{" "}
               <Link
                 onClick={handleLoader}
-                href="/signup"
+                href="/EmailVerify"
                 className="text-purple-600 hover:underline"
               >
                 Sign Up

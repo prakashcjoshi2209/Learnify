@@ -120,7 +120,7 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
           <div className="flex items-center space-x-4">
             {/* Cart Icon */}
             <button
-              onClick={() => handleNavigation("/cart")}
+              onClick={() => handleNavigation("/Cart")}
               className="relative bg-white text-black font-semibold p-2 rounded-full"
             >
               <ShoppingCartIcon className="h-5 w-5" />
