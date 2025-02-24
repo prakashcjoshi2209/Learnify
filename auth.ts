@@ -48,20 +48,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt', // Use JWT for sessions
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  // cookies: {
-  //   sessionToken: {
-  //     name: `__Secure-next-auth.session-token`,
-  //     options: {
-  //       httpOnly: true,
-  //       secure: process.env.NODE_ENV === "production",
-  //       sameSite: "lax",
-  //       path: "/",
-  //     },
-  //   },
-  // },
   pages: {
     signIn: '/login',
   },
+  trustHost: true, 
   callbacks: {
     async signIn({ user, account, profile }) {
 
@@ -166,3 +156,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   secret: process.env.AUTH_SECRET,
 });
+
+// import NextAuth from "next-auth";
+// import { authConfig } from "./auth.config";
+
+// export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);

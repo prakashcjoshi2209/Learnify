@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     existingUser.resetToken = passwordResetToken;
     existingUser.resetTokenExpiry = passwordResetExpires;
 
-    const resetUrl = `http://localhost:3000/ResetPassword/${resetToken}`;
+    const resetUrl = `http://learnify-abesit/ResetPassword/${resetToken}`;
 
     // Configure Nodemailer transporter
     const transporter = nodemailer.createTransport({
