@@ -44,13 +44,13 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
-import { auth } from '../auth';
+// import { auth } from '../auth';
 
 export async function middleware(req: NextRequest) {
-  // const token = await getToken({ req, secret: process.env.AUTH_SECRET})
-  const session = await auth();
-  // console.log("Middleware Debug - Token:", token);
-  console.log("Middleware Debug - Token:", session);
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET})
+  // const session = await auth();
+  console.log("Middleware Debug - Token:", token);
+  // console.log("Middleware Debug - Token:", session);
   console.log("Request Path:", req.nextUrl.pathname);
 
 
@@ -74,6 +74,7 @@ export async function middleware(req: NextRequest) {
 
   // If the user is not authenticated and tries to access a protected route, redirect them to the login page
   if (!isAuth && isDashboardPage) {
+    console.log(process.env.AUTH_SECRET);
     console.log("Redirecting to /login due to missing auth");
     return NextResponse.redirect(new URL('/login', req.url));
   }
