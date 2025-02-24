@@ -1,3 +1,6 @@
+
+
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -83,7 +86,7 @@ const Courses: React.FC = () => {
         </div>
 
         {/* Filter Bar */}
-        <div className="flex justify-center space-x-4 mb-8">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-8 overflow-x-auto px-2">
           {categories.map((category) => (
             <button
               key={category}

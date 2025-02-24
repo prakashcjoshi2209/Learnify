@@ -8,6 +8,7 @@ import NoCoursesAvailable from "./NoCoursesAvailable";
 import Loader from "@/components/ui/Loader";
 import { ICourse } from "../models/Course";
 import { useRouter } from "next/navigation";
+import OffersSection  from "./OffersSection";
 
 const DashboardContent = () => {
   const [courses, setCourses] = useState<ICourse[]>([]);
@@ -94,6 +95,10 @@ const DashboardContent = () => {
             )}
           </div>
         )}
+
+          {/* offers Courses Section */}
+          <OffersSection />
+
       </div>
     </div>
   );

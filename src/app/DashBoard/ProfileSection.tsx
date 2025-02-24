@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; 
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineBell, AiOutlineMail, AiOutlineSetting } from "react-icons/ai";
 import { signOut } from "next-auth/react";
@@ -8,12 +9,11 @@ import { Session } from "next-auth";
 import Image from "next/image";
 
 const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
-  // const { data: session , update} = useSession();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState<string>("Good Morning");
-  // const [imgUrl, setImgUrl] = useState(null);
-  // console.log(session);
+
   useEffect(() => {
     setProfileImage(session?.user?.image || null);
 
@@ -32,7 +32,6 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
     } else {
       setCurrentTime("Good Evening");
     }
-    
   }, [session]);
 
   const handleImageUpload = async (
@@ -59,17 +58,6 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
       if (!res.ok) {
         throw new Error(data.message);
       } else {
-        // console.log("Executing what you wanted!!");
-        // await update({
-        //   ...session,
-        //   user: {
-        //     ...session?.user,
-        //     image: data.imageUrl, // Update the user image in the session
-        //   },
-        // });
-        // refreshSession();
-        // session.user.image = data.imageUrl;
-        // window.location.reload();
         await signOut();
         setProfileImage(data.imageUrl);
       }
@@ -86,7 +74,7 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
   }
 
   return (
-    <div className="w-74 h-screen  bg-white text-gray-800 border-r border-gray-200 flex flex-col overflow-y-auto">
+    <div className="w-74 h-screen bg-white text-gray-800 border-r border-gray-200 flex flex-col overflow-y-auto">
       <div className="flex flex-col items-center">
         <div className="relative w-24 h-24 mt-3 rounded-full border-4 border-purple-500 overflow-hidden">
           {loading ? (
@@ -116,13 +104,21 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
           Continue Your Journey And Achieve Your Target
         </p>
       </div>
-      <div className="flex justify-around ">
-        <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200">
+      
+      {/* Buttons Section */}
+      <div className="flex justify-around">
+        {/* Notification Button with Navigation */}
+        <button
+          className="p-3 rounded-full bg-gray-100 hover:bg-gray-200"
+          onClick={() => router.push("/Notification")} // Navigates to Notification page
+        >
           <AiOutlineBell className="text-xl text-gray-600" />
         </button>
+
         <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200">
           <AiOutlineMail className="text-xl text-gray-600" />
         </button>
+
         <button className="p-3 rounded-full bg-gray-100 hover:bg-gray-200">
           <AiOutlineSetting className="text-xl text-gray-600" />
         </button>

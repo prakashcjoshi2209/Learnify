@@ -43,7 +43,7 @@ const PopularCourses: React.FC = () => {
     fetchCourses();
 }, []);
 
-  // Safely sort and get the top 4 courses by students enrolled
+
   const topCourses = [...courses] // Create a shallow copy to avoid mutating the state
     .sort((a, b) => {
       const studentsA = a.studentsEnrolled || 0; // Ensure valid number
