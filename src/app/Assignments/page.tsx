@@ -108,10 +108,6 @@ const Quizzes = async () => {
         <QuizzesList />
       </div>
 
-      {/* Profile Section */}
-      <div className="w-72 bg-white border-l border-gray-200">
-        <ProfileSection session={session} />
-      </div>
     </div>
   );
 };
