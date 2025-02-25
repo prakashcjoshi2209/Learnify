@@ -2,27 +2,37 @@
 
 import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 
 interface SearchResult {
-  id: string;
+  _id: string;
   name: string;
+  image: string;
 }
 
 const SearchBar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [results, setResults] = useState<SearchResult[]>([]);
 
-  const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+  const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
     setSearchTerm(query);
+    // console.log("This is the search term: ", searchTerm);
 
     if (query.length > 1) {
       try {
-        const response = await fetch(`/api/search?query=${query}`);
+        const response = await fetch("/api/Search", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ query }),
+        });
         if (!response.ok) throw new Error("Failed to fetch search results");
 
-        const data: SearchResult[] = await response.json();
-        setResults(data);
+        const data = await response.json();
+        setResults(data.data);
+        // console.log("This is the data coming form backend: ", data.data);
       } catch (error) {
         console.error("Search error:", error);
         setResults([]);
@@ -50,10 +60,11 @@ const SearchBar: React.FC = () => {
         <ul className="absolute z-10 mt-2 bg-white shadow-lg rounded-lg w-full max-h-60 overflow-y-auto">
           {results.map((item) => (
             <li
-              key={item.id}
-              className="p-2 border-b text-gray-800 cursor-pointer hover:bg-gray-100"
+              key={item._id}
+              className="p-2 border-b text-gray-800 cursor-pointer hover:bg-gray-100 flex items-center space-x-3"
             >
-              {item.name}
+              <Image src={item.image} alt={item.name} width={100} height={100} className="object-cover" />
+              <span>{item.name}</span>
             </li>
           ))}
         </ul>
