@@ -26,6 +26,7 @@ export interface ICourseProgress {
 export interface IUser extends Document {
   name: string;
   email: string;
+  verified: boolean;
   password?: string; // Optional for OAuth users
   avatar?: string;
   githubId?: string;
@@ -65,6 +66,7 @@ const UserSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
+    verified: {type: Boolean, default: false, required: true},
     password: {
       type: String,
       required: function (this: IUser) {

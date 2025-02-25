@@ -13,6 +13,8 @@ const Login = () => {
   const [loader, setLoader] = useState(false);
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  // const [success, setSuccess] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -23,7 +25,7 @@ const Login = () => {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMessage("");
+    // setMessage("");
     setIsProcessing(true);
 
     const result = await signIn("credentials", {
@@ -31,14 +33,16 @@ const Login = () => {
       password,
       redirect: false,
       callbackUrl: redirectPath,
-      rememberMe
+      rememberMe,
     });
 
     if (result?.error) {
       setIsProcessing(false);
       console.error("Login failed", result.error);
-      setMessage("Invalid email or password.");
+      // console.log(result);
+      setMessage(result.error);
     } else {
+      // setMessage("Random")
       console.log("Login successful!");
       router.push(redirectPath);
     }
@@ -50,7 +54,8 @@ const Login = () => {
       await signIn(provider, { callbackUrl: redirectPath });
     } catch (error) {
       console.error("Social login failed", error);
-      setMessage("Social login failed. Please try again.");
+      setMessage("Social login failed. Please try again.")
+      // setError("Social login failed. Please try again.");
     } finally {
       setLoader(false);
     }
@@ -119,18 +124,11 @@ const Login = () => {
             </div>
 
             <div className="my-4 text-center text-gray-400">- OR -</div>
-
-            {message && (
-              <p
-                className={`text-center py-2 rounded-md ${
-                  message.includes("Invalid")
-                    ? "text-red-600 bg-red-100"
-                    : "text-green-600 bg-green-100"
-                }`}
-              >
-                {message}
-              </p>
-            )}
+            {message && <p
+              className="text-center py-2 rounded-md text-red-600 bg-red-100"
+            >
+              {message}
+            </p>}
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <label
@@ -140,7 +138,7 @@ const Login = () => {
                   Email
                 </label>
                 <input
-                  type="text"
+                  type="email"
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -209,7 +207,7 @@ const Login = () => {
               Don’t have an account?{" "}
               <Link
                 onClick={handleLoader}
-                href="/EmailVerify"
+                href="/signup"
                 className="text-purple-600 hover:underline"
               >
                 Sign Up
