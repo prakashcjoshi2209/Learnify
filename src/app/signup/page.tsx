@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
 
@@ -34,8 +34,9 @@ const signUpSchema = z
   });
 
 const Signup = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [apiError, setApiError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -64,8 +65,8 @@ const Signup = () => {
   const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
     setApiError(null);
     try {
-      console.log(values.password);
-      const response = await fetch("/api/signup", {
+      // console.log(values.password);
+      const response = await fetch("/api/sendVerificationEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -74,11 +75,20 @@ const Signup = () => {
           password: values.password,
         }),
       });
+      // const response = await fetch("/api/signup", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     name: values.name,
+      //     email: values.email,
+      //     password: values.password,
+      //   }),
+      // });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Something went wrong!");
-
-      router.push("/login");
+      setSuccess(data.message);
+      // router.push("/login");
     } catch (error: unknown) {
       if (error instanceof Error) {
         setApiError(error.message);
@@ -145,6 +155,9 @@ const Signup = () => {
 
           {apiError && (
             <div className="text-red-600 text-center mb-4">{apiError}</div>
+          )}
+          {success && (
+            <div className="text-green-600 text-center mb-4">{success}</div>
           )}
 
           <Form {...form}>

@@ -14,15 +14,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const { email, password, rememberMe } = credentials || {};
 
         if (!email || !password) {
-          return null; // Missing credentials
+          console.log("Missing Credentails!");
+          return null;
         }
 
         await dbConnect();
 
         // Find the user in the database
         const user = await User.findOne({ email });
+        // console.log(user.verified);
 
         if(!user || typeof password !== "string"){
+          console.log("Invalid Credentials!");
+          return null;
+        }
+
+        if (!user.verified) {
+          console.log("User is not verified")
           return null;
         }
 
