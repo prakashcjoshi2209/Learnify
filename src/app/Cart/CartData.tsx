@@ -1,6 +1,3 @@
-
-
-
 'use client';
 
 import { useState } from 'react';
@@ -11,87 +8,70 @@ const cartData = {
     items: [
       {
         id: 1,
-        name: "Godrej 1 Ton 3 Star, 5-In-1 Convertible Cooling, Inverter Split AC",
-        description: "Copper, I-Sense Technology, 2023 Model, White",
-        style: "1 Ton 3 star (2024)",
-        price: 28990,
+        name: "Mastering Python Programming",
+        description: "Learn Python from scratch with hands-on projects.",
+        style: "500+ students enrolled",
+        price: 199,
         quantity: 1,
         image: "/signuppageimage.png",
-        stockStatus: "In stock",
-        shipping: "Eligible for FREE Shipping"
+        stockStatus: "Limited seats available",
+        shipping: "Instant Access"
       },
       {
         id: 2,
-        name: "Godrej 1 Ton 3 Star, 5-In-1 Convertible Cooling, Inverter Split AC",
-        description: "Copper, I-Sense Technology, 2023 Model, White",
-        style: "1 Ton 3 star (2024)",
-        price: 28990,
+        name: "Full Stack Web Development",
+        description: "Build responsive websites with HTML, CSS, JS, React, and Node.js.",
+        style: "900+ students enrolled",
+        price: 299,
         quantity: 1,
         image: "/signuppageimage.png",
-        stockStatus: "In stock",
-        shipping: "Eligible for FREE Shipping"
+        stockStatus: "Limited seats available",
+        shipping: "Instant Access"
       },
       {
         id: 3,
-        name: "Godrej 1 Ton 3 Star, 5-In-1 Convertible Cooling, Inverter Split AC",
-        description: "Copper, I-Sense Technology, 2023 Model, White",
-        style: "1 Ton 3 star (2024)",
-        price: 28990,
+        name: "Data Science and AI",
+        description: "Master data science, machine learning, and AI.",
+        style: "1.2K+ students enrolled",
+        price: 499,
         quantity: 1,
         image: "/signuppageimage.png",
-        stockStatus: "In stock",
-        shipping: "Eligible for FREE Shipping"
+        stockStatus: "Limited seats available",
+        shipping: "Instant Access"
       }
-    ] ,
-    
+    ]
   }
 };
 
 const CartData = () => {
   const [cart, setCart] = useState(cartData.cart);
 
-  const handleQuantityChange = (index: number, change: number) => {
-    const updatedCart = { ...cart };
-    updatedCart.items[index].quantity = Math.max(1, updatedCart.items[index].quantity + change);
-    setCart(updatedCart);
-  };
-
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
-      <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-4">Shopping Cart</h2>
-        <hr className="mb-4" />
+    <div className="bg-gray-100 ">
+      <div className="bg-white shadow-lg rounded-lg p-6 max-w-4xl mx-auto border border-gray-300">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800">Course Enrollment</h2>
+        <hr className="mb-6 border-gray-300" />
 
-        {cart.items.map((item, index) => (
-          <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <Image src={item.image} alt={item.name} width={150} height={100} className="rounded" />
+        {cart.items.map((item) => (
+          <div key={item.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6 p-4 border-b border-gray-200">
+            <Image src={item.image} alt={item.name} width={150} height={100} className="rounded-lg shadow-sm" />
             <div className="flex-1">
-              <h3 className="text-lg font-medium">{item.name}</h3>
-              <p className="text-sm text-gray-600">{item.description}</p>
-              <p className="text-green-600 font-medium">{item.stockStatus}</p>
-              <p className="text-sm text-gray-500">{item.shipping}</p>
-              <p className="text-sm font-bold">Style Name: <span className="font-normal">{item.style}</span></p>
-              
-              <div className="flex items-center gap-4 mt-2">
-                
-                <button className="text-red-500 text-sm ml-4">Delete</button>
-                <button className="text-blue-500 text-sm">Save for later</button>
-              </div>
+              <h3 className="text-xl font-semibold text-gray-900">{item.name}</h3>
+              <p className="text-sm text-gray-600 mb-2">{item.description}</p>
+              <p className="text-green-600 font-semibold mb-1">{item.stockStatus}</p>
+              <p className="text-sm text-gray-500 mb-2">{item.shipping}</p>
+              <p className="text-sm font-bold text-gray-700">Enrolled: <span className="font-normal">{item.style}</span></p>
             </div>
-            <p className="text-lg font-semibold">₹{(item.price * item.quantity).toLocaleString()}</p>
+            <div className="text-right">
+              <p className="text-lg font-semibold text-gray-900">₹{item.price}</p>
+              <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">Pay Now</button>
+            </div>
           </div>
         ))}
-
-        <hr className="mt-4" />
-        <div className="flex justify-end mt-4 text-lg font-semibold">
-          <p>
-            Subtotal ({cart.items.reduce((total, item) => total + item.quantity, 0)} item): 
-            <span className="text-black"> ₹{cart.items.reduce((total, item) => total + item.price * item.quantity, 0).toLocaleString()}</span>
-          </p>
-        </div>
       </div>
     </div>
   );
 };
 
 export default CartData;
+
