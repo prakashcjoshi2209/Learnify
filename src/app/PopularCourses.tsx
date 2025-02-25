@@ -3,18 +3,6 @@ import React, { useEffect, useState } from "react";
 import Card from "./ExploreData/Card";
 import { ICourse } from "./models/Course";
 
-// interface Course {
-//   _id: string;
-//   name: string;
-//   image: string;
-//   studentsEnrolled: number;
-//   price: {
-//     current: number;
-//     original: number;
-//   };
-//   shortDescription: string;
-// }
-
 const PopularCourses: React.FC = () => {
   const [courses, setCourses] = useState<ICourse[]>([]); //course need to be an array only in this case.
   const [isLoading, setIsLoading] = useState(true);
