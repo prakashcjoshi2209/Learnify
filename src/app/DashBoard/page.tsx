@@ -36,7 +36,7 @@ const Page = async () => {
       </div>
 
       {/* Right Side - Profile Section with Proper Spacing */}
-      <div className="w-2/10 p-2 bg-gray-100  border-gray-300 ml-1 sticky top-0">
+      <div className="w-1/16 p-2 bg-gray-100  border-gray-300 ml-1 sticky top-0">
         <ProfileSection session={session} />
       </div>
     </div>
