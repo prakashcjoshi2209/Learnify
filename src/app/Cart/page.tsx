@@ -4,12 +4,14 @@ import React from 'react'
 import CartData from './CartData'
 import Footer from '../Footer/page'
 import Navbar from '@/components/ui/Navbar'
+import { auth } from '../../../auth'
 
 
-const page = () => {
+const page = async () => {
+  const session = await auth();
   return (
     <div>
-        <Navbar />
+        <Navbar session={session} />
         <CartData/>
         <Footer/>
     </div>

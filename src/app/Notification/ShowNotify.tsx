@@ -13,7 +13,7 @@ const ShowNotify = () => {
         {/* Main Layout */}
         <div className="flex-grow flex">
           {/* Sidebar (Left) */}
-          <div className="w-72 bg-white text-gray-800 border-r border-gray-200 flex flex-col justify-between">
+          <div className="w-82 bg-white text-gray-800 border-r border-gray-200 flex flex-col justify-between">
           <Sidebar />
         </div>
   

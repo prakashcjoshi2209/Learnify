@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+
 import { BellIcon } from "@heroicons/react/24/outline"; 
-import ProfileSection from "../DashBoard/ProfileSection"; 
+
 
 type Notification = {
   id: number;
@@ -13,12 +13,14 @@ type Notification = {
 };
 
 const Notification = () => {
-  const { data: session } = useSession(); 
+  
 
   const [notifications, setNotifications] = useState<Notification[]>([
     { id: 1, title: "New Course Available!", message: "A new React course has been added to the library.", time: "2 hours ago" },
     { id: 2, title: "Assignment Due", message: "Your JavaScript assignment is due tomorrow.", time: "5 hours ago" },
     { id: 3, title: "Reminder: Live Session", message: "Join the live session on Machine Learning at 6 PM today.", time: "1 day ago" },
+    { id: 4, title: "Assignment Due", message: "Your React assignment is due tomorrow.", time: "5 hours ago" },
+    
   ]);
 
   return (
@@ -43,11 +45,6 @@ const Notification = () => {
           </ul>
         )}
       </div>
-
-      {/* Profile Section on the Right */}
-      {/* <div className="w-72 bg-white border-l border-gray-200 ">
-        <ProfileSection session={session} />
-      </div> */}
     </div>
   );
 };
