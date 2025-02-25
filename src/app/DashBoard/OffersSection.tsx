@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -70,7 +67,7 @@ const OffersSection: React.FC = () => {
           textDecorationSkipInk: "none",
         }}
       >
-        Something Special Just for you! 🎉
+        Something Special Just for You! 🎉
       </p>
 
       <div className="relative w-full max-w-5xl flex items-center justify-center">
@@ -93,11 +90,17 @@ const OffersSection: React.FC = () => {
                 className="w-full"
               >
                 <Card className="relative flex flex-col p-3 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden">
-                  <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
-                    {offer.discount}
-                  </span>
+                  
+                  {/* Wrapper for Image and Badge */}
+                  <div className="relative w-full pt-6">
+                    {/* Discount Badge - Now with extra space above the image */}
+                    <span className="absolute top-0 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
+                      {offer.discount}
+                    </span>
 
-                  <img src={offer.image} alt={offer.title} className="w-full h-28 mt-3 object-cover rounded-t-lg" />
+                    {/* Course Image */}
+                    <img src={offer.image} alt={offer.title} className="w-full h-28 object-cover rounded-t-lg" />
+                  </div>
 
                   <CardHeader className="flex-grow px-2 py-2 flex flex-col">
                     <CardTitle className="text-sm sm:text-base font-semibold">{offer.title}</CardTitle>
@@ -127,5 +130,3 @@ const OffersSection: React.FC = () => {
 };
 
 export default OffersSection;
-
-
