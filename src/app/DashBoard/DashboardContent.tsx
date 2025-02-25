@@ -82,7 +82,14 @@ const DashboardContent = () => {
           </button>
         </div>
 
-        {/* Available Courses */}
+       
+
+          {/* offers Courses Section */}
+          <OffersSection />
+
+
+
+           {/* Available Courses */}
         <h3 className="text-xl font-semibold mb-6">Enrolled Courses</h3>
         {isEmpty ? (
           <NoCoursesAvailable />
@@ -95,9 +102,6 @@ const DashboardContent = () => {
             )}
           </div>
         )}
-
-          {/* offers Courses Section */}
-          <OffersSection />
 
       </div>
     </div>
