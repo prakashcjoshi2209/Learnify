@@ -29,11 +29,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        if (!user.verified) {
-          console.log("User is not verified")
-          return null;
-        }
-
         // Validate the password
         if (user && bcrypt.compareSync(password, user.password)) {
           return { id: user._id.toString(), name: user.name, email: user.email, rememberMe };
