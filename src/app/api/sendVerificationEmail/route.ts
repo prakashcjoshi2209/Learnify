@@ -48,20 +48,6 @@ export async function POST(req: Request) {
       { new: true, upsert: true } //either update or insert
     );
 
-  //   if(!data){
-  //     await Verify.insertOne(
-  //     {
-  //       email: email, 
-  //       token: emailverifyToken,
-  //       expires: emailverifyExpires
-  //     }
-  //   )
-  // }
-
-    // user.token = emailverifyToken;
-    // user.expires = emailverifyExpires;
-    
-
     const verifyUrl = `http://localhost:3000/verifyEmail/${verifyToken}`;
 
     // Configure Nodemailer transporter

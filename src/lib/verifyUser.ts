@@ -1,18 +1,25 @@
+"use server";
+
 import User from "@/app/models/User";
-import connectDB from "./dbConnect"
+import connectDB from "./dbConnect";
 
-const verifyUser = async(email)=> {
-  await connectDB();
+const verifyUser = async (email: string) => {
+  try {
+    if (!email) {
+      console.error("Email is not passed!");
+      return 0;
+    }
 
-  if(!email){
-    console.log("Email is not passed");
-    console.error("Email is not passed!");
+    await connectDB();
+    const user = await User.findOne({ email });
+    if(!user){
+      return 2;
+    }
+    return user?.verified ? 1 : 0;
+  } catch (error) {
+    console.error("Error verifying user:", error);
+    return 0;
   }
-  const user = await User.findOne({email});
-  if(user.verified){
-    return true;
-  }
-  return false;
-}
+};
 
 export default verifyUser;

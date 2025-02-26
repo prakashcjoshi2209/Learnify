@@ -7,17 +7,18 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loader from "@/components/ui/Loader";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import verifyUser from "@/lib/verifyUser";
+import sendEmail from "@/lib/sendEmail";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [loader, setLoader] = useState(false);
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  // const [success, setSuccess] = useState<string | null>(null);
-  // const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [messageType, setMessageType] = useState<"success" | "error" | "">("");
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -27,24 +28,39 @@ const Login = () => {
     e.preventDefault();
     // setMessage("");
     setIsProcessing(true);
+    const verified: number = await verifyUser(email);
+    // console.log("VerifyUser returned value: ", verified);
+    if (verified) {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: redirectPath,
+        rememberMe,
+      });
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-      callbackUrl: redirectPath,
-      rememberMe,
-    });
-
-    if (result?.error) {
-      setIsProcessing(false);
-      console.error("Login failed", result.error);
-      // console.log(result);
-      setMessage(result.error);
+      if (result?.error) {
+        setIsProcessing(false);
+        console.error("Login failed", result.error);
+        // console.log(result);
+        setMessage("Invalid Credentials");
+      } else {
+        // setMessage("Random")
+        console.log("Login successful!");
+        router.push(redirectPath);
+      }
     } else {
-      // setMessage("Random")
-      console.log("Login successful!");
-      router.push(redirectPath);
+      const emailSent : boolean = await sendEmail(email);
+      if(emailSent){
+        setMessage("Email verification link is sent!");
+        setMessageType("success");
+        setIsProcessing(false);
+      }
+      else{
+        setMessage("Please verify your Email first!");
+        setMessageType("error");
+        setIsProcessing(false);
+      }
     }
   };
 
@@ -54,16 +70,12 @@ const Login = () => {
       await signIn(provider, { callbackUrl: redirectPath });
     } catch (error) {
       console.error("Social login failed", error);
-      setMessage("Social login failed. Please try again.")
+      setMessage("Social login failed. Please try again.");
       // setError("Social login failed. Please try again.");
     } finally {
       setLoader(false);
     }
   };
-
-  // const handleLoaderForLink = () => {
-  //   setIsProcessing(true);
-  // };
 
   const handleLoader = () => {
     setLoader(true);
@@ -124,11 +136,12 @@ const Login = () => {
             </div>
 
             <div className="my-4 text-center text-gray-400">- OR -</div>
-            {message && <p
-              className="text-center py-2 rounded-md text-red-600 bg-red-100"
-            >
-              {message}
-            </p>}
+            {message && (
+              <p className={`text-center py-2 rounded-md ${
+                messageType === "success" ? "text-green-600 bg-green-100" : "text-red-600 bg-red-100"}`}>
+                {message}
+              </p>
+            )}
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <label
@@ -141,7 +154,10 @@ const Login = () => {
                   type="email"
                   id="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setMessage("");
+                  }}
                   placeholder="Enter your email"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                   required
@@ -159,7 +175,10 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                     id="password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setMessage("");
+                    }}
                     placeholder="Enter your password"
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                     required
@@ -177,8 +196,8 @@ const Login = () => {
                 <label className="flex items-center text-gray-600 text-sm">
                   <input
                     type="checkbox"
-                    checked= {rememberMe}
-                    onChange={()=> setRememberMe(!rememberMe)}
+                    checked={rememberMe}
+                    onChange={() => setRememberMe(!rememberMe)}
                     className="form-checkbox mr-2 focus:ring-purple-500"
                   />
                   Remember me

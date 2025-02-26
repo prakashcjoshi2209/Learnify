@@ -32,7 +32,7 @@ export interface IUser extends Document {
   githubId?: string;
   googleId?: string;
   // coursesBought?: ICourse[];
-  coursesBought?: number;
+  coursesBought?: number[];
   reviews?: string[];
   courseProgress?: ICourseProgress[];
   resetToken?: string;
