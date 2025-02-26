@@ -41,7 +41,7 @@ const sidebarConfig = {
         {
           label: "Notifications",
           icon: <BsCheckSquare className="text-lg" />,
-          href: "/notification",
+          href: "/Notification",
         },
         {
           label: "Group",

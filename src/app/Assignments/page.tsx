@@ -107,6 +107,9 @@ const Quizzes = async () => {
       <div className="flex-grow p-4">
         <QuizzesList />
       </div>
+      <div className="w-72 bg-white border-l border-gray-200 ">
+          <ProfileSection session={session} />
+        </div>
 
     </div>
   );
