@@ -59,9 +59,9 @@ export async function POST(req: Request) {
         ],
       })
         .lean()
-        .select("_id name image"); // Select only required fields
+        .select("_id name image courseId"); // Select only required fields
     } else {
-      courses = await Course.find({}).lean().select("_id name image");
+      courses = await Course.find({}).lean().select("_id name image courseId");
     }
 
     // Convert MongoDB _id to id for frontend compatibility
