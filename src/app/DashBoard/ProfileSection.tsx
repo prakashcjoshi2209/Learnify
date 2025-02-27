@@ -8,11 +8,28 @@ import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import Image from "next/image";
 
+
+type ProgressData = { day: string; progress: number };
+
+
 const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState<string>("Good Morning");
+
+   // Static progress data
+   const progressData: ProgressData[] = [
+    { day: "Mon", progress: 100 },
+    { day: "Tue", progress: 120 },
+    { day: "Wed", progress: 80 },
+    { day: "Thu", progress: 90 },
+    { day: "Fri", progress: 110 },
+    { day: "Sat", progress: 60 },
+    { day: "Sun", progress: 90 },
+  ];
+
+
 
   useEffect(() => {
     setProfileImage(session?.user?.image || null);
@@ -123,6 +140,22 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
           <AiOutlineSetting className="text-xl text-gray-600" />
         </button>
       </div>
+
+      <div className="space-y-4 mt-5 ml-4">
+        <h3 className="text-base font-semibold text-gray-800 ml-10">Daily Progress</h3>
+        <div className="flex items-end space-x-2">
+          {progressData.map(({ day, progress }) => (
+            <div key={day} className="flex flex-col items-center">
+              <div
+                className="bg-purple-600 w-4 rounded-md"
+                style={{ height: `${progress}px` }}
+              ></div>
+              <span className="text-sm text-gray-500 mt-2">{day}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   );
 };

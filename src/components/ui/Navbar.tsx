@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { HeartIcon } from "@heroicons/react/24/outline";
 import {
   ShoppingCartIcon,
   Bars3Icon,
@@ -118,6 +119,13 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
+            {/* Wishlist Icon */}
+                <button
+                   onClick={() => handleNavigation("/Wishlist")}
+                     className="relative bg-white text-black font-semibold p-2 rounded-full"
+                     >
+                  <HeartIcon className="h-5 w-5" />
+                </button>
             {/* Cart Icon */}
             <button
               onClick={() => handleNavigation("/Cart")}

@@ -66,6 +66,7 @@ export interface ICourse extends Document {
   tags: string[];
   lastUpdated: Date;
   mediaContent: IMediaContent[];
+  progress?: number;
 }
 
 // Schema definitions for nested objects

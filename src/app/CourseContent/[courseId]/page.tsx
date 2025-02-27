@@ -9,6 +9,7 @@ import CourseContentData from "./CourseContentData";
 import PublishHome from "./Publisher";
 import { useSession } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
+import Navbar from "@/components/ui/Navbar";
 import { ICourse } from "@/app/models/Course";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -258,6 +259,7 @@ const CourseContentPage: React.FC = () => {
   return (
     <>
       {/* {session && <Script src="https://checkout.razorpay.com/v1/checkout.js" />} */}
+      <Navbar/>
       <div className="bg-dark-blue text-white">
         <header className="text-center py-8 flex">
           <div className="max-w-4xl mx-auto">
