@@ -7,19 +7,20 @@ import { useParams, useRouter } from "next/navigation";
 import CoursePage from "./About2";
 import CourseContentData from "./CourseContentData";
 import PublishHome from "./Publisher";
-// import Script from "next/script";
 import { useSession } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
 import { ICourse } from "@/app/models/Course";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 declare global {
   interface Window {
-    Razorpay:  new (options: RazorpayOptions) => RazorpayInstance;
+    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
   }
 }
 
 interface RazorpayOptions {
-  key: string ;
+  key: string;
   amount: number;
   currency: string;
   name: string;
@@ -29,6 +30,7 @@ interface RazorpayOptions {
   prefill?: {
     name?: string;
     email?: string;
+    contact?: number;
   };
   theme?: {
     color: string;
@@ -39,18 +41,18 @@ interface RazorpayInstance {
   open: () => void;
 }
 
-
 const CourseContentPage: React.FC = () => {
-
   // courses part
   const { data: session } = useSession();
   const { courseId } = useParams();
 
   const [courseIncluded, setCourseIncluded] = useState(false);
-  const [course, setCourse] = useState<ICourse | null>(null) // State to store course data
+  const [cartIncluded, setCartIncluded] = useState(false);
+  const [course, setCourse] = useState<ICourse | null>(null); // State to store course data
   const [loading, setLoading] = useState(true); // State to indicate loading
   const [error, setError] = useState<string | null>(null); // State to handle errors
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -70,6 +72,7 @@ const CourseContentPage: React.FC = () => {
         const data = await response.json();
         setCourse(data.course);
         setCourseIncluded(data.courseIncluded);
+        setCartIncluded(data.cartIncluded);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
@@ -86,8 +89,49 @@ const CourseContentPage: React.FC = () => {
     }
   }, [courseId]);
 
+  const addToWishlist = async () => {
+    setIsAdding(true);
+    if (!session) {
+      const currentPath = window.location.pathname;
+      router.push(`/login?redirect=${currentPath}`);
+      return;
+    }
+    try {
+      const response = await fetch("/api/addCart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ courseId }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+      setIsAdding(false);
+      console.log("Success:", data.message);
+      setCartIncluded(true);
+      toast.success("Course added to wishlist!");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error);
+        console.log("Adding Cart has developed some issue.");
+      } else {
+        console.error("Something went Wrong on client side.");
+      }
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
   if (loading) {
-    return <div className="flex items-center justify-center min-h-screen bg-white opacity-100"> <Loader /> </div>; // Display a loading state
+    return (
+      <div>
+        {" "}
+        <Loader />{" "}
+      </div>
+    ); // Display a loading state
   }
 
   if (error) {
@@ -103,79 +147,13 @@ const CourseContentPage: React.FC = () => {
   const courseName = course.name;
   const cId = courseId;
 
-  // const handlePayment = async () => {
-  //   setIsProcessing(true);
-  //   if(!session){
-  //     const currentPath = window.location.pathname; // Get the current route
-  //     router.push(`/login?redirect=${currentPath}`); // Redirect to login with the current path as a query param
-  //     // http://localhost:3000/login?redirect=/CourseContent/4
-  //   }
-  //   try {
-  //     // Create order
-  //     const response = await fetch("/api/createOrder", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ amt: amount }),
-  //     });
-
-  //     const data = await response.json();
-
-  //     // Initialize Razorpay
-  //     const options: RazorpayOptions = {
-  //       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
-  //       amount: amount * 100, // amount in paise
-  //       currency: "INR",
-  //       name: "Learnify",
-  //       description: `Buying course ${courseName}`,
-  //       order_id: data.orderId,
-  //       handler: async function (response: { razorpay_payment_id: string }) {
-  //         const paymentId = response.razorpay_payment_id;
-  //         console.log("Payment successful!", response);
-
-  //         // Save course to user account
-  //         const resp = await fetch("/api/buyCourse", {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({ cId, paymentId }),
-  //         });
-
-  //         const dta = await resp.json();
-  //         if (resp.ok) {
-  //           alert(`${dta.message}`);
-  //           setCourseIncluded(true);
-  //           router.push("/DashBoard");
-  //         } else {
-  //           alert(`Error: ${dta.error}`);
-  //         }
-  //       },
-  //       prefill: {
-  //         name: session?.user?.name || "Guest User",
-  //         email: session?.user?.email || "guest@example.com",
-  //       },
-  //       theme: {
-  //         color: "#8A2BE2",
-  //       },
-  //     };
-
-  //     const rzp1 = new window.Razorpay(options);
-  //     rzp1.open();
-  //   } catch (error: unknown) {
-  //     console.error("Payment Failed: ", error instanceof Error ? error.message : error);
-  //   } finally {
-  //     setIsProcessing(false);
-  //   }
-  // };
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       if (window.Razorpay) {
         resolve(true);
         return;
       }
-  
+
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => resolve(true);
@@ -183,22 +161,22 @@ const CourseContentPage: React.FC = () => {
       document.body.appendChild(script);
     });
   };
-  
+
   const handlePayment = async () => {
     setIsProcessing(true);
-  
+
     if (!session) {
-      const currentPath = window.location.pathname; 
+      const currentPath = window.location.pathname;
       router.push(`/login?redirect=${currentPath}`);
       return;
     }
-  
+
     try {
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
         throw new Error("Failed to load Razorpay script.");
       }
-  
+
       // Create order
       const response = await fetch("/api/createOrder", {
         method: "POST",
@@ -207,13 +185,13 @@ const CourseContentPage: React.FC = () => {
         },
         body: JSON.stringify({ amt: amount }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!window.Razorpay) {
         throw new Error("Razorpay is not available.");
       }
-  
+
       // Initialize Razorpay
       const options: RazorpayOptions = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
@@ -225,7 +203,7 @@ const CourseContentPage: React.FC = () => {
         handler: async function (response: { razorpay_payment_id: string }) {
           const paymentId = response.razorpay_payment_id;
           console.log("Payment successful!", response);
-  
+
           // Save course to user account
           const resp = await fetch("/api/buyCourse", {
             method: "POST",
@@ -234,34 +212,42 @@ const CourseContentPage: React.FC = () => {
             },
             body: JSON.stringify({ cId, paymentId }),
           });
-  
+
           const dta = await resp.json();
           if (resp.ok) {
-            alert(`${dta.message}`);
+            toast.success(`${dta.message}`, {
+              autoClose: 5000,
+            });
+            // alert(`${dta.message}`);
             setCourseIncluded(true);
             router.push("/DashBoard");
           } else {
-            alert(`Error: ${dta.error}`);
+            // alert(`Error: ${dta.error}`);
+            toast.error(`Error: ${dta.error}`);
           }
         },
         prefill: {
           name: session?.user?.name || "Guest User",
           email: session?.user?.email || "guest@example.com",
+          contact: session?.user?.phone,
         },
         theme: {
           color: "#8A2BE2",
         },
       };
-  
+
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error: unknown) {
-      console.error("Payment Failed: ", error instanceof Error ? error.message : error);
+      console.error(
+        "Payment Failed: ",
+        error instanceof Error ? error.message : error
+      );
     } finally {
       setIsProcessing(false);
     }
   };
-  
+
   const handleScroll = (sectionId: string) => {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -299,18 +285,37 @@ const CourseContentPage: React.FC = () => {
               </span>
             </div>
             <div className="flex justify-center gap-4 mt-6">
-              <button className="border border-gray-400 rounded-md px-4 py-2 hover:bg-gray-800">
-                Wishlist
-              </button>
+              {!courseIncluded ? (
+                !cartIncluded ? (
+                  <button
+                    className="border border-gray-400 rounded-md px-4 py-2 hover:bg-gray-800"
+                    onClick={addToWishlist}
+                  >
+                    {isAdding ? "Adding..." : "Wishlist"}
+                  </button>
+                ) : (
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md"
+                    disabled
+                  >
+                    Added to Wishlist
+                  </button>
+                )
+              ) : null}
               {!courseIncluded ? (
                 <button
                   className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-md"
                   onClick={handlePayment}
                 >
-                  {isProcessing ? "Processing..." : `Buy Now (₹ ${course.price.current})`}
+                  {isProcessing
+                    ? "Processing..."
+                    : `Buy Now (₹ ${course.price.current})`}
                 </button>
               ) : (
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md" disabled>
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded-md"
+                  disabled
+                >
                   Course Purchased
                 </button>
               )}
@@ -341,25 +346,37 @@ const CourseContentPage: React.FC = () => {
           </div>
         </section>
 
-      <footer className="bg-purple-500 text-center text-white py-4">
+        <footer className="bg-purple-500 text-center text-white py-4">
           <div className="flex justify-center space-x-8">
-            <button onClick={() => handleScroll("about-course")} className="hover:underline">
+            <button
+              onClick={() => handleScroll("about-course")}
+              className="hover:underline"
+            >
               About Course
             </button>
-            <button onClick={() => handleScroll("course-content")} className="hover:underline">
+            <button
+              onClick={() => handleScroll("course-content")}
+              className="hover:underline"
+            >
               Course Content
             </button>
-            <button onClick={() => handleScroll("about-publisher")} className="hover:underline">
+            <button
+              onClick={() => handleScroll("about-publisher")}
+              className="hover:underline"
+            >
               About Publisher
             </button>
-            <button onClick={() => handleScroll("faq")} className="hover:underline">
+            <button
+              onClick={() => handleScroll("faq")}
+              className="hover:underline"
+            >
               FAQs
             </button>
           </div>
         </footer>
       </div>
 
-  <section id="about-course">
+      <section id="about-course">
         <CoursePage />
       </section>
 
