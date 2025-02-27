@@ -1,5 +1,6 @@
 import React from 'react'
 import Navbar from '../components/ui/Navbar'
+import StatsBar from '@/components/StatsBar'
 import Footer from './Footer/page'
 import BenefitsSection from './BenifitsSection'
 import PopularCourses from './PopularCourses'
@@ -14,6 +15,7 @@ const page = async () => {
     <div>
       <Navbar session = {session}/>
       <Consist/>
+      <StatsBar/>
       <PopularCourses/>
       <BenefitsSection/>
       <Footer/>
