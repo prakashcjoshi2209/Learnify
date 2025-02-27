@@ -26,6 +26,7 @@ export interface ICourseProgress {
 export interface IUser extends Document {
   name: string;
   email: string;
+  phone?: number;
   verified: boolean;
   password?: string; // Optional for OAuth users
   avatar?: string;
@@ -33,6 +34,7 @@ export interface IUser extends Document {
   googleId?: string;
   // coursesBought?: ICourse[];
   coursesBought?: number[];
+  cart?: number[];
   reviews?: string[];
   courseProgress?: ICourseProgress[];
   resetToken?: string;
@@ -66,6 +68,7 @@ const UserSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
+    phone: {type: Number, unique: true},
     verified: {type: Boolean, default: false, required: true},
     password: {
       type: String,
@@ -78,6 +81,10 @@ const UserSchema: Schema = new Schema(
     googleId: { type: String, unique: true, sparse: true },
     coursesBought: {
       type: [Number], // Embedding just the courseId
+      default: [],
+    },
+    cart: {
+      type: [Number],
       default: [],
     },
     reviews: { type: [String], default: [] },

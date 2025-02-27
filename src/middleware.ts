@@ -59,6 +59,7 @@ export async function middleware(req: NextRequest) {
   const isLoginPage = req.nextUrl.pathname === '/login';
   const isForgetPasswordPage = req.nextUrl.pathname=== '/ForgetPassword';
   const isDashboardPage = req.nextUrl.pathname === '/DashBoard';
+  const isCart = req.nextUrl.pathname === "/Cart";
 
   // If the user is authenticated and tries to access the login page, redirect them to the dashboard
   if (isAuth && isLoginPage) {
@@ -74,8 +75,12 @@ export async function middleware(req: NextRequest) {
 
   // If the user is not authenticated and tries to access a protected route, redirect them to the login page
   if (!isAuth && isDashboardPage) {
-    console.log(process.env.AUTH_SECRET);
     console.log("Redirecting to /login due to missing auth");
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  if (!isAuth && isCart) {
+    console.log("Redirecting User to Login");
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
@@ -89,7 +94,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/DashBoard/:path*', '/login', "/pay/:path*", "/ForgetPassword"], 
+  matcher: ['/DashBoard/:path*', '/login', "/pay/:path*", "/ForgetPassword" , "/Cart/:path*"], 
 };
 
 

@@ -25,11 +25,13 @@ export async function POST(req: NextRequest) {
 
       // Check if the course is already purchased
       const hasBoughtCourse = user?.coursesBought.includes(courseId);
+      const hasCourseInCart = user?.cart.includes(courseId);
 
       return NextResponse.json(
         {
           course,
-          courseIncluded: hasBoughtCourse, // true if purchased, false otherwise
+          courseIncluded: hasBoughtCourse,
+          cartIncluded: hasCourseInCart,
         },
         { status: 200 }
       );
