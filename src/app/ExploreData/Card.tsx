@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Image from "next/image"; 
 
 interface CardProps {
   title: string;
