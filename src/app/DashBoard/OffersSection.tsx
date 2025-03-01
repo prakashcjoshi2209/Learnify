@@ -1,9 +1,11 @@
 
 
+
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import {
   Card,
   CardHeader,
@@ -87,9 +89,9 @@ const OffersSection: React.FC = () => {
         {/* Previous Button */}
         <button
           onClick={prevSlide}
-          className="absolute left-0 z-10 p-3 bg-purple-500 text-white rounded-full shadow-md hover:bg-purple-700 transition-all duration-300 focus:outline-none"
+          className="absolute left-0 z-10 p-1  text-purple-600 rounded-full shadow-md hover:bg-purple-300 transition-all duration-300 focus:outline-none"
         >
-          ◀
+          <FaChevronLeft size={24} />
         </button>
 
         <AnimatePresence>
@@ -103,33 +105,30 @@ const OffersSection: React.FC = () => {
                 transition={{ duration: 0.6, ease: "easeInOut" }}
                 className="w-full"
               >
-           <Card className="relative flex flex-col p-4 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden transform hover:scale-105 h-[320px]">
-  
-                      {/* Discount Badge - Positioned at top-right of the Card */}
+                <Card className="relative flex flex-col p-4 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden transform hover:scale-105 h-[320px]">
+                  {/* Discount Badge */}
                   <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
-                       {offer.discount}
-                   </span>
+                    {offer.discount}
+                  </span>
 
-                        {/* Image Section */}
-                    <div className="w-full">
-                                   <img src={offer.image} alt={offer.title} className="w-full h-32 object-cover rounded-lg" />
-                    </div>
+                  {/* Image Section */}
+                  <div className="w-full">
+                    <img src={offer.image} alt={offer.title} className="w-full h-32 object-cover rounded-lg" />
+                  </div>
 
                   <CardHeader className="flex-grow px-2 py-3 flex flex-col justify-between">
-                  <CardTitle className="text-lg font-semibold text-gray-800">{offer.title}</CardTitle>
-                  <CardDescription className="text-sm text-gray-600 mt-2">{offer.description}</CardDescription>
-    
-                        {/* Author & Button Section */}
-                    <div className="flex justify-between items-center mt-4">
-                        <p className="text-xs font-medium text-gray-500">By {offer.author}</p>
-                        <button className="py-2 px-4 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-md">
-                            Enroll Now!
-                        </button>
-                   </div>
-                 </CardHeader>
-           </Card>
+                    <CardTitle className="text-lg font-semibold text-gray-800">{offer.title}</CardTitle>
+                    <CardDescription className="text-sm text-gray-600 mt-2">{offer.description}</CardDescription>
 
-                
+                    {/* Author & Button Section */}
+                    <div className="flex justify-between items-center mt-4">
+                      <p className="text-xs font-medium text-gray-500">By {offer.author}</p>
+                      <button className="py-2 px-4 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-md">
+                        Enroll Now!
+                      </button>
+                    </div>
+                  </CardHeader>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -138,9 +137,9 @@ const OffersSection: React.FC = () => {
         {/* Next Button */}
         <button
           onClick={nextSlide}
-          className="absolute right-0 z-10 p-3 bg-purple-500 text-white rounded-full shadow-md hover:bg-purple-700 transition-all duration-300 focus:outline-none"
+          className="absolute right-0 z-10 p-1  text-purple-600 rounded-full shadow-md hover:bg-purple-300 transition-all duration-300 focus:outline-none"
         >
-          ▶
+          <FaChevronRight size={24} />
         </button>
       </div>
     </div>
@@ -148,3 +147,4 @@ const OffersSection: React.FC = () => {
 };
 
 export default OffersSection;
+
