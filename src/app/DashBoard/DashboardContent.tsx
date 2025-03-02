@@ -47,11 +47,11 @@ const DashboardContent = () => {
       {/* Main Content */}
       <div className="flex-1 p-4 md:pl-8">
         {/* Top Bar */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
           <input
             type="text"
             placeholder="Search your Course here..."
-            className="w-full md:max-w-md p-3 rounded-lg border border-gray-300 focus:outline-none"
+            className="w-full sm:w-auto flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none"
           />
           <button className="ml-4 p-3 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200">
             Settings
@@ -82,7 +82,7 @@ const DashboardContent = () => {
         {isEmpty ? (
           <NoCoursesAvailable />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {fetchingUserCourses ? (
               <Loader />
             ) : (
