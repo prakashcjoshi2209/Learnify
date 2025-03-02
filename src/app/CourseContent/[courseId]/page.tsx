@@ -13,6 +13,7 @@ import { ICourse } from "@/app/models/Course";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 declare global {
   interface Window {
     Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
@@ -257,7 +258,8 @@ const CourseContentPage: React.FC = () => {
   return (
     <>
       {/* {session && <Script src="https://checkout.razorpay.com/v1/checkout.js" />} */}
-      <div className="bg-dark-blue text-white">
+  <div className="bg-dark-blue text-white">
+        
         <header className="text-center py-8 flex">
           <div className="max-w-4xl mx-auto">
             <p className="text-sm text-gray-300">
