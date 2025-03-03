@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import Card from "./Card";
 import Footer from "../Footer/page";
 import { ICourse } from "../models/Course";
+import { Session } from "next-auth";
 
 interface Course {
   id: number;
@@ -21,7 +22,7 @@ interface Course {
   category: string;
 }
 
-const Courses: React.FC = () => {
+const Courses: React.FC<{ session?: Session | null }> = ({ session }) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeCategory, setActiveCategory] = useState<string>("All Programmes");
@@ -110,6 +111,7 @@ const Courses: React.FC = () => {
             {filteredCourses.map((course) => (
               <Card
                 key={course.id}
+                session = {session}
                 title={course.title}
                 image={course.image}
                 students={course.students}

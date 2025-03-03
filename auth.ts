@@ -31,6 +31,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Validate the password
         if (user && bcrypt.compareSync(password, user.password)) {
+          user.lastLoginAt = new Date();
+          user.lastActiveAt = new Date();
+          await user.save();
           return { id: user._id.toString(), name: user.name, email: user.email, rememberMe };
         }
 

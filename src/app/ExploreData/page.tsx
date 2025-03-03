@@ -10,7 +10,7 @@ const page = async () => {
   return (
     <div>
       <Navbar session = {session}/>
-      <Courses />
+      <Courses session={session} />
     </div>
   )
 }

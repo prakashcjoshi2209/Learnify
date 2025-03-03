@@ -40,6 +40,8 @@ export interface IUser extends Document {
   courseProgress?: ICourseProgress[];
   resetToken?: string;
   resetTokenExpiry?: Date;
+  lastLoginAt?: Date;
+  lastActiveAt?: Date;
 }
 
 const SubmoduleProgressSchema: Schema = new Schema({
@@ -99,6 +101,8 @@ const UserSchema: Schema = new Schema(
     },
     resetToken: { type: String, required: false },
     resetTokenExpiry: { type: Date, required: false },
+    lastLoginAt: {type: Date, required: false},
+    lastActiveAt: {type: Date, required: false}
   },
   { timestamps: true }
 );
