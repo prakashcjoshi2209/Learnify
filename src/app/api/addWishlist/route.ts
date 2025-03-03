@@ -14,12 +14,12 @@ export async function POST(req: Request){
         if(!user){
             return NextResponse.json({ message: 'User not found' }, { status: 404 });
         }
-        if (user.cart.includes(courseId)) {
+        if (user.wishlist.includes(courseId)) {
             return NextResponse.json({message: "Course is already included"}, {status: 400});
         }
-        user.cart.push(courseId);
+        user.wishlist.push(courseId);
         await user.save();
-        return NextResponse.json({message: "Course Added to Cart!"}, {status: 200});        
+        return NextResponse.json({message: "Course Added to Wishlist!"}, {status: 200});        
     } 
     catch (error) {
         console.error(error);

@@ -31,6 +31,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Validate the password
         if (user && bcrypt.compareSync(password, user.password)) {
+          user.lastLoginAt = new Date();
+          user.lastActiveAt = new Date();
+          await user.save();
           return { id: user._id.toString(), name: user.name, email: user.email, rememberMe };
         }
 
@@ -150,7 +153,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.email = token.email as string;
         session.user.image = token.image as string;
         (session.user as any).provider = token.provider as string;
-        session.user.phone = token.phone || null;
+        (session.user as any).phone = (token.phone as number) || null ;
       }
       session.expires = token.rememberMe
       ? (new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()  as unknown as string & Date) // 30 days

@@ -49,11 +49,13 @@ const CourseContentPage: React.FC = () => {
 
   const [courseIncluded, setCourseIncluded] = useState(false);
   const [cartIncluded, setCartIncluded] = useState(false);
+  const [wishlistIncluded, setWishlistIncluded] = useState(false);
   const [course, setCourse] = useState<ICourse | null>(null); // State to store course data
   const [loading, setLoading] = useState(true); // State to indicate loading
   const [error, setError] = useState<string | null>(null); // State to handle errors
   const [isProcessing, setIsProcessing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [isWishing, setIsWishing] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -90,7 +92,7 @@ const CourseContentPage: React.FC = () => {
     }
   }, [courseId]);
 
-  const addToWishlist = async () => {
+  const addToCart = async () => {
     setIsAdding(true);
     if (!session) {
       const currentPath = window.location.pathname;
@@ -111,9 +113,9 @@ const CourseContentPage: React.FC = () => {
         throw new Error(data.message || "Something went wrong");
       }
       setIsAdding(false);
-      console.log("Success:", data.message);
+      // console.log("Success:", data.message);
       setCartIncluded(true);
-      toast.success("Course added to wishlist!");
+      toast.success(data.message);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error);
@@ -126,13 +128,50 @@ const CourseContentPage: React.FC = () => {
     }
   };
 
+  const addToWishlist = async () => {
+    setIsWishing(true);
+    if (!session) {
+      const currentPath = window.location.pathname;
+      router.push(`/login?redirect=${currentPath}`);
+      return;
+    }
+    try {
+      const response = await fetch("/api/addWishlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ courseId }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+      setIsWishing(false);
+      // console.log("Success:", data.message);
+      setWishlistIncluded(true);
+      toast.success(data.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error);
+        console.log("Adding Wishlist has developed some issue.");
+      } else {
+        console.error("Something went Wrong on client side.");
+      }
+    } finally {
+      setIsWishing(false);
+    }
+  };
+
+
   if (loading) {
     return (
       <div>
         {" "}
         <Loader />{" "}
       </div>
-    ); // Display a loading state
+    );
   }
 
   if (error) {
@@ -230,7 +269,7 @@ const CourseContentPage: React.FC = () => {
         prefill: {
           name: session?.user?.name || "Guest User",
           email: session?.user?.email || "guest@example.com",
-          contact: session?.user?.phone,
+          contact: (session?.user as {phone?: number})?.phone,
         },
         theme: {
           color: "#8A2BE2",
@@ -290,9 +329,26 @@ const CourseContentPage: React.FC = () => {
                 !cartIncluded ? (
                   <button
                     className="border border-gray-400 rounded-md px-4 py-2 hover:bg-gray-800"
+                    onClick={addToCart}
+                  >
+                    {isAdding ? "Adding..." : "Cart"}
+                  </button>
+                ) : (
+                  <button
+                    className="bg-green-500 text-white px-4 py-2 rounded-md"
+                    disabled
+                  >
+                    Added to Cart
+                  </button>
+                )
+              ) : null}
+              {!courseIncluded ? (
+                !wishlistIncluded ? (
+                  <button
+                    className="border border-gray-400 rounded-md px-4 py-2 hover:bg-gray-800"
                     onClick={addToWishlist}
                   >
-                    {isAdding ? "Adding..." : "Wishlist"}
+                    {isWishing ? "Adding..." : "Wishlist"}
                   </button>
                 ) : (
                   <button

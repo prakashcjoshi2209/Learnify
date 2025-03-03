@@ -17,6 +17,7 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState<string>("Good Morning");
+  // const [progressData, setProgressData] = useState<ProgressData[]>([]);
 
    // Static progress data
    const progressData: ProgressData[] = [
@@ -28,6 +29,25 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
     { day: "Sat", progress: 60 },
     { day: "Sun", progress: 90 },
   ];
+
+  // useEffect(() => {
+  //   const fetchProgress = async () => {
+  //     console.log("fetching the course progress.");
+  //     try {
+  //       const res = await fetch("/api/progress");
+  //       const data = await res.json();
+  //       console.log("fetched data: ", data);
+  //       setProgressData(data); // Update state with fetched data
+  //     } catch (error) {
+  //       console.error("Error fetching progress data:", error);
+  //     }
+  //   };
+
+  //   fetchProgress();
+  //   const interval = setInterval(fetchProgress, 60000); // Refresh every 60s
+
+  //   return () => clearInterval(interval); // Cleanup on unmount
+  // }, []);
 
 
 

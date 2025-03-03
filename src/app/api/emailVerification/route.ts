@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     }
     // User.verified = true;
     // await User.save();
-    await User.findOneAndUpdate({email: user.email}, {verified: true});
+    await User.findOneAndUpdate({email: user.email}, {$set: { verified: true, lastLoginAt: new Date(), lastActiveAt: new Date()}});
     await user.deleteOne();
 
     return NextResponse.json({message: "Email is successfully Verified."}, {status: 200});

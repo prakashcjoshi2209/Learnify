@@ -42,24 +42,26 @@
 
 
 import { NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+// import { getToken } from 'next-auth/jwt';
 import type { NextRequest } from 'next/server';
 // import { auth } from '../auth';
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET})
+  // const token = await getToken({ req, secret: process.env.AUTH_SECRET})
   // const session = await auth();
-  console.log("Middleware Debug - Token:", token);
+  // console.log("Middleware Debug - Token:", token);
   // console.log("Middleware Debug - Token:", session);
   console.log("Request Path:", req.nextUrl.pathname);
 
 
-  const isAuth = !!token; // Check if the user has a valid token
+  // const isAuth = !!token; // Check if the user has a valid token
+  const isAuth = false;
   // const isAuth = !!session; // Check if the user has a valid token
   const isLoginPage = req.nextUrl.pathname === '/login';
   const isForgetPasswordPage = req.nextUrl.pathname=== '/ForgetPassword';
-  const isDashboardPage = req.nextUrl.pathname === '/DashBoard';
-  const isCart = req.nextUrl.pathname === "/Cart";
+  // const isDashboardPage = req.nextUrl.pathname === '/DashBoard';
+  // const isCart = req.nextUrl.pathname === "/Cart";
+  // const isWishlist = req.nextUrl.pathname === "/Wishlist";
 
   // If the user is authenticated and tries to access the login page, redirect them to the dashboard
   if (isAuth && isLoginPage) {
@@ -74,15 +76,20 @@ export async function middleware(req: NextRequest) {
   }
 
   // If the user is not authenticated and tries to access a protected route, redirect them to the login page
-  if (!isAuth && isDashboardPage) {
-    console.log("Redirecting to /login due to missing auth");
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
+  // if (!isAuth && isDashboardPage) {
+  //   console.log("Redirecting to /login due to missing auth");
+  //   return NextResponse.redirect(new URL('/login', req.url));
+  // }
 
-  if (!isAuth && isCart) {
-    console.log("Redirecting User to Login");
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
+  // if (!isAuth && isCart) {
+  //   console.log("Redirecting User to Login");
+  //   return NextResponse.redirect(new URL('/login', req.url));
+  // }
+
+  // if (!isAuth && isWishlist) {
+  //   console.log("Redirecting User to Login");
+  //   return NextResponse.redirect(new URL('/login', req.url));
+  // }
 
   // For testing purposes
   if (!isAuth && req.nextUrl.pathname.startsWith('/pay')) {

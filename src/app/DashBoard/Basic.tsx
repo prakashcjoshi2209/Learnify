@@ -96,8 +96,9 @@ import DashboardContent from "./DashboardContent";
 import { IoPersonCircleOutline, IoClose } from "react-icons/io5";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Sidebar from "./Sidebar";
+import { Session } from "next-auth";
 
-const Basic = ({ session }: { session: any }) => {
+const Basic = ({ session }: { session: Session | null}) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [profileOpen, setProfileOpen] = useState<boolean>(false);
 

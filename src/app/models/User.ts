@@ -35,10 +35,13 @@ export interface IUser extends Document {
   // coursesBought?: ICourse[];
   coursesBought?: number[];
   cart?: number[];
+  wishlist?: number[];
   reviews?: string[];
   courseProgress?: ICourseProgress[];
   resetToken?: string;
   resetTokenExpiry?: Date;
+  lastLoginAt?: Date;
+  lastActiveAt?: Date;
 }
 
 const SubmoduleProgressSchema: Schema = new Schema({
@@ -68,7 +71,7 @@ const UserSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
-    phone: {type: Number, unique: true},
+    phone: {type: Number, unique: true, sparse: true, default: null},
     verified: {type: Boolean, default: false, required: true},
     password: {
       type: String,
@@ -87,6 +90,10 @@ const UserSchema: Schema = new Schema(
       type: [Number],
       default: [],
     },
+    wishlist: {
+      type: [Number],
+      default: [],
+    },
     reviews: { type: [String], default: [] },
     courseProgress: {
       type: [CourseProgressSchema],
@@ -94,6 +101,8 @@ const UserSchema: Schema = new Schema(
     },
     resetToken: { type: String, required: false },
     resetTokenExpiry: { type: Date, required: false },
+    lastLoginAt: {type: Date, required: false},
+    lastActiveAt: {type: Date, required: false}
   },
   { timestamps: true }
 );

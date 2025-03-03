@@ -287,25 +287,24 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            {/* Wishlist & Cart Icons (Shown only when logged in) */}
-            {session && (
+            {!session ? null : (
               <>
                 <button
                   onClick={() => handleNavigation("/Wishlist")}
-                  className={`relative p-2 rounded-full transition ${pathname === "/Wishlist" ? "bg-pink-500 text-white" : "bg-white text-black font-semibold"}`}
+                  className="relative bg-white text-black font-semibold p-2 rounded-full"
                 >
                   <HeartIcon className="h-5 w-5" />
                 </button>
 
                 <button
                   onClick={() => handleNavigation("/Cart")}
-                  className={`relative p-2 rounded-full transition ${pathname === "/Cart" ? "bg-pink-500 text-white" : "bg-white text-black font-semibold"}`}
+                  className="relative bg-white text-black font-semibold p-2 rounded-full"
                 >
                   <ShoppingCartIcon className="h-5 w-5" />
                 </button>
               </>
-            )}
-
+            )}  
+            
             {/* Auth Buttons */}
             {!session ? (
               <div className="hidden md:flex space-x-2">
@@ -340,6 +339,80 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
           </div>
         </div>
       </nav>
+
+      {/* Sidebar */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+          <div className="fixed top-0 right-0 w-[250px] bg-white h-full shadow-lg z-50">
+            {/* Close Button */}
+            <div className="flex items-center justify-between px-4 py-3 border-b">
+              <h2 className="text-xl font-bold text-purple-600">Menu</h2>
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                className="text-gray-600 hover:text-red-500"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Sidebar Links */}
+            <div className="flex flex-col p-4 space-y-4">
+              <button
+                onClick={() => handleNavigation("/")}
+                className={`text-gray-800 hover:text-purple-600 ${
+                  pathname === "/" ? "font-bold" : ""
+                }`}
+              >
+                Home
+              </button>
+              <button
+                onClick={() => handleNavigation("/ExploreData")}
+                className={`text-gray-800 hover:text-purple-600 ${
+                  pathname === "/ExploreData" ? "font-bold" : ""
+                }`}
+              >
+                Explore
+              </button>
+              {session ? (
+                <button
+                  onClick={() => handleNavigation("/DashBoard")}
+                  className={`text-gray-800 hover:text-purple-600 ${
+                    pathname === "/DashBoard" ? "font-bold" : ""
+                  }`}
+                >
+                  Dashboard
+                </button>
+              ) : (
+                ""
+              )}
+              {!session ? (
+                <div className="flex flex-col space-y-4">
+                  <button
+                    onClick={() => handleNavigation("/signup")}
+                    className="text-gray-800 hover:text-purple-600"
+                  >
+                    Sign Up
+                  </button>
+
+                  <button
+                    onClick={() => handleNavigation("/login")}
+                    className="text-gray-800 hover:text-purple-600"
+                  >
+                    Login
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleLogout}
+                  className="text-gray-800 hover:text-purple-600"
+                >
+                  Logout
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

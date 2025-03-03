@@ -134,7 +134,7 @@ import { MagnifyingGlassIcon, ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { BeatLoader, SkewLoader } from "react-spinners";
-import Loader from "./Loader";
+// import Loader from "./Loader";
 
 interface SearchResult {
   _id: string;

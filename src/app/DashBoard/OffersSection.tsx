@@ -12,6 +12,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 interface Offer {
   id: number;
@@ -23,12 +24,12 @@ interface Offer {
 }
 
 const offers: Offer[] = [
-  { id: 1, title: "Mastering Next.js", description: "Learn Next.js with real-world projects.", author: "John Doe", discount: "40% OFF", image: "signuppageimage.png" },
-  { id: 2, title: "Advanced TypeScript", description: "Master TypeScript with deep concepts.", author: "Jane Smith", discount: "50% OFF", image: "signuppageimage.png" },
-  { id: 3, title: "Full-Stack MERN Bootcamp", description: "Become a full-stack developer.", author: "David Johnson", discount: "30% OFF", image: "signuppageimage.png" },
-  { id: 4, title: "React Native from Scratch", description: "Build mobile apps using React Native.", author: "Sarah Lee", discount: "60% OFF", image: "signuppageimage.png" },
-  { id: 5, title: "Next.js Advanced", description: "Go beyond the basics in Next.js.", author: "John Doe", discount: "80% OFF", image: "signuppageimage.png" },
-  { id: 6, title: "TypeScript Pro", description: "Advanced TypeScript for developers.", author: "Jane Smith", discount: "90% OFF", image: "signuppageimage.png" },
+  { id: 1, title: "Mastering Next.js", description: "Learn Next.js with real-world projects.", author: "John Doe", discount: "40% OFF", image: "/signuppageimage.png" },
+  { id: 2, title: "Advanced TypeScript", description: "Master TypeScript with deep concepts.", author: "Jane Smith", discount: "50% OFF", image: "/signuppageimage.png" },
+  { id: 3, title: "Full-Stack MERN Bootcamp", description: "Become a full-stack developer.", author: "David Johnson", discount: "30% OFF", image: "/signuppageimage.png" },
+  { id: 4, title: "React Native from Scratch", description: "Build mobile apps using React Native.", author: "Sarah Lee", discount: "60% OFF", image: "/signuppageimage.png" },
+  { id: 5, title: "Next.js Advanced", description: "Go beyond the basics in Next.js.", author: "John Doe", discount: "80% OFF", image: "/signuppageimage.png" },
+  { id: 6, title: "TypeScript Pro", description: "Advanced TypeScript for developers.", author: "Jane Smith", discount: "90% OFF", image: "/signuppageimage.png" },
 ];
 
 const OffersSection: React.FC = () => {
@@ -111,10 +112,10 @@ const OffersSection: React.FC = () => {
                     {offer.discount}
                   </span>
 
-                  {/* Image Section */}
-                  <div className="w-full">
-                    <img src={offer.image} alt={offer.title} className="w-full h-32 object-cover rounded-lg" />
-                  </div>
+                        {/* Image Section */}
+                    <div className="w-full">
+                                   <Image src={offer.image} alt={offer.title} height={32} width={32} className="object-cover rounded-lg" />
+                    </div>
 
                   <CardHeader className="flex-grow px-2 py-3 flex flex-col justify-between">
                     <CardTitle className="text-lg font-semibold text-gray-800">{offer.title}</CardTitle>
