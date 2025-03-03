@@ -34,6 +34,7 @@ export async function GET() {
 
     return NextResponse.json(progressData, { status: 200 });
   } catch (error) {
+    console.error("Failed to fetch progress data", error);
     return NextResponse.json({ error: "Failed to fetch progress data" }, { status: 500 });
   }
 }

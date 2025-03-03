@@ -16,7 +16,7 @@ const page = async () => {
       <Navbar session = {session}/>
       <Consist/>
       <StatsBar/>
-      <PopularCourses/>
+      <PopularCourses session={session}/>
       <BenefitsSection/>
       <Footer/>
     </div>
