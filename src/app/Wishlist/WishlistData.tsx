@@ -106,15 +106,17 @@ const Wishlist = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gray-100">
       {/* Profile Section */}
-      <div className="w-1/4 p-6 bg-white shadow-lg flex flex-col items-center">
+      <div className="md:w-1/4 w-full p-6 bg-white shadow-lg flex flex-col items-center md:sticky md:top-0">
         <ProfileSection session={session} />
       </div>
 
       {/* Wishlist Section */}
-      <main className="flex-1 p-10">
-        <h1 className="text-3xl font-bold text-purple-800 mb-6">Wishlist</h1>
+      <main className="flex-1 p-6 md:p-10">
+        <h1 className="text-2xl md:text-3xl font-bold text-purple-800 mb-6 text-center md:text-left">
+          Wishlist
+        </h1>
 
         {/* Show empty wishlist message */}
         {wishlist.length === 0 ? (

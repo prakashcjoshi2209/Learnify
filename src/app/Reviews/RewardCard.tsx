@@ -13,8 +13,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ name, imageUrl, review, rating 
     return Array.from({ length: 5 }, (_, index) => (
       <span
         key={index}
-        className={`text-3xl ${
-          index < rating ? 'text-yellow-300' : 'text-gray-800'
+        className={`text-xl sm:text-2xl ${
+          index < rating ? 'text-yellow-300' : 'text-gray-400'
         }`}
       >
         ★
@@ -23,21 +23,29 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ name, imageUrl, review, rating 
   };
 
   return (
-    <div className="flex items-center border border-purple-800 rounded-lg p-4 shadow-sm bg-white">
+    <div className="flex flex-col sm:flex-row items-center sm:items-start border border-purple-800 rounded-lg p-4 shadow-sm bg-white w-full max-w-lg mx-auto">
+      {/* Profile Image */}
       <Image
         src={imageUrl}
         alt={`${name}'s profile`}
-        width={36}
-        height={36}
-        className="w-12 h-12 rounded-full object-cover mr-4 "
+        width={48}
+        height={48}
+        className="w-16 h-16 sm:w-12 sm:h-12 rounded-full object-cover mb-3 sm:mb-0 sm:mr-4"
       />
-      <div>
-       <div className='flex items-center space-x-4 '>
-       <h4 className="font-semibold text-xl text-purple-600">{name}</h4>
-       <div className="flex items-center space-x-1">{renderStars()}</div>
-       </div>
-        <hr className='border-2 border-purple-600'/>
-        <p className="text-gray-600 text-sm mt-2 text-primaryBlue font-bold">{review}</p>
+
+      {/* Review Content */}
+      <div className="text-center sm:text-left w-full">
+        {/* Name & Stars */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-center sm:justify-between space-y-2 sm:space-y-0">
+          <h4 className="font-semibold text-lg sm:text-xl text-purple-600">{name}</h4>
+          <div className="flex">{renderStars()}</div>
+        </div>
+
+        {/* Divider */}
+        <hr className="border border-purple-600 my-2 sm:my-1" />
+
+        {/* Review Text */}
+        <p className="text-gray-600 text-sm sm:text-base font-bold">{review}</p>
       </div>
     </div>
   );

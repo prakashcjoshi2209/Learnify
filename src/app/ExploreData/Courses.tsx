@@ -116,7 +116,7 @@ const Courses: React.FC = () => {
                 price={course.price}
                 originalPrice={course.originalPrice}
                 description={course.description}
-                buttonLabel="Enroll Now"
+                buttonLabel="View Detail"
                 courseId={course.courseId}
               />
             ))}

@@ -44,7 +44,6 @@ const CartPage = () => {
         setLoading(false);
       }
     };
-
     fetchCartCourses();
   }, []);
 
@@ -80,7 +79,6 @@ const CartPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ courseId }),
       });
-
       if (!response.ok) throw new Error("Failed to remove course");
 
       setCart((prevCart) =>
@@ -96,14 +94,12 @@ const CartPage = () => {
   };
 
   if (loading) return <Loader />;
-
   const totalAmount = cart.reduce((sum, item) => sum + item.price.current, 0);
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      {/* Profile Section Sidebar */}
-      <div className="w-1/4 p-6 bg-white shadow-lg flex flex-col items-center">
-        <ProfileSection session={session} /> {/* Pass session prop */}
+    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
+      <div className="w-full md:w-1/4 p-6 bg-white shadow-lg flex flex-col items-center">
+        <ProfileSection session={session} />
       </div>
 
       {/* Cart Section */}
@@ -143,8 +139,6 @@ const CartPage = () => {
                     className="object-cover w-full h-full"
                   />
                 </div>
-
-                {/* Course Details */}
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-gray-900">
                     {item.name}
@@ -201,7 +195,6 @@ const CartPage = () => {
           </div>
         )}
 
-        {/* Total Amount Section */}
         {cart.length > 0 && (
           <div className="mt-8 p-6 bg-white shadow-md rounded-lg flex justify-between items-center border-t-4 border-blue-500">
             <h3 className="text-2xl font-bold text-gray-800">

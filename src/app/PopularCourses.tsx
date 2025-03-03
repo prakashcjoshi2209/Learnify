@@ -73,7 +73,7 @@ const PopularCourses: React.FC = () => {
             originalPrice={course.price.original}
             description={course.shortDescription}
             // dateRange={course.duration}
-            buttonLabel="Enroll Now"
+            buttonLabel="View Detail"
             courseId={course.courseId}
           />
         ))}
