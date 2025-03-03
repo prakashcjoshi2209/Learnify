@@ -198,17 +198,6 @@ const Card: React.FC<CardProps> = ({
     setTimeout(() => setShowMessage(false), 2000);
   };
 
-  const formatStudents = (num: number) => {
-    const roundedNum = Math.round(num / 100) * 100;
-    if (roundedNum >= 1_000_000) {
-      return (roundedNum / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
-    }
-    if (roundedNum >= 1_000) {
-      return (roundedNum / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
-    }
-    return roundedNum;
-  };
-
   return (
     <div className="w-full max-w-[360px] bg-white rounded-lg shadow-lg border hover:shadow-xl transform hover:scale-105 transition-transform duration-300 flex flex-col relative font-sans">
       {/* Image Section */}

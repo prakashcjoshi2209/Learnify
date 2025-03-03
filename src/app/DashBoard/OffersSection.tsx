@@ -24,12 +24,12 @@ interface Offer {
 }
 
 const offers: Offer[] = [
-  { id: 1, title: "Mastering Next.js", description: "Learn Next.js with real-world projects.", author: "John Doe", discount: "40% OFF", image: "signuppageimage.png" },
-  { id: 2, title: "Advanced TypeScript", description: "Master TypeScript with deep concepts.", author: "Jane Smith", discount: "50% OFF", image: "signuppageimage.png" },
-  { id: 3, title: "Full-Stack MERN Bootcamp", description: "Become a full-stack developer.", author: "David Johnson", discount: "30% OFF", image: "signuppageimage.png" },
-  { id: 4, title: "React Native from Scratch", description: "Build mobile apps using React Native.", author: "Sarah Lee", discount: "60% OFF", image: "signuppageimage.png" },
-  { id: 5, title: "Next.js Advanced", description: "Go beyond the basics in Next.js.", author: "John Doe", discount: "80% OFF", image: "signuppageimage.png" },
-  { id: 6, title: "TypeScript Pro", description: "Advanced TypeScript for developers.", author: "Jane Smith", discount: "90% OFF", image: "signuppageimage.png" },
+  { id: 1, title: "Mastering Next.js", description: "Learn Next.js with real-world projects.", author: "John Doe", discount: "40% OFF", image: "/signuppageimage.png" },
+  { id: 2, title: "Advanced TypeScript", description: "Master TypeScript with deep concepts.", author: "Jane Smith", discount: "50% OFF", image: "/signuppageimage.png" },
+  { id: 3, title: "Full-Stack MERN Bootcamp", description: "Become a full-stack developer.", author: "David Johnson", discount: "30% OFF", image: "/signuppageimage.png" },
+  { id: 4, title: "React Native from Scratch", description: "Build mobile apps using React Native.", author: "Sarah Lee", discount: "60% OFF", image: "/signuppageimage.png" },
+  { id: 5, title: "Next.js Advanced", description: "Go beyond the basics in Next.js.", author: "John Doe", discount: "80% OFF", image: "/signuppageimage.png" },
+  { id: 6, title: "TypeScript Pro", description: "Advanced TypeScript for developers.", author: "Jane Smith", discount: "90% OFF", image: "/signuppageimage.png" },
 ];
 
 const OffersSection: React.FC = () => {

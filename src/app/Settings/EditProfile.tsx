@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 const EditProfile = () => {
@@ -86,10 +87,12 @@ const EditProfile = () => {
       {/* Sidebar */}
       <aside className="w-1/4 bg-white shadow-lg p-6">
         <div className="text-center">
-          <img
+          <Image
+            height={24}
+            width={24}
             src={profileImage}
             alt="Profile"
-            className="w-24 h-24 mx-auto rounded-full object-cover"
+            className="mx-auto rounded-full object-cover"
           />
           <h2 className="mt-3 font-semibold text-lg">
             {formData.firstName || "First Name"}{" "}
