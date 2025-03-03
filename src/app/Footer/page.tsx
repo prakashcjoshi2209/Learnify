@@ -8,7 +8,7 @@ import {FaXTwitter} from "react-icons/fa6"
 
 
 import { MdEmail, MdPhone } from "react-icons/md";
-import page from "../ExploreData/Courses";
+// import page from "../ExploreData/Courses";
 
 const Footer: React.FC = () => {
   return (

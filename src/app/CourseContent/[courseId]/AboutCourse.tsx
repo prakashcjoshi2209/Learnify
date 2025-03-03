@@ -25,6 +25,11 @@ const AboutCourse: React.FC<CourseDetailsProps> = ({
   details,
   features,
 }) => {
+
+  const handleDownload = async()=>{
+    
+  }
+
   return (
     <div className="flex flex-col lg:flex-row gap-8 bg-gray-50 p-8 rounded-lg shadow-lg">
       {/* Left Section */}
@@ -63,7 +68,7 @@ const AboutCourse: React.FC<CourseDetailsProps> = ({
             </div>
           </div>
         ))}
-        <button className="w-full bg-white text-purple-700 py-3 border border-purple-600 rounded-lg font-semibold flex items-center justify-center hover:bg-gray-300 transition duration-300">
+        <button onClick={handleDownload} className="w-full bg-white text-purple-700 py-3 border border-purple-600 rounded-lg font-semibold flex items-center justify-center hover:bg-gray-300 transition duration-300">
           <FaDownload className="mr-2 text-lg" />
           Download Syllabus for Complete Details
         </button>

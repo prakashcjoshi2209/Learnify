@@ -1,130 +1,16 @@
+"use client";
 
-// "use client";
-
-// import { useState } from "react";
-// import Image from "next/image";
-// import { useRouter } from "next/navigation";
-// import ProfileSection from "../Cart/ProfileSection";
-
-// interface ICourse {
-//   _id: string;
-//   name: string;
-//   image: string;
-//   price: { current: number };
-//   shortDescription: string;
-//   studentsEnrolled: number;
-//   courseId: number;
-// }
-
-// // Sample Wishlist Data
-// const initialWishlist: ICourse[] = [
-//   {
-//     _id: "1",
-//     name: "React Mastery Course",
-//     image: "/images/react-course.jpg",
-//     price: { current: 4999 },
-//     shortDescription: "Learn React from scratch and build real-world projects.",
-//     studentsEnrolled: 1200,
-//     courseId: 101,
-//   },
-//   {
-//     _id: "2",
-//     name: "Next.js Advanced Guide",
-//     image: "/images/nextjs-course.jpg",
-//     price: { current: 5999 },
-//     shortDescription: "Master Next.js for full-stack web development.",
-//     studentsEnrolled: 850,
-//     courseId: 102,
-//   },
-// ];
-
-// const Wishlist = () => {
-//   const [wishlist, setWishlist] = useState<ICourse[]>(initialWishlist);
-//   const [isProcessing, setIsProcessing] = useState(false);
-//   const router = useRouter();
-
-//   // Remove from Wishlist
-//   const handleRemove = (courseId: number) => {
-//     setWishlist((prev) => prev.filter((item) => item.courseId !== courseId));
-//   };
-
-//   // Move to Cart
-//   const handleMoveToCart = (course: ICourse) => {
-//     setIsProcessing(true);
-
-//     setTimeout(() => {
-//       handleRemove(course.courseId);
-//       setIsProcessing(false);
-//     }, 1000);
-//   };
-
-//   return (
-//     <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-purple-500 to-indigo-600 p-6">
-//       <div className="bg-white/30 backdrop-blur-lg shadow-lg rounded-xl p-8 max-w-4xl w-full border border-white/10">
-//         <h2 className="text-4xl font-extrabold text-white text-center mb-6">Your Wishlist 💖</h2>
-
-//         {/* Empty Wishlist Message */}
-//         {wishlist.length === 0 ? (
-//           <p className="text-center text-white/90 text-lg font-semibold">
-//             Your wishlist is empty 😔
-//           </p>
-//         ) : (
-//           <div className="space-y-6">
-//             {wishlist.map((item) => (
-//               <div
-//                 key={item._id}
-//                 className="flex flex-col sm:flex-row items-center gap-6 bg-white/30 p-5 rounded-lg shadow-md hover:shadow-xl transition"
-//               >
-//                 <Image
-//                   src={item.image}
-//                   alt={item.name}
-//                   width={150}
-//                   height={100}
-//                   className="rounded-lg shadow-md"
-//                 />
-//                 <div className="flex-1">
-//                   <h3 className="text-2xl font-bold text-white">{item.name}</h3>
-//                   <p className="text-sm text-white/80 mb-2">{item.shortDescription}</p>
-//                   <p className="text-sm font-semibold text-white/90">
-//                     🎓 Enrolled: <span className="font-normal">{item.studentsEnrolled}</span>
-//                   </p>
-//                 </div>
-//                 <div className="text-right">
-//                   <p className="text-lg font-bold text-white">₹{item.price.current}</p>
-//                   <button
-//                     onClick={() => handleMoveToCart(item)}
-//                     className="mt-2 px-6 py-2 bg-green-500 text-white font-semibold rounded-full shadow-md transition hover:bg-green-600"
-//                     disabled={isProcessing}
-//                   >
-//                     {isProcessing ? "Processing..." : "Move to Cart"}
-//                   </button>
-//                   <button
-//                     onClick={() => handleRemove(item.courseId)}
-//                     className="mt-2 ml-4 px-6 py-2 bg-red-500 text-white font-semibold rounded-full shadow-md transition hover:bg-red-600"
-//                   >
-//                     Remove ❌
-//                   </button>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Wishlist;
-
-
-
-'use client';
-
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import Image from 'next/image';
-import ProfileSection from '../Cart/ProfileSection';
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import ProfileSection from "../Cart/ProfileSection";
+import { FaUsers } from "react-icons/fa";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import formatStudents from "@/lib/formatStudents";
+import Loader from "@/components/ui/Loader";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 interface ICourse {
   _id: string;
@@ -136,37 +22,88 @@ interface ICourse {
     original: number;
   };
   studentsEnrolled: number;
+  courseId: number;
 }
 
-const initialWishlist: ICourse[] = [
-  {
-    _id: '1',
-    name: 'React for Beginners',
-    shortDescription: 'Learn the fundamentals of React.js',
-    image: '/LoginImage.png',
-    price: {
-      current: 2999,
-      original: 4999,
-    },
-    studentsEnrolled: 1200,
-  },
-  {
-    _id: '2',
-    name: 'Advanced Node.js',
-    shortDescription: 'Deep dive into backend development with Node.js',
-    image: '/LoginImage.png',
-    price: {
-      current: 3499,
-      original: 5999,
-    },
-    studentsEnrolled: 800,
-  },
-];
-
 const Wishlist = () => {
-  const [wishlist, setWishlist] = useState<ICourse[]>(initialWishlist);
-  const router = useRouter();
-  const { data: session } = useSession(); // Fetch session data
+  const [wishlist, setWishlist] = useState<ICourse[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isRemoving, setIsRemoving] = useState<boolean>(false);
+  const [isWishing, setIsWishing] = useState<boolean>(false);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    const fetchWishlistCourses = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch("/api/wishlistCourses");
+        if (!response.ok) throw new Error("Error fetching courses");
+        const data: ICourse[] = await response.json();
+        setWishlist(data);
+      } catch (error) {
+        console.error("Error fetching wishlist data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWishlistCourses();
+  }, []);
+
+  const removeFromWishlist = async (courseId: number) => {
+    try {
+      setIsRemoving(true);
+      const response = await fetch("/api/removeWishlistCourse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ courseId }),
+      });
+
+      if (!response.ok) throw new Error("Failed to remove course");
+
+      setWishlist(wishlist.filter((course) => course.courseId !== courseId));
+      toast.success("Course removed successfully");
+    } catch (error) {
+      setIsRemoving(false);
+      console.error("Error removing course:", error);
+    } finally {
+      setIsRemoving(false);
+    }
+  };
+
+  // Function to move course to cart
+  const moveToCart = async (courseId: number) => {
+    setIsWishing(true);
+    try {
+      const response = await fetch("/api/addCart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ courseId }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+      removeFromWishlist(courseId);
+      setIsWishing(false);
+      toast.success("Course is moved to your Cart");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error);
+        console.log("Adding Wishlist has developed some issue.");
+      } else {
+        setIsWishing(false);
+        console.error("Something went Wrong on client side.");
+      }
+    } finally {
+      setIsWishing(false);
+    }
+  };
+
+  if (loading) return <Loader />;
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -174,41 +111,85 @@ const Wishlist = () => {
       <div className="w-1/4 p-6 bg-white shadow-lg flex flex-col items-center">
         <ProfileSection session={session} />
       </div>
+
       {/* Wishlist Section */}
       <main className="flex-1 p-10">
         <h1 className="text-3xl font-bold text-purple-800 mb-6">Wishlist</h1>
 
-        {/* Wishlist Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {wishlist.map((course) => (
-            <div key={course._id} className="bg-white rounded-lg shadow-md p-4">
-              <Image
-                src={course.image}
-                alt={course.name}
-                width={300}
-                height={180}
-                className="rounded-lg"
-              />
-              <div className="mt-4">
-                <p className="text-gray-600 text-sm">📅 1 - 28 July 2022</p>
-                <h3 className="text-lg font-semibold text-indigo-700">{course.name}</h3>
-                <p className="text-sm text-gray-500">{course.shortDescription}</p>
+        {/* Show empty wishlist message */}
+        {wishlist.length === 0 ? (
+          <div className="text-center text-gray-500 text-lg mt-10">
+            🎈 Your Wishlist is empty. Start adding courses!
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {wishlist.map((course) => (
+              <div
+                key={course._id}
+                className="bg-white rounded-lg shadow-md p-4 relative"
+              >
+                {/* Course Image */}
+                <Image
+                  src={course.image}
+                  alt={course.name}
+                  width={300}
+                  height={180}
+                  className="rounded-lg"
+                />
 
-                {/* Student Count */}
-                <div className="flex items-center mt-2">
-                  <Image src="/images/students-icon.png" alt="Students" width={20} height={20} />
-                  <span className="text-sm text-gray-600 ml-2">+ {course.studentsEnrolled} students</span>
-                </div>
+                {/* Course Details */}
+                <div className="mt-4">
+                  <h3 className="text-lg font-semibold text-indigo-700">
+                    {course.name}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {course.shortDescription}
+                  </p>
 
-                {/* Pricing */}
-                <div className="flex items-center mt-2">
-                  <p className="text-lg font-bold text-black">₹{course.price.current}</p>
-                  <p className="text-sm text-gray-400 line-through ml-2">₹{course.price.original}</p>
+                  {/* Student Count */}
+                  <div className="flex items-center mt-2">
+                    <FaUsers className="text-purple-600 mr-2" />
+                    <span className="text-sm text-gray-600 ml-2">
+                      +{formatStudents(course.studentsEnrolled)} students
+                    </span>
+                  </div>
+
+                  {/* Pricing */}
+                  <div className="flex items-center mt-2">
+                    <p className="text-lg font-bold text-black">
+                      ₹{course.price.current}
+                    </p>
+                    <p className="text-sm text-gray-400 line-through ml-2">
+                      ₹{course.price.original}
+                    </p>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex justify-between items-center mt-4">
+                    {/* Move to Cart */}
+                    <button
+                      onClick={() => moveToCart(course.courseId)}
+                      className="flex items-center bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition"
+                    >
+                      {isWishing ? <ClipLoader size={15} color="white" /> : <AiOutlineShoppingCart className="mr-2" />}  Move to Cart
+                    </button>
+
+                    {isRemoving ? (
+                      <ClipLoader size={30} color="red" />
+                    ) : (
+                      <button
+                        onClick={() => removeFromWishlist(course.courseId)}
+                        className="text-red-500 hover:text-red-700 transition"
+                      >
+                        <TrashIcon className="w-6 h-6" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );

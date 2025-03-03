@@ -20,8 +20,8 @@ export async function GET() {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
         // console.log("User founded!");
-        // console.log("User cart courses: ", user.cart)
-        const courses = await Course.find({ courseId: { $in: user.cart } });
+        // console.log("User wishlist courses: ", user.cart)
+        const courses = await Course.find({ courseId: { $in: user.wishlist } });
         if(!courses){
             return NextResponse.json({error: "No courses Found!"}, {status:404});
         }

@@ -10,6 +10,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 interface Offer {
   id: number;
@@ -112,7 +113,7 @@ const OffersSection: React.FC = () => {
 
                         {/* Image Section */}
                     <div className="w-full">
-                                   <img src={offer.image} alt={offer.title} className="w-full h-32 object-cover rounded-lg" />
+                                   <Image src={offer.image} alt={offer.title} height={32} width={32} className="object-cover rounded-lg" />
                     </div>
 
                   <CardHeader className="flex-grow px-2 py-3 flex flex-col justify-between">

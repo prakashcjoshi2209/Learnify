@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import formatStudents from "@/lib/formatStudents";
 
 interface CardProps {
   title: string;
@@ -36,16 +37,16 @@ const Card: React.FC<CardProps> = ({
     router.push(`/CourseContent/${courseId}`);
   };
 
-  const formatStudents = (num:number) => {
-    const roundedNum = Math.round(num / 100) * 100;
-    if (roundedNum >= 1_000_000) {
-      return (roundedNum / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
-    }
-    if (roundedNum >= 1_000) {
-      return (roundedNum / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
-    }
-    return roundedNum;
-  };
+  // const formatStudents = (num:number) => {
+  //   const roundedNum = Math.round(num / 100) * 100;
+  //   if (roundedNum >= 1_000_000) {
+  //     return (roundedNum / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  //   }
+  //   if (roundedNum >= 1_000) {
+  //     return (roundedNum / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  //   }
+  //   return roundedNum;
+  // };
 
   return (
     <div className="w-full max-w-[360px] bg-white rounded-lg shadow-lg border hover:shadow-xl transform hover:scale-105 transition-transform duration-300 flex flex-col">

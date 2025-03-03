@@ -119,20 +119,23 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
 
           {/* Right Section */}
           <div className="flex items-center space-x-4">
-            {/* Wishlist Icon */}
+            {!session ? null : (
+              <>
                 <button
-                   onClick={() => handleNavigation("/Wishlist")}
-                     className="relative bg-white text-black font-semibold p-2 rounded-full"
-                     >
+                  onClick={() => handleNavigation("/Wishlist")}
+                  className="relative bg-white text-black font-semibold p-2 rounded-full"
+                >
                   <HeartIcon className="h-5 w-5" />
                 </button>
-            {/* Cart Icon */}
-            <button
-              onClick={() => handleNavigation("/Cart")}
-              className="relative bg-white text-black font-semibold p-2 rounded-full"
-            >
-              <ShoppingCartIcon className="h-5 w-5" />
-            </button>
+
+                <button
+                  onClick={() => handleNavigation("/Cart")}
+                  className="relative bg-white text-black font-semibold p-2 rounded-full"
+                >
+                  <ShoppingCartIcon className="h-5 w-5" />
+                </button>
+              </>
+            )}
 
             {/* Buttons */}
             {!session ? (
@@ -218,7 +221,7 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
                 ""
               )}
               {!session ? (
-                <div className = "flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4">
                   <button
                     onClick={() => handleNavigation("/signup")}
                     className="text-gray-800 hover:text-purple-600"

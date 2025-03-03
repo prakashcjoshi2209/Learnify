@@ -154,10 +154,10 @@ const Signup = () => {
           <div className="my-4 text-center text-gray-400">- OR -</div>
 
           {apiError && (
-            <div className="text-red-600 text-center mb-4">{apiError}</div>
+            <div className="text-red-600 bg-red-100 text-center py-2 mb-2 rounded-md">{apiError}</div>
           )}
           {success && (
-            <div className="text-green-600 text-center mb-4">{success}</div>
+            <div className="text-green-600 bg-green-100 text-center py-2 mb-2 rounded-md">{success}</div>
           )}
 
           <Form {...form}>

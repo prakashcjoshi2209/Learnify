@@ -150,7 +150,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.email = token.email as string;
         session.user.image = token.image as string;
         (session.user as any).provider = token.provider as string;
-        session.user.phone = token.phone || null;
+        (session.user as any).phone = (token.phone as number) || null ;
       }
       session.expires = token.rememberMe
       ? (new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()  as unknown as string & Date) // 30 days
