@@ -12,7 +12,7 @@ import { ICourse } from "../models/Course";
 interface CardProps {
   title: string;
   image: string;
-  session: Session | null;
+  session: Session | null | undefined;
   students: number;
   price: number;
   originalPrice: number;

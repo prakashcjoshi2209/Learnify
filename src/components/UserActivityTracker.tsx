@@ -1,53 +1,53 @@
-"use client";
+// "use client";
 
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
-const UserActivityTracker = () => {
-  console.log("UserActivityTracker component mounted!");
+// const UserActivityTracker = () => {
+//   console.log("UserActivityTracker component mounted!");
 
-  const [isUpdating, setIsUpdating] = useState(false);
+//   const [isUpdating, setIsUpdating] = useState(false);
 
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
+//   useEffect(() => {
+//     let timeout: NodeJS.Timeout;
 
-    const updateActivity = async () => {
-      if (isUpdating) return;
-      setIsUpdating(true);
-      try {
-        await fetch("/api/updateUserActivity");
-      } catch (error) {
-        console.error("Error updating user activity:", error);
-      } finally {
-        setIsUpdating(false);
-      }
-    };
+//     const updateActivity = async () => {
+//       if (isUpdating) return;
+//       setIsUpdating(true);
+//       try {
+//         await fetch("/api/updateUserActivity");
+//       } catch (error) {
+//         console.error("Error updating user activity:", error);
+//       } finally {
+//         setIsUpdating(false);
+//       }
+//     };
 
-    const handleActivity = () => {
-      clearTimeout(timeout);
-      updateActivity();
+//     const handleActivity = () => {
+//       clearTimeout(timeout);
+//       updateActivity();
 
-      // If no activity for 5 mins, consider the user inactive
-      timeout = setTimeout(() => {
-        console.log("User inactive");
-      }, 5 * 60 * 1000);
-    };
+//       // If no activity for 5 mins, consider the user inactive
+//       timeout = setTimeout(() => {
+//         console.log("User inactive");
+//       }, 5 * 60 * 1000);
+//     };
 
-    // Attach event listeners
-    window.addEventListener("mousemove", handleActivity);
-    window.addEventListener("keypress", handleActivity);
-    window.addEventListener("scroll", handleActivity);
-    window.addEventListener("click", handleActivity);
+//     // Attach event listeners
+//     window.addEventListener("mousemove", handleActivity);
+//     window.addEventListener("keypress", handleActivity);
+//     window.addEventListener("scroll", handleActivity);
+//     window.addEventListener("click", handleActivity);
 
-    return () => {
-      window.removeEventListener("mousemove", handleActivity);
-      window.removeEventListener("keypress", handleActivity);
-      window.removeEventListener("scroll", handleActivity);
-      window.removeEventListener("click", handleActivity);
-      clearTimeout(timeout);
-    };
-  }, []);
+//     return () => {
+//       window.removeEventListener("mousemove", handleActivity);
+//       window.removeEventListener("keypress", handleActivity);
+//       window.removeEventListener("scroll", handleActivity);
+//       window.removeEventListener("click", handleActivity);
+//       clearTimeout(timeout);
+//     };
+//   }, []);
 
-  return null;
-};
+//   return null;
+// };
 
-export default UserActivityTracker;
+// export default UserActivityTracker;

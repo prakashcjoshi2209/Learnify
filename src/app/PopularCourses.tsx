@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from "react";
 import Card from "./ExploreData/Card";
 import { ICourse } from "./models/Course";
+import { Session } from "next-auth";
 
-const PopularCourses: React.FC = () => {
+const PopularCourses: React.FC<{ session?: Session | null }> = ({ session }) => {
   const [courses, setCourses] = useState<ICourse[]>([]); //course need to be an array only in this case.
   const [isLoading, setIsLoading] = useState(true);
 
@@ -68,6 +69,7 @@ const PopularCourses: React.FC = () => {
             key={course.courseId}
             title={course.name}
             image={course.image}
+            session={session}
             students={course.studentsEnrolled}
             price={course.price.current}
             originalPrice={course.price.original}

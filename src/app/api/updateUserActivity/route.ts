@@ -13,6 +13,6 @@ export async function GET(){
         return NextResponse.json({message: "User lastLoginStatus successfully updated."}, {status: 200});
 
     } catch (error) {
-        
+        console.error("Error occured server side", error);
     }
 }
