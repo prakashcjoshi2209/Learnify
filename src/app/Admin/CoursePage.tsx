@@ -1,5 +1,3 @@
-
-
 "use client";
 import React, { useState } from "react";
 
@@ -15,10 +13,16 @@ const CoursePage: React.FC = () => {
         title="Course Introduction"
         initialFields={[
           "Demo",
-          "Topic",
           "Long Description",
-          "Sub Points",
-          "Properties",
+          "Category",
+          "Select Level",
+          "Certificate Provider",
+          "Lifetime Access",
+          "Subtitles",
+          "Subtitles Language",
+          "Tags", 
+          "Prerequisite",
+          "Requirement",
           "Publisher Name",
           "Publisher Bio",
           "Publisher Profile Image",
@@ -28,27 +32,29 @@ const CoursePage: React.FC = () => {
       {/* Course Details Section */}
       <DynamicSection
         title="Course Details"
-        initialFields={["Content Duration", "No. of Assignment", "Video Lectures"]}
+        initialFields={["No. of Assignment", "Video Lectures"]}
       />
 
       {/* About Course Section */}
-      <DynamicSection
-        title="About Course"
-        initialFields={["Topic", "Intro",  "Syllabus"]}
-      />
-
-     
+      <DynamicSection title="About Course" initialFields={["Syllabus"]} />
     </div>
   );
 };
 
-// Dynamic Section Component with Add Field Feature
 const DynamicSection: React.FC<{ title: string; initialFields: string[] }> = ({
   title,
   initialFields,
 }) => {
   const [fields, setFields] = useState<string[]>(initialFields);
   const [fieldValues, setFieldValues] = useState<{ [key: string]: string }>({});
+  const [categories, setCategories] = useState<string[]>([
+    "Programming",
+    "Web Development",
+    "Data Science",
+    "Cloud Computing",
+    "Cyber Security",
+    "Management",
+  ]);
 
   const addField = () => {
     const newField = prompt("Enter new field name:");
@@ -58,21 +64,28 @@ const DynamicSection: React.FC<{ title: string; initialFields: string[] }> = ({
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFieldValues({ ...fieldValues, [field]: value });
+  const addCategory = () => {
+    const newCategory = prompt("Enter new category name:");
+    if (newCategory && !categories.includes(newCategory)) {
+      setCategories([...categories, newCategory]);
+    }
   };
 
-  const handleFileChange = (field: string, file: File | null) => {
-    if (file) {
-      setFieldValues({ ...fieldValues, [field]: file.name }); // Store the file name
-    }
+  const handleInputChange = (field: string, value: string) => {
+    setFieldValues({ ...fieldValues, [field]: value.toString() });
   };
 
   return (
     <div className="mb-6">
       <h2 className="text-xl font-semibold text-indigo-600 mb-2">{title}</h2>
       <div className="bg-white p-4 rounded-lg shadow">
-        <Table fields={fields} fieldValues={fieldValues} onInputChange={handleInputChange} onFileChange={handleFileChange} />
+        <Table
+          fields={fields}
+          fieldValues={fieldValues}
+          onInputChange={handleInputChange}
+          categories={categories}
+          addCategory={addCategory}
+        />
         <div className="text-right mt-2">
           <button
             onClick={addField}
@@ -86,30 +99,66 @@ const DynamicSection: React.FC<{ title: string; initialFields: string[] }> = ({
   );
 };
 
-// Table Component
-const Table: React.FC<{ 
-  fields: string[]; 
-  fieldValues: { [key: string]: string }; 
+const Table: React.FC<{
+  fields: string[];
+  fieldValues: { [key: string]: string };
   onInputChange: (field: string, value: string) => void;
-  onFileChange: (field: string, file: File | null) => void;
-}> = ({ fields, fieldValues, onInputChange, onFileChange }) => (
+  categories: string[];
+  addCategory: () => void;
+}> = ({ fields, fieldValues, onInputChange, categories, addCategory }) => (
   <table className="w-full border-collapse border border-gray-300">
     <tbody>
       {fields.map((field, index) => (
         <tr key={index} className="border border-gray-300">
           <td className="p-2 border-r border-gray-300">{field}</td>
           <td className="p-2">
-            {field === "Demo" ? (
-              <input type="file" accept="video/*" onChange={(e) => onFileChange(field, e.target.files?.[0] || null)} className="border p-1" />
-            ) : field === "Syllabus" ? (
-              <input type="file" accept="application/pdf" onChange={(e) => onFileChange(field, e.target.files?.[0] || null)} className="border p-1" />
-            ) : field === "Publisher Profile Image" ? (
-              <input type="file" accept="image/*" onChange={(e) => onFileChange(field, e.target.files?.[0] || null)} className="border p-1" />
+            {field === "Category" ? (
+              <div className="flex items-center gap-2">
+                <select
+                  value={fieldValues[field] || "Programming"}
+                  onChange={(e) => onInputChange(field, e.target.value)}
+                  className="w-full border p-1 rounded"
+                >
+                  {categories.map((category, i) => (
+                    <option key={i} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={addCategory}
+                  className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                >
+                  + Add Category
+                </button>
+              </div>
+            ) : field === "Select Level" ||
+              field === "Certificate Provider" ||
+              field === "Lifetime Access" ||
+              field === "Subtitles" ? (
+              <select
+                value={fieldValues[field] || "No"}
+                onChange={(e) => onInputChange(field, e.target.value)}
+                className="w-full border p-1 rounded"
+              >
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            ) : field === "Subtitles Language" && fieldValues["Subtitles"] === "Yes" ? (
+              <select
+                value={fieldValues[field] || "English"}
+                onChange={(e) => onInputChange(field, e.target.value)}
+                className="w-full border p-1 rounded"
+              >
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Both">Both</option>
+              </select>
             ) : (
-              <input 
-                type={field.includes("Price") || field === "Discount Percentage" ? "number" : "text"} 
-                value={fieldValues[field] || ""} 
-                onChange={(e) => onInputChange(field, e.target.value)} 
+              <input
+                type="text"
+                value={fieldValues[field] || ""}
+                onChange={(e) => onInputChange(field, e.target.value)}
                 className="w-full border p-1 rounded"
               />
             )}
