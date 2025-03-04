@@ -84,7 +84,7 @@ const LargeDescriptionSchema: Schema = new Schema({
 const PriceSchema: Schema = new Schema({
   current: { type: Number, required: true },
   original: { type: Number, required: true },
-  discountPercentage: { type: Number, required: true },
+  discountPercentage: { type: Number, required: true, default: 0 },
 });
 
 const ModuleSchema: Schema = new Schema({
@@ -119,7 +119,7 @@ export const CourseSchema: Schema = new Schema({
   courseId: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
   image: { type: String, required: true },
-  studentsEnrolled: { type: Number, required: true },
+  studentsEnrolled: { type: Number, required: true, default: 0 },
   shortDescription: { type: String, required: true },
   authors: { type: [AuthorSchema], required: true },
   largeDescription: { type: LargeDescriptionSchema, required: true },

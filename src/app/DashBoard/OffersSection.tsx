@@ -5,15 +5,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ICourse } from "../models/Course";
 
 const OffersSection: React.FC = () => {
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [navigating, setNavigating] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [startIndex, setStartIndex] = useState(0);
   const [itemsPerSlide, setItemsPerSlide] = useState(3);
   const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -23,6 +26,7 @@ const OffersSection: React.FC = () => {
 
         const data = await response.json();
         const courseData: ICourse[] = data.data;
+        console.log(courseData);
         setCourses(courseData);
         setLoading(false);
       } catch (err: unknown) {
@@ -84,8 +88,8 @@ const OffersSection: React.FC = () => {
       {loading && <p className="text-center text-gray-600">Loading offers...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
 
-      {!loading && !error && courses.length > 0 && (
-        <div 
+      
+        <div  
           className="relative w-full max-w-5xl flex items-center justify-center"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -123,8 +127,12 @@ const OffersSection: React.FC = () => {
 
                       <div className="flex justify-between items-center mt-4">
                         <p className="text-xs font-medium text-gray-500">By {course.authors.map(author => author.name).join(", ")}</p>
-                        <button className="py-2 px-4 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-md">
-                          Enroll Now!
+                        <button onClick={()=> 
+                          {
+                            setNavigating(true);
+                            router.push(`/CourseContent/${course.courseId}`); 
+                          }} className="py-2 px-4 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-md">
+                          { navigating ? "Loading..." : "Enroll Now!"}
                         </button>
                       </div>
                     </CardHeader>
@@ -141,7 +149,6 @@ const OffersSection: React.FC = () => {
             <FaChevronRight size={24} />
           </button>
         </div>
-      )}
     </div>
   );
 };

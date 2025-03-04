@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import Loader from "@/components/ui/Loader";
 import ProfileSection from "./ProfileSection";
 import makePayments from "@/lib/makePayments";
@@ -11,6 +10,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import formatStudents from "@/lib/formatStudents";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
+import { Session } from "next-auth";
 
 interface ICourse {
   _id: string;
@@ -22,13 +22,12 @@ interface ICourse {
   courseId: number;
 }
 
-const CartPage = () => {
+const CartPage : React.FC<{ session?: Session | null }> = ({ session }) => {
   const [cart, setCart] = useState<ICourse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isRemoving, setIsRemoving] = useState(false);
+  const [removingCourse, setRemovingCourse] = useState<number | null>(null);
   const [processingCourse, setProcessingCourse] = useState<number | null>(null);
   const [isBuyingAll, setIsBuyingAll] = useState<boolean>(false);
-  const { data: session } = useSession(); // Retrieve session
   const router = useRouter();
 
   useEffect(() => {
@@ -53,16 +52,24 @@ const CartPage = () => {
     courseId: number[] | number
   ) => {
     setProcessingCourse(Array.isArray(courseId) ? null : courseId);
-    if(Array.isArray(courseId)){
+    if (Array.isArray(courseId)) {
       setIsBuyingAll(true);
     }
     try {
-      await makePayments(amount, courseName, courseId, session);
+      const result = await makePayments(amount, courseName, courseId, session);
+      console.log("Result came from the backend makePayments function: ", result);
+      if(result){
       const idsToRemove = Array.isArray(courseId) ? courseId : [courseId];
-      const updatedCart = cart.filter((item) => !idsToRemove.includes(item.courseId));
+      const updatedCart = cart.filter(
+        (item) => !idsToRemove.includes(item.courseId)
+      );
       setCart(updatedCart);
       toast.info("Redirecting to Dashboard!");
       router.push("/DashBoard");
+    }
+    else{
+      setProcessingCourse(null);
+    }
     } catch (error) {
       console.error("Payment failed:", error);
     } finally {
@@ -73,25 +80,25 @@ const CartPage = () => {
 
   const handleRemove = async (courseId: number) => {
     try {
-      setIsRemoving(true);
+      setRemovingCourse(courseId);
       const response = await fetch("/api/removeCartCourse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ courseId }),
       });
       if (!response.ok) throw new Error("Failed to remove course");
-
+  
       setCart((prevCart) =>
         prevCart.filter((item) => item.courseId !== courseId)
       );
-      toast.success("Course removed from cart.")
+      toast.success("Course removed from cart.");
     } catch (error) {
-      setIsRemoving(false);
       console.error("Error removing course:", error);
     } finally {
-      setIsRemoving(false);
+      setRemovingCourse(null);
     }
   };
+  
 
   if (loading) return <Loader />;
   const totalAmount = cart.reduce((sum, item) => sum + item.price.current, 0);
@@ -119,16 +126,17 @@ const CartPage = () => {
                 key={item._id}
                 className="relative flex items-center gap-6 bg-white p-6 rounded-lg shadow-md border-l-8 border-purple-500 hover:shadow-lg transition transform hover:-translate-y-1 duration-300"
               >
-                {isRemoving ? (
-                    <ClipLoader size={30} color="red" />
+                <button
+                  onClick={() => handleRemove(item.courseId)}
+                  className="absolute top-3 right-3 text-red-500 hover:text-red-700 transition w-6 h-6 flex items-center justify-center"
+                >
+                  {removingCourse === item.courseId ? (
+                    <ClipLoader size={20} color="red" />
                   ) : (
-                    <button
-                      onClick={() => handleRemove(item.courseId)}
-                      className="absolute top-3 right-3  text-red-500 hover:text-red-700 transition"
-                    >
-                      <TrashIcon className="w-6 h-6" />
-                    </button>
-                    )}
+                    <TrashIcon className="w-6 h-6" />
+                  )}
+                </button>
+
                 {/* Course Image */}
                 <div className="w-32 h-32 overflow-hidden rounded-lg shadow-md">
                   <Image
@@ -202,7 +210,11 @@ const CartPage = () => {
             </h3>
             <button
               onClick={() =>
-                handlePayment(totalAmount, "Total Cart Payment", cart.map((course) => course.courseId))
+                handlePayment(
+                  totalAmount,
+                  "Total Cart Payment",
+                  cart.map((course) => course.courseId)
+                )
               }
               className="px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600  text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-md"
             >

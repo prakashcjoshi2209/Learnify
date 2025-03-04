@@ -26,12 +26,13 @@ export async function POST(req: NextRequest) {
       // Check if the course is already purchased
       const hasBoughtCourse = user?.coursesBought.includes(courseId);
       const hasCourseInCart = user?.cart.includes(courseId);
-
+      const hasCourseInWishlist = user?.wishlist.includes(courseId);
       return NextResponse.json(
         {
           course,
           courseIncluded: hasBoughtCourse,
           cartIncluded: hasCourseInCart,
+          wishlistIncluded: hasCourseInWishlist
         },
         { status: 200 }
       );

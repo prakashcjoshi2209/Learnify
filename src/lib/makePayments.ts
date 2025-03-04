@@ -27,6 +27,9 @@ interface RazorpayOptions {
   theme?: {
     color: string;
   };
+  modal?: {
+    ondismiss: () => void;
+  };
 }
 
 interface RazorpayInstance {
@@ -37,7 +40,7 @@ const makePayments = async (
   amount: number,
   courseName: string,
   cId: number[] | number,      
-  session: Session | null,
+  session: Session | null | undefined,
   ) => {
   // const router = useRouter();
 
@@ -56,7 +59,7 @@ const makePayments = async (
     });
   };
 
-  return new Promise<void>(async (resolve, reject) => {
+  return new Promise<boolean>(async (resolve, reject) => {
     try {
       // if (!session) {
       //   const currentPath = window.location.pathname;
@@ -66,7 +69,9 @@ const makePayments = async (
 
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
-        throw new Error("Failed to load Razorpay script.");
+        // throw new Error("Failed to load Razorpay script.");
+        toast.error("Failed to Load Razorpay right now")
+        return resolve(false);
       }
 
       // Create order
@@ -79,7 +84,8 @@ const makePayments = async (
       const data = await response.json();
 
       if (!window.Razorpay) {
-        throw new Error("Razorpay is not available.");
+        toast.error("Razorpay is not available.");
+        return resolve(false);
       }
 
       // Initialize Razorpay
@@ -133,7 +139,8 @@ const makePayments = async (
           if (resp.ok) {
             console.log("Payment successful!", response);
           } else {
-            console.log("Payment Problem!", response);
+            toast.error("Payment processing error.");
+            return resolve(false);
           }
 
           const removeResponse = await fetch("/api/removeCartCourse", {
@@ -145,12 +152,18 @@ const makePayments = async (
           const removeData = await removeResponse.json();
           if (!removeResponse.ok) {
             toast.error(`Error removing course: ${removeData.error}`);
-            return reject("Error removing course from DB");
+            return resolve(false);
           }
           toast.success("Payment Successful!", { autoClose: 5000 });
+          resolve(true);
         }
-          resolve(); 
         },
+        modal: {
+          ondismiss: function () {
+          toast.info("Payment cancelled by user.");
+          return resolve(false);
+        }
+      },
         prefill: {
           name: session?.user?.name || "Guest User",
           email: session?.user?.email || "guest@example.com",

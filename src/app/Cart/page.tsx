@@ -12,7 +12,7 @@ const page = async () => {
   return (
     <div>
         <Navbar session={session} />
-        <CartData/>
+        <CartData session={session}/>
         <Footer/>
     </div>
   )
