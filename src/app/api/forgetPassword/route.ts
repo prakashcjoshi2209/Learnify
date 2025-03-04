@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     existingUser.resetToken = passwordResetToken;
     existingUser.resetTokenExpiry = passwordResetExpires;
 
-    const resetUrl = `http://learnify-abesit/ResetPassword/${resetToken}`;
+    const resetUrl = `https://learnify-abesit-kunal-tyagis-projects-86468f26.vercel.app/ResetPassword/${resetToken}`;
 
     // Configure Nodemailer transporter
     const transporter = nodemailer.createTransport({
