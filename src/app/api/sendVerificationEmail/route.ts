@@ -48,7 +48,8 @@ export async function POST(req: Request) {
       { new: true, upsert: true } //either update or insert
     );
 
-    const verifyUrl = `http://localhost:3000/verifyEmail/${verifyToken}`;
+    // const verifyUrl = `http://localhost:3000/verifyEmail/${verifyToken}`;    
+    const verifyUrl = `https://learnify-abesit-kunal-tyagis-projects-86468f26.vercel.app/${verifyToken}`;
 
     // Configure Nodemailer transporter
     const transporter = nodemailer.createTransport({
