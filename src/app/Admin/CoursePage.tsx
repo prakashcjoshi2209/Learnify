@@ -1,261 +1,322 @@
-// "use client";
-// import React, { useState } from "react";
-
-// const CoursePage: React.FC = () => {
-//   return (
-//     <div className="min-h-screen bg-gray-100 p-6">
-//       <h1 className="text-3xl font-bold text-indigo-700 mb-6">
-//         Course Introduction Page
-//       </h1>
-
-//       {/* Course Introduction Section */}
-//       <DynamicSection
-//         title="Course Introduction"
-//         initialFields={[
-//           "Demo",
-//           "Long Description",
-//           "Category",
-//           "Select Level",
-//           "Certificate Provider",
-//           "Lifetime Access",
-//           "Subtitles",
-//           "Subtitles Language",
-//           "Tags", 
-//           "Prerequisite",
-//           "Requirement",
-//           "Publisher Name",
-//           "Publisher Bio",
-//           "Publisher Profile Image",
-//         ]}
-//       />
-
-//       {/* Course Details Section */}
-//       <DynamicSection
-//         title="Course Details"
-//         initialFields={["No. of Assignment", "Video Lectures"]}
-//       />
-
-//       {/* About Course Section */}
-//       <DynamicSection title="About Course" initialFields={["Syllabus"]} />
-//     </div>
-//   );
-// };
-
-// const DynamicSection: React.FC<{ title: string; initialFields: string[] }> = ({
-//   title,
-//   initialFields,
-// }) => {
-//   const [fields, setFields] = useState<string[]>(initialFields);
-//   const [fieldValues, setFieldValues] = useState<{ [key: string]: string }>({});
-//   const [categories, setCategories] = useState<string[]>([
-//     "Programming",
-//     "Web Development",
-//     "Data Science",
-//     "Cloud Computing",
-//     "Cyber Security",
-//     "Management",
-//   ]);
-
-//   const addField = () => {
-//     const newField = prompt("Enter new field name:");
-//     if (newField) {
-//       setFields([...fields, newField]);
-//       setFieldValues({ ...fieldValues, [newField]: "" });
-//     }
-//   };
-
-//   const addCategory = () => {
-//     const newCategory = prompt("Enter new category name:");
-//     if (newCategory && !categories.includes(newCategory)) {
-//       setCategories([...categories, newCategory]);
-//     }
-//   };
-
-//   const handleInputChange = (field: string, value: string) => {
-//     setFieldValues({ ...fieldValues, [field]: value.toString() });
-//   };
-
-//   return (
-//     <div className="mb-6">
-//       <h2 className="text-xl font-semibold text-indigo-600 mb-2">{title}</h2>
-//       <div className="bg-white p-4 rounded-lg shadow">
-//         <Table
-//           fields={fields}
-//           fieldValues={fieldValues}
-//           onInputChange={handleInputChange}
-//           categories={categories}
-//           addCategory={addCategory}
-//         />
-//         <div className="text-right mt-2">
-//           <button
-//             onClick={addField}
-//             className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-//           >
-//             Add Field
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const Table: React.FC<{
-//   fields: string[];
-//   fieldValues: { [key: string]: string };
-//   onInputChange: (field: string, value: string) => void;
-//   categories: string[];
-//   addCategory: () => void;
-// }> = ({ fields, fieldValues, onInputChange, categories, addCategory }) => (
-//   <table className="w-full border-collapse border border-gray-300">
-//     <tbody>
-//       {fields.map((field, index) => (
-//         <tr key={index} className="border border-gray-300">
-//           <td className="p-2 border-r border-gray-300">{field}</td>
-//           <td className="p-2">
-//             {field === "Category" ? (
-//               <div className="flex items-center gap-2">
-//                 <select
-//                   value={fieldValues[field] || "Programming"}
-//                   onChange={(e) => onInputChange(field, e.target.value)}
-//                   className="w-full border p-1 rounded"
-//                 >
-//                   {categories.map((category, i) => (
-//                     <option key={i} value={category}>
-//                       {category}
-//                     </option>
-//                   ))}
-//                 </select>
-//                 <button
-//                   onClick={addCategory}
-//                   className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-//                 >
-//                   + Add Category
-//                 </button>
-//               </div>
-//             ) : field === "Select Level" ||
-//               field === "Certificate Provider" ||
-//               field === "Lifetime Access" ||
-//               field === "Subtitles" ? (
-//               <select
-//                 value={fieldValues[field] || "No"}
-//                 onChange={(e) => onInputChange(field, e.target.value)}
-//                 className="w-full border p-1 rounded"
-//               >
-//                 <option value="Yes">Yes</option>
-//                 <option value="No">No</option>
-//               </select>
-//             ) : field === "Subtitles Language" && fieldValues["Subtitles"] === "Yes" ? (
-//               <select
-//                 value={fieldValues[field] || "English"}
-//                 onChange={(e) => onInputChange(field, e.target.value)}
-//                 className="w-full border p-1 rounded"
-//               >
-//                 <option value="English">English</option>
-//                 <option value="Hindi">Hindi</option>
-//                 <option value="Both">Both</option>
-//               </select>
-//             ) : (
-//               <input
-//                 type="text"
-//                 value={fieldValues[field] || ""}
-//                 onChange={(e) => onInputChange(field, e.target.value)}
-//                 className="w-full border p-1 rounded"
-//               />
-//             )}
-//           </td>
-//         </tr>
-//       ))}
-//     </tbody>
-//   </table>
-// );
-
-// export default CoursePage;
-
-
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { FaTrash } from "react-icons/fa"; // Importing the trash icon from react-icons
+import { toast } from "react-toastify";
+import { ICourse } from "../models/Course";
 
 const CoursePage: React.FC = () => {
+  const [fieldValues, setFieldValues] = useState<{ [key: string]: string}>({});
+  const [dynamicFields, setDynamicFields] = useState<string[]>([]); // To track dynamically added fields
+  const [videoFile, setVideoFile] = useState<File | null >();
+  const [pdfFile, setPdfFile] = useState<File | null >();
+  const [realCategories, setRealCategories] = useState<string[]>([]);
+
+  const uploadToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "learnify_frontend");
+    formData.append("cloud_name", "dtfe8o5ny");
+  
+    let uploadType = "raw"; // Default to raw for PDFs and other files
+  
+    if (file.type.startsWith("video/")) {
+      uploadType = "video";
+    } else if (file.type.startsWith("image/")) {
+      uploadType = "image";
+    } else {
+      uploadType = "raw"
+    }
+  
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/dtfe8o5ny/${uploadType}/upload`, {
+        method: "POST",
+        body: formData,
+      });
+  
+      const data = await res.json();
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary Upload Error:", error);
+      return null;
+    }
+  };
+  
+
+  const handleSave = async () => {
+    // console.log("Function started processing");
+    if (!videoFile || !pdfFile) {
+      toast.error("Please upload both Demo and Syllabus files!");
+      return;
+    }
+  
+    const videoUrl = await uploadToCloudinary(videoFile);
+    const syllabusUrl = await uploadToCloudinary(pdfFile);
+  
+    if (!videoUrl || !syllabusUrl) {
+      toast.error("Error uploading files!");
+      return;
+    }
+  
+    const tagsArray = fieldValues.Tags?.split(/[\s,#]+/).filter(Boolean) || [];
+    const prerequisiteArray = fieldValues.Prerequisite?.split(/[,#]+/).filter(Boolean) || [];
+    const requirementArray = fieldValues.Requirement?.split(/[,#]+/).filter(Boolean) || [];
+    const subPointsArray = fieldValues.SubPoints?.split(/[,#]+/).filter(Boolean) || [];
+  
+    const response = await fetch("/api/saveCourseIntro", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...fieldValues,
+        Demo: videoUrl,
+        Syllabus: syllabusUrl,
+        TagsArray: tagsArray,
+        PrerequisiteArray: prerequisiteArray,
+        RequirementArray: requirementArray,
+        SubPointsArray: subPointsArray,
+      }),
+    });
+  
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      toast.success(data.message);
+    } else {
+      toast.error("Failed to save data!");
+    }
+  };
+
+  
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("/api/courseCategories");
+      const data = await response.json();
+      if (data.categories) {
+        setRealCategories(data.categories);
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error fetching courses:", error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+  };
+  
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-3xl font-bold text-indigo-700 mb-6">
         Course Introduction Page
       </h1>
 
-      {/* Course Introduction Section */}
+      {/* Combined Sections */}
       <DynamicSection
         title="Course Introduction"
         initialFields={[
           "Demo",
           "Long Description",
+          "SubPoints",
           "Category",
           "Certificate Provider",
           "Lifetime Access",
           "Select Level",
-          "Tags", 
+          "Tags",
           "Prerequisite",
           "Requirement",
           "Publisher Name",
           "Publisher Bio",
+          "Publisher Description",
           "Publisher Profile Image",
           "Subtitles",
-         
         ]}
+        fieldValues={fieldValues}
+        setFieldValues={setFieldValues}
+        dynamicFields={dynamicFields}
+        setDynamicFields={setDynamicFields}
+        setPdfFile={setPdfFile}
+        setVideoFile={setVideoFile}
+        categories={realCategories}
+        setRealCategories={setRealCategories}
       />
-
-      {/* Course Details Section */}
       <DynamicSection
         title="Course Details"
-        initialFields={["No. of Assignment", "Video Lectures"]}
+        initialFields={["No. of Assignment", "No. of Video Lectures"]}
+        fieldValues={fieldValues}
+        setFieldValues={setFieldValues}
+        dynamicFields={dynamicFields}
+        setDynamicFields={setDynamicFields}
+        setPdfFile={setPdfFile}
+        setVideoFile={setVideoFile}
+        categories={realCategories}
+        setRealCategories={setRealCategories}
+      />
+      <DynamicSection
+        title="About Course"
+        initialFields={["Syllabus"]}
+        fieldValues={fieldValues}
+        setFieldValues={setFieldValues}
+        dynamicFields={dynamicFields}
+        setDynamicFields={setDynamicFields}
+        setPdfFile={setPdfFile}
+        setVideoFile={setVideoFile}
+        categories={realCategories}
+        setRealCategories={setRealCategories}
       />
 
-      {/* About Course Section */}
-      <DynamicSection title="About Course" initialFields={["Syllabus"]} />
+      {/* Save Button */}
+      <div className="flex justify-center mt-8">
+        <button
+          onClick={handleSave}
+          className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+        >
+          Save
+        </button>
+      </div>
     </div>
   );
 };
 
-const DynamicSection: React.FC<{ title: string; initialFields: string[] }> = ({
+// Dynamic section that handles rendering form fields
+const DynamicSection: React.FC<{
+  title: string;
+  initialFields: string[];
+  fieldValues: { [key: string]: string };
+  setFieldValues: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+  dynamicFields: string[]; // Track dynamic fields
+  setDynamicFields: React.Dispatch<React.SetStateAction<string[]>>; // Update dynamic fields
+  setVideoFile: React.Dispatch<React.SetStateAction<File | null | undefined>>; 
+  setPdfFile: React.Dispatch<React.SetStateAction<File | null | undefined>>;
+  setRealCategories: React.Dispatch<React.SetStateAction<string[]>>;
+  categories: string[];
+}> = ({
   title,
   initialFields,
+  fieldValues,
+  setFieldValues,
+  dynamicFields,
+  setDynamicFields,
+  setVideoFile,
+  setPdfFile,
+  categories,
+  setRealCategories,
 }) => {
   const [fields, setFields] = useState<string[]>(initialFields);
-  const [fieldValues, setFieldValues] = useState<{ [key: string]: string }>({});
-  const [categories, setCategories] = useState<string[]>([
-    "Programming",
-    "Web Development",
-    "Data Science",
-    "Cloud Computing",
-    "Cyber Security",
-    "Management",
-  ]);
+  const [localCategories, setLocalCategories] = useState<string[]>(categories);
+
+  useEffect(() => {
+    setLocalCategories(categories);
+  }, [categories]);
+
+  // const [categories, setCategories] = useState<string[]>([
+  //   "Programming",
+  //   "Web Development",
+  //   "Data Science",
+  //   "Cloud Computing",
+  //   "Cyber Security",
+  //   "Management",
+  //   "Design"
+  // ]);
+
+  // Default pre-filled values for fields
+  const defaultValues: { [key: string]: string } = {
+    Category: "Programming",
+    "Select Level": "Beginner",
+    "Certificate Provider": "No",
+    "Lifetime Access": "No",
+    "Subtitles": "No",
+    "Subtitles Language": "English", // Default for Subtitles Language
+    "Demo": "",
+    "Syllabus": "",
+  };
+
+  useEffect(() => {
+    // Initialize the fieldValues with pre-filled values only once
+    const initialValues = { ...defaultValues };
+    initialFields.forEach((field) => {
+      if (!initialValues[field]) {
+        initialValues[field] = "";
+      }
+    });
+
+    // Set field values only once
+    setFieldValues(initialValues);
+  }, []); // The empty array ensures this effect runs only once when the component is mounted
 
   const addField = () => {
     const newField = prompt("Enter new field name:");
     if (newField) {
       setFields([...fields, newField]);
+      setDynamicFields([...dynamicFields, newField]); // Track dynamic fields
       setFieldValues({ ...fieldValues, [newField]: "" });
     }
   };
 
+  const deleteField = (fieldToDelete: string) => {
+    setFields(fields.filter((field) => field !== fieldToDelete));
+    setDynamicFields(dynamicFields.filter((field) => field !== fieldToDelete)); // Remove from dynamic fields
+    const updatedFieldValues = { ...fieldValues };
+    delete updatedFieldValues[fieldToDelete];
+    setFieldValues(updatedFieldValues);
+  };
+
   const addCategory = () => {
     const newCategory = prompt("Enter new category name:");
-    if (newCategory && !categories.includes(newCategory)) {
-      setCategories([...categories, newCategory]);
+    if (newCategory && !localCategories.includes(newCategory)) {
+      setFieldValues({ ...fieldValues, Category: newCategory });
+      setRealCategories((prevCategories) => [...prevCategories, newCategory]);
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFieldValues({ ...fieldValues, [field]: value.toString() });
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
-    // Show or hide 'Subtitles Language' field based on 'Subtitles' selection
+  const handleFileUpload = async (field: string, file: File) => {
+    if (!file) return;
+  
+    if (field === "Publisher Profile Image") {
+      const fileBase64 = await convertFileToBase64(file);
+      if (fileBase64) {
+        setFieldValues((prev) => ({ ...prev, [field]: fileBase64 }));
+      }
+    } else if (field === "Demo") {
+      setVideoFile(file); 
+    } else if (field === "Syllabus") {
+      setPdfFile(file);
+    } else {
+      setFieldValues((prev) => ({ ...prev, [field]: file.name }));
+    }
+  };
+  
+
+  const handleInputChange = (field: string, value: string) => {
+    setFieldValues((prevValues) => ({
+      ...prevValues,
+      [field]: value.toString(),
+    }));
+
+    // Specific logic for fields like "Subtitles" and "Subtitles Language"
     if (field === "Subtitles") {
       if (value === "Yes") {
         if (!fields.includes("Subtitles Language")) {
-          setFields([...fields, "Subtitles Language"]);
+          setFields((prevFields) => [...prevFields, "Subtitles Language"]);
         }
       } else {
-        setFields(fields.filter(f => f !== "Subtitles Language"));
+        setFields((prevFields) => prevFields.filter((f) => f !== "Subtitles Language"));
+        setFieldValues((prevValues) => {
+          const updatedValues = { ...prevValues };
+          delete updatedValues["Subtitles Language"];
+          return updatedValues;
+        });
       }
     }
   };
@@ -270,6 +331,9 @@ const DynamicSection: React.FC<{ title: string; initialFields: string[] }> = ({
           onInputChange={handleInputChange}
           categories={categories}
           addCategory={addCategory}
+          deleteField={deleteField}
+          handleFileUpload={handleFileUpload}
+          dynamicFields={dynamicFields} // Pass dynamic fields to Table
         />
         <div className="text-right mt-2">
           <button
@@ -284,13 +348,17 @@ const DynamicSection: React.FC<{ title: string; initialFields: string[] }> = ({
   );
 };
 
+// Table that handles rendering each form field
 const Table: React.FC<{
   fields: string[];
   fieldValues: { [key: string]: string };
   onInputChange: (field: string, value: string) => void;
   categories: string[];
   addCategory: () => void;
-}> = ({ fields, fieldValues, onInputChange, categories, addCategory }) => (
+  deleteField: (fieldToDelete: string) => void;
+  handleFileUpload: (field: string, file: File) => void;
+  dynamicFields: string[]; // List of dynamically added fields
+}> = ({ fields, fieldValues, onInputChange, categories, addCategory, deleteField, dynamicFields, handleFileUpload }) => (
   <table className="w-full border-collapse border border-gray-300">
     <tbody>
       {fields.map((field, index) => (
@@ -348,6 +416,52 @@ const Table: React.FC<{
                 <option value="Hindi">Hindi</option>
                 <option value="Both">Both</option>
               </select>
+            ) : field === "Tags" || field === "Sub Points" ? (
+              <input
+                type="text"
+                value={fieldValues[field] || ""}
+                onChange={(e) => onInputChange(field, e.target.value)}
+                placeholder="Enter points by space or comma"
+                className="w-full border p-1 rounded"
+              />
+            ) : field === "Video Lectures" ? (
+              <input
+              type="number" 
+              value={fieldValues[field] || ""}
+              onChange={(e) => onInputChange(field, e.target.value)}
+              placeholder="Enter number of video lectures"
+              className="w-full border p-1 rounded"
+            />
+            ) : field === "Syllabus" ? (
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleFileUpload(field, file);
+                }}
+                className="w-full border p-1 rounded"
+              />
+            ) : field === "Publisher Profile Image" ? (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleFileUpload(field, file);
+                }}
+                className="w-full border p-1 rounded"
+              />
+            ) : field === "Demo" ? (
+              <input
+                type="file"
+                accept="video/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) handleFileUpload(field, file);
+                }}
+                className="w-full border p-1 rounded"
+              />
             ) : (
               <input
                 type="text"
@@ -355,6 +469,16 @@ const Table: React.FC<{
                 onChange={(e) => onInputChange(field, e.target.value)}
                 className="w-full border p-1 rounded"
               />
+            ) }
+          </td>
+          <td className="p-2">
+            {dynamicFields.includes(field) && (
+              <button
+                onClick={() => deleteField(field)}
+                className="text-red-600 hover:text-red-800"
+              >
+                <FaTrash />
+              </button>
             )}
           </td>
         </tr>
