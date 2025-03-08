@@ -28,8 +28,8 @@ interface ICourse {
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState<ICourse[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isRemoving, setIsRemoving] = useState<boolean>(false);
-  const [isWishing, setIsWishing] = useState<boolean>(false);
+  const [removing, setRemoving] = useState<{ [key: number]: boolean }>({});
+  const [wishing, setWishing] = useState<{ [key: number]: boolean }>({});
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -51,8 +51,8 @@ const Wishlist = () => {
   }, []);
 
   const removeFromWishlist = async (courseId: number) => {
+    setRemoving((prev) => ({ ...prev, [courseId]: true }));
     try {
-      setIsRemoving(true);
       const response = await fetch("/api/removeWishlistCourse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,45 +61,31 @@ const Wishlist = () => {
 
       if (!response.ok) throw new Error("Failed to remove course");
 
-      setWishlist(wishlist.filter((course) => course.courseId !== courseId));
-      toast.success("Course removed successfully");
+      setWishlist((prev) => prev.filter((course) => course.courseId !== courseId));
     } catch (error) {
-      setIsRemoving(false);
       console.error("Error removing course:", error);
     } finally {
-      setIsRemoving(false);
+      setRemoving((prev) => ({ ...prev, [courseId]: false }));
     }
   };
 
-  // Function to move course to cart
   const moveToCart = async (courseId: number) => {
-    setIsWishing(true);
+    setWishing((prev) => ({ ...prev, [courseId]: true }));
     try {
       const response = await fetch("/api/addCart", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ courseId }),
       });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
+      if (!response.ok) throw new Error("Something went wrong");
+
       removeFromWishlist(courseId);
-      setIsWishing(false);
       toast.success("Course is moved to your Cart");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error);
-        console.log("Adding Wishlist has developed some issue.");
-      } else {
-        setIsWishing(false);
-        console.error("Something went Wrong on client side.");
-      }
+    } catch (error) {
+      console.error("Error moving to cart:", error);
     } finally {
-      setIsWishing(false);
+      setWishing((prev) => ({ ...prev, [courseId]: false }));
     }
   };
 
@@ -128,7 +114,7 @@ const Wishlist = () => {
             {wishlist.map((course) => (
               <div
                 key={course._id}
-                className="bg-white rounded-lg shadow-md p-4 relative"
+                className="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between h-full"
               >
                 {/* Course Image */}
                 <Image
@@ -140,11 +126,11 @@ const Wishlist = () => {
                 />
 
                 {/* Course Details */}
-                <div className="mt-4">
+                <div className="mt-4 flex flex-col flex-grow">
                   <h3 className="text-lg font-semibold text-indigo-700">
                     {course.name}
                   </h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 flex-grow">
                     {course.shortDescription}
                   </p>
 
@@ -165,28 +151,38 @@ const Wishlist = () => {
                       ₹{course.price.original}
                     </p>
                   </div>
+                </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex justify-between items-center mt-4">
-                    {/* Move to Cart */}
-                    <button
-                      onClick={() => moveToCart(course.courseId)}
-                      className="flex items-center bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition"
-                    >
-                      {isWishing ? <ClipLoader size={15} color="white" /> : <AiOutlineShoppingCart className="mr-2" />}  Move to Cart
-                    </button>
+                {/* Action Buttons - Always at the Bottom */}
+                <div className="flex justify-between items-center mt-4">
+                  {/* Move to Cart */}
+                  <button
+                    onClick={() => moveToCart(course.courseId)}
+                    className="flex items-center bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition"
+                    disabled={wishing[course.courseId]}
+                  >
+                    {wishing[course.courseId] ? (
+                      <ClipLoader size={15} color="white" />
+                    ) : (
+                      <AiOutlineShoppingCart className="mr-2" />
+                    )}
+                    Move to Cart
+                  </button>
 
-                    {isRemoving ? (
+                  <button
+                    onClick={() => {
+                      removeFromWishlist(course.courseId)
+                      toast.info("Course removed successfully");
+                    }}
+                    className="text-red-500 hover:text-red-700 transition"
+                    disabled={removing[course.courseId]}
+                  >
+                    {removing[course.courseId] ? (
                       <ClipLoader size={30} color="red" />
                     ) : (
-                      <button
-                        onClick={() => removeFromWishlist(course.courseId)}
-                        className="text-red-500 hover:text-red-700 transition"
-                      >
-                        <TrashIcon className="w-6 h-6" />
-                      </button>
+                      <TrashIcon className="w-6 h-6" />
                     )}
-                  </div>
+                  </button>
                 </div>
               </div>
             ))}
