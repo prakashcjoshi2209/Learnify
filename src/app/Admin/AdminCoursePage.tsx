@@ -77,11 +77,11 @@ const AdminCoursePage: React.FC = () => {
         )}
 
         {/* Update Button */}
-        <div className="flex justify-center items-center">
+        {/* <div className="flex justify-center items-center">
           <button className="px-4 py-2 my-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             Update
           </button>
-        </div>
+        </div> */}
       </main>
     </div>
   );

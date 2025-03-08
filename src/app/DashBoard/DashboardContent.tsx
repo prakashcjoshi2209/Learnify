@@ -53,9 +53,6 @@ const DashboardContent = () => {
             placeholder="Search your Course here..."
             className="w-full sm:w-auto flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none"
           />
-          <button className="ml-4 p-3 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200">
-            Settings
-          </button>
         </div>
 
         {/* Header Section */}
