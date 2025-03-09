@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { FaTrash } from "react-icons/fa"; // Importing the trash icon from react-icons
 import { toast } from "react-toastify";
 import { ICourse } from "../models/Course";
 
@@ -135,8 +134,6 @@ const CoursePage: React.FC = () => {
         ]}
         fieldValues={fieldValues}
         setFieldValues={setFieldValues}
-        dynamicFields={dynamicFields}
-        setDynamicFields={setDynamicFields}
         setPdfFile={setPdfFile}
         setVideoFile={setVideoFile}
         categories={realCategories}
@@ -147,8 +144,6 @@ const CoursePage: React.FC = () => {
         initialFields={["No. of Assignment", "No. of Video Lectures"]}
         fieldValues={fieldValues}
         setFieldValues={setFieldValues}
-        dynamicFields={dynamicFields}
-        setDynamicFields={setDynamicFields}
         setPdfFile={setPdfFile}
         setVideoFile={setVideoFile}
         categories={realCategories}
@@ -159,8 +154,6 @@ const CoursePage: React.FC = () => {
         initialFields={["Syllabus"]}
         fieldValues={fieldValues}
         setFieldValues={setFieldValues}
-        dynamicFields={dynamicFields}
-        setDynamicFields={setDynamicFields}
         setPdfFile={setPdfFile}
         setVideoFile={setVideoFile}
         categories={realCategories}
@@ -171,7 +164,7 @@ const CoursePage: React.FC = () => {
       <div className="flex justify-center mt-8">
         <button
           onClick={handleSave}
-          className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg "
         >
           Save
         </button>
@@ -186,8 +179,6 @@ const DynamicSection: React.FC<{
   initialFields: string[];
   fieldValues: { [key: string]: string };
   setFieldValues: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
-  dynamicFields: string[]; // Track dynamic fields
-  setDynamicFields: React.Dispatch<React.SetStateAction<string[]>>; // Update dynamic fields
   setVideoFile: React.Dispatch<React.SetStateAction<File | null | undefined>>; 
   setPdfFile: React.Dispatch<React.SetStateAction<File | null | undefined>>;
   setRealCategories: React.Dispatch<React.SetStateAction<string[]>>;
@@ -197,8 +188,6 @@ const DynamicSection: React.FC<{
   initialFields,
   fieldValues,
   setFieldValues,
-  dynamicFields,
-  setDynamicFields,
   setVideoFile,
   setPdfFile,
   categories,
@@ -246,22 +235,6 @@ const DynamicSection: React.FC<{
     setFieldValues(initialValues);
   }, []); // The empty array ensures this effect runs only once when the component is mounted
 
-  const addField = () => {
-    const newField = prompt("Enter new field name:");
-    if (newField) {
-      setFields([...fields, newField]);
-      setDynamicFields([...dynamicFields, newField]); // Track dynamic fields
-      setFieldValues({ ...fieldValues, [newField]: "" });
-    }
-  };
-
-  const deleteField = (fieldToDelete: string) => {
-    setFields(fields.filter((field) => field !== fieldToDelete));
-    setDynamicFields(dynamicFields.filter((field) => field !== fieldToDelete)); // Remove from dynamic fields
-    const updatedFieldValues = { ...fieldValues };
-    delete updatedFieldValues[fieldToDelete];
-    setFieldValues(updatedFieldValues);
-  };
 
   const addCategory = () => {
     const newCategory = prompt("Enter new category name:");
@@ -321,6 +294,23 @@ const DynamicSection: React.FC<{
     }
   };
 
+  const requiredFields: string[] = [
+    "Category",
+    "Select Level",
+    "Certificate Provider",
+    "Lifetime Access",
+    "Subtitles",
+    "Subtitles Language",
+    "Tags",
+    "Sub Points",
+    "No. of Assignments",
+    "No. of Video Lectures",
+    "Video Lectures",
+    "Syllabus",
+    "Publisher Profile Image",
+    "Demo"
+  ];
+
   return (
     <div className="mb-6">
       <h2 className="text-xl font-semibold text-indigo-600 mb-2">{title}</h2>
@@ -331,18 +321,11 @@ const DynamicSection: React.FC<{
           onInputChange={handleInputChange}
           categories={categories}
           addCategory={addCategory}
-          deleteField={deleteField}
+        
           handleFileUpload={handleFileUpload}
-          dynamicFields={dynamicFields} // Pass dynamic fields to Table
+         
         />
-        <div className="text-right mt-2">
-          <button
-            onClick={addField}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-          >
-            Add Field
-          </button>
-        </div>
+        
       </div>
     </div>
   );
@@ -355,10 +338,128 @@ const Table: React.FC<{
   onInputChange: (field: string, value: string) => void;
   categories: string[];
   addCategory: () => void;
-  deleteField: (fieldToDelete: string) => void;
   handleFileUpload: (field: string, file: File) => void;
-  dynamicFields: string[]; // List of dynamically added fields
-}> = ({ fields, fieldValues, onInputChange, categories, addCategory, deleteField, dynamicFields, handleFileUpload }) => (
+  
+// }> = ({ fields, fieldValues, onInputChange, categories, addCategory, handleFileUpload }) => (
+//   <table className="w-full border-collapse border border-gray-300">
+//     <tbody>
+//       {fields.map((field, index) => (
+//         <tr key={index} className="border border-gray-300">
+//           <td className="p-2 border-r border-gray-300">{field}</td>
+//           <td className="p-2">
+//             {field === "Category" ? (
+//               <div className="flex items-center gap-2">
+//                 <select
+//                   value={fieldValues[field] || "Programming"}
+//                   onChange={(e) => onInputChange(field, e.target.value)}
+//                   className="w-full border p-1 rounded"
+//                 >
+//                   {categories.map((category, i) => (
+//                     <option key={i} value={category}>
+//                       {category}
+//                     </option>
+//                   ))}
+//                 </select>
+//                 <button
+//                   onClick={addCategory}
+//                   className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+//                 >
+//                   + Add Category
+//                 </button>
+//               </div>
+//             ) : field === "Select Level" ? (
+//               <select
+//                 value={fieldValues[field] || "Beginner"}
+//                 onChange={(e) => onInputChange(field, e.target.value)}
+//                 className="w-full border p-1 rounded"
+//               >
+//                 <option value="Beginner">Beginner</option>
+//                 <option value="Intermediate">Intermediate</option>
+//                 <option value="Advanced">Advanced</option>
+//               </select>
+//             ) : field === "Certificate Provider" ||
+//               field === "Lifetime Access" ||
+//               field === "Subtitles" ? (
+//               <select
+//                 value={fieldValues[field] || "No"}
+//                 onChange={(e) => onInputChange(field, e.target.value)}
+//                 className="w-full border p-1 rounded"
+//               >
+//                 <option value="Yes">Yes</option>
+//                 <option value="No">No</option>
+//               </select>
+//             ) : field === "Subtitles Language" ? (
+//               <select
+//                 value={fieldValues[field] || "English"}
+//                 onChange={(e) => onInputChange(field, e.target.value)}
+//                 className="w-full border p-1 rounded"
+//               >
+//                 <option value="English">English</option>
+//                 <option value="Hindi">Hindi</option>
+//                 <option value="Both">Both</option>
+//               </select>
+//             ) : field === "Tags" || field === "Sub Points" ? (
+//               <input
+//                 type="text"
+//                 value={fieldValues[field] || ""}
+//                 onChange={(e) => onInputChange(field, e.target.value)}
+//                 placeholder="Enter points by space or comma"
+//                 className="w-full border p-1 rounded"
+//               />
+//             ) : field === "Video Lectures" ? (
+//               <input
+//               type="number" 
+//               value={fieldValues[field] || ""}
+//               onChange={(e) => onInputChange(field, e.target.value)}
+//               placeholder="Enter number of video lectures"
+//               className="w-full border p-1 rounded"
+//             />
+//             ) : field === "Syllabus" ? (
+//               <input
+//                 type="file"
+//                 accept="application/pdf"
+//                 onChange={(e) => {
+//                   const file = e.target.files?.[0];
+//                   if (file) handleFileUpload(field, file);
+//                 }}
+//                 className="w-full border p-1 rounded"
+//               />
+//             ) : field === "Publisher Profile Image" ? (
+//               <input
+//                 type="file"
+//                 accept="image/*"
+//                 onChange={(e) => {
+//                   const file = e.target.files?.[0];
+//                   if (file) handleFileUpload(field, file);
+//                 }}
+//                 className="w-full border p-1 rounded"
+//               />
+//             ) : field === "Demo" ? (
+//               <input
+//                 type="file"
+//                 accept="video/*"
+//                 onChange={(e) => {
+//                   const file = e.target.files?.[0];
+//                   if (file) handleFileUpload(field, file);
+//                 }}
+//                 className="w-full border p-1 rounded"
+//               />
+//             ) : (
+//               <input
+//                 type="text"
+//                 value={fieldValues[field] || ""}
+//                 onChange={(e) => onInputChange(field, e.target.value)}
+//                 className="w-full border p-1 rounded"
+//               />
+//             ) }
+//           </td>
+          
+//         </tr>
+//       ))}
+//     </tbody>
+//   </table>
+// );
+}> = ({ fields, fieldValues, onInputChange, categories, addCategory, handleFileUpload }) => (
   <table className="w-full border-collapse border border-gray-300">
     <tbody>
       {fields.map((field, index) => (
@@ -368,7 +469,7 @@ const Table: React.FC<{
             {field === "Category" ? (
               <div className="flex items-center gap-2">
                 <select
-                  value={fieldValues[field] || "Programming"}
+                  value={fieldValues[field] || ""}
                   onChange={(e) => onInputChange(field, e.target.value)}
                   className="w-full border p-1 rounded"
                 >
@@ -421,41 +522,37 @@ const Table: React.FC<{
                 type="text"
                 value={fieldValues[field] || ""}
                 onChange={(e) => onInputChange(field, e.target.value)}
-                placeholder="Enter points by space or comma"
+                placeholder="Enter points separated by space or comma"
+                className="w-full border p-1 rounded"
+              />
+            ) : field === "No. of Assignment" || field === "No. of Video Lectures" ? (
+              <input
+                type="number"
+                min="0"
+                value={fieldValues[field] || ""}
+                onChange={(e) => onInputChange(field, e.target.value)}
+                placeholder={`Enter ${field}`}
                 className="w-full border p-1 rounded"
               />
             ) : field === "Video Lectures" ? (
               <input
-              type="number" 
-              value={fieldValues[field] || ""}
-              onChange={(e) => onInputChange(field, e.target.value)}
-              placeholder="Enter number of video lectures"
-              className="w-full border p-1 rounded"
-            />
-            ) : field === "Syllabus" ? (
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFileUpload(field, file);
-                }}
+                type="number"
+                min="0"
+                value={fieldValues[field] || ""}
+                onChange={(e) => onInputChange(field, e.target.value)}
+                placeholder="Enter number of video lectures"
                 className="w-full border p-1 rounded"
               />
-            ) : field === "Publisher Profile Image" ? (
+            ) : field === "Syllabus" || 
+                field === "Publisher Profile Image" || 
+                field === "Demo" ? (
               <input
                 type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleFileUpload(field, file);
-                }}
-                className="w-full border p-1 rounded"
-              />
-            ) : field === "Demo" ? (
-              <input
-                type="file"
-                accept="video/*"
+                accept={
+                  field === "Syllabus" ? "application/pdf" :
+                  field === "Publisher Profile Image" ? "image/*" :
+                  field === "Demo" ? "video/*" : ""
+                }
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) handleFileUpload(field, file);
@@ -469,16 +566,6 @@ const Table: React.FC<{
                 onChange={(e) => onInputChange(field, e.target.value)}
                 className="w-full border p-1 rounded"
               />
-            ) }
-          </td>
-          <td className="p-2">
-            {dynamicFields.includes(field) && (
-              <button
-                onClick={() => deleteField(field)}
-                className="text-red-600 hover:text-red-800"
-              >
-                <FaTrash />
-              </button>
             )}
           </td>
         </tr>
@@ -487,4 +574,11 @@ const Table: React.FC<{
   </table>
 );
 
+
 export default CoursePage;
+
+
+
+
+
+
