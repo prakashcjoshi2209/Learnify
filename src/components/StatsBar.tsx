@@ -34,7 +34,7 @@ const StatsBar: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex justify-center space-x-8 p-8 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg">
+    <div className="flex justify-center space-x-16  p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg">
       <div className="text-center transform hover:scale-105 transition duration-300">
         <h2 className="text-4xl font-extrabold">
           {students}+
