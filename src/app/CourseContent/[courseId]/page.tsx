@@ -375,23 +375,23 @@ const CourseContentPage: React.FC = () => {
       </div>
 
       <section id="about-course">
-        <CoursePage />
+        <CoursePage course={course} />
       </section>
 
       <section id="course-content">
-        <CourseContentData />
+        <CourseContentData course={course} />
       </section>
 
       <section id="about-publisher">
-        <PublishHome />
+        <PublishHome course={course} />
       </section>
 
       <section id="rewards">
-        <Rewards />
+        <Rewards course={course} />
       </section>
 
       <section id="faq">
-        <ReviewsHome />
+        <ReviewsHome course={course} />
       </section>
 
       <Footer />
