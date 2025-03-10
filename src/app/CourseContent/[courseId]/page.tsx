@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import makePayments from "@/lib/makePayments";
 import { AiFillHeart, AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
+import Rewards from "./Rewards"
 
 // declare global {
 //   interface Window {
@@ -358,6 +359,12 @@ const CourseContentPage: React.FC = () => {
               About Publisher
             </button>
             <button
+              onClick={() => handleScroll("rewards")}
+              className="hover:underline"
+            >
+              Rewards
+            </button>
+            <button
               onClick={() => handleScroll("faq")}
               className="hover:underline"
             >
@@ -377,6 +384,10 @@ const CourseContentPage: React.FC = () => {
 
       <section id="about-publisher">
         <PublishHome />
+      </section>
+
+      <section id="rewards">
+        <Rewards />
       </section>
 
       <section id="faq">
