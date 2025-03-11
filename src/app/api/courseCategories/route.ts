@@ -7,7 +7,6 @@ export async function GET() {
     await connectDB();
     
     const categories = await Course.distinct("category");
-    console.log(categories);
 
     return NextResponse.json({ categories }, { status: 200 });
   } catch (error) {

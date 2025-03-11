@@ -3,9 +3,10 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import connectDB from "./dbConnect";
 import Verify from "@/app/models/Verify";
+import Course from "@/app/models/Course";
 
 
-const sendEmail = async(email:string)=>{
+const sendEmail = async(email:string, task:string, courseId: null | undefined | number)=>{
 
     await connectDB();
     try{
@@ -18,7 +19,28 @@ const sendEmail = async(email:string)=>{
           { new: true, upsert: true } //either update or insert
         );
     
-        const verifyUrl = `http://localhost:3000/verifyEmail/${verifyToken}`;
+        var toDo; var subject, description, buttonDesc, heading;
+        if(task === "Verification"){
+          const verifyUrl = `http://localhost:3000/verifyEmail/${verifyToken}`;
+          toDo = verifyUrl;
+          subject = "Verify Your Email";
+          heading = "Verify Your Email";
+          description = "We noticed that you requested a Email Verification link for your Learnify account. Click the button below to proceed. This link will expire in <strong>1 hour</strong>"
+          buttonDesc = "Verify Email"
+        }
+        else{
+          const course = await Course.findOne({courseId: courseId});
+          if(!course) {
+            return false;
+          }
+          subject = "Download Syllabus";
+          heading = "Download Syllabus";
+          description = "You can Download the syllabus from clicking the button below.";
+          buttonDesc = "Download Syllabus"; 
+          const syllabusLink = course.syllabus;
+          toDo = syllabusLink;
+        }
+
     
         // Configure Nodemailer transporter
         const transporter = nodemailer.createTransport({
@@ -32,20 +54,20 @@ const sendEmail = async(email:string)=>{
         const mailOptions = {
           from: `"Learnify Support" <${process.env.EMAIL_USER}>`, // Sender address
           to: email, // Recipient address
-          subject: "Verify Your Email: Learnify",
+          subject: `${subject}: Learnify`,
           html: `
             <div style="font-family: Arial, sans-serif; line-height: 1.6; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px; background: #f5f2fc; box-shadow: 0 4px 15px rgba(128, 0, 128, 0.2);">
               <div style="text-align: center; margin-bottom: 20px;">
                 <img src="https://res.cloudinary.com/dtfe8o5ny/image/upload/v1736586694/Gemini_Generated_Image_9yp2if9yp2if9yp2_wahy7d.jpg" alt="Learnify Logo" style="width: 180px; height: auto; border-radius: 10px;">
               </div>
-              <h2 style="color: #4b0082; text-align: center;">Verify Your Email</h2>
+              <h2 style="color: #4b0082; text-align: center;">${heading}</h2>
               <p style="color: #333; text-align: center;">Hello </p>
               <p style="color: #4b0082; font-weight: bold; text-align: center;">
-                We noticed that you requested a Email Verification mail for your Learnify account. Click the button below to proceed. This link will expire in <strong>1 hour</strong>.
+                ${description}.
               </p>
               <div style="text-align: center; margin: 20px 0;">
-                <a href="${verifyUrl}" style="background: #800080; color: #fff; text-decoration: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; display: inline-block;">
-                  Verify Email
+                <a href="${toDo}" style="background: #800080; color: #fff; text-decoration: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; display: inline-block;">
+                  ${buttonDesc}
                 </a>
               </div>
               <p style="color: #555; text-align: center; margin-top: 20px;">

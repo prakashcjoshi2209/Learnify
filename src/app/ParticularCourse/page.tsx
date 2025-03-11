@@ -1,5 +1,5 @@
 import React from 'react'
-import LectureScreen from '../LectureScreen/page'
+import LectureScreen from '../LectureScreen/[id]/page'
 import CourseAccordion from './CourseAccordian'
 
 const page = () => {

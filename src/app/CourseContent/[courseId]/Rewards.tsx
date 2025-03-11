@@ -1,19 +1,25 @@
 // app/rewards/page.tsx (Next.js 13+ with App Router)
+import { ICourse } from "@/app/models/Course";
 import React from "react";
+
+interface CoursePageProps{
+  course: ICourse;
+}
 
 type Reward = {
   id: number;
   title: string;
-  reward: string;
+  reward: number;
 };
 
 type RewardsProps = {
   rewardsData: Reward[];
-  investment: string;
-  totalReward: string;
+  investment: number;
+  totalReward: number;
+  course: ICourse
 };
 
-const Rewards: React.FC<RewardsProps> = ({ rewardsData, investment, totalReward }) => {
+const Rewards: React.FC<RewardsProps> = ({ rewardsData, investment, totalReward, course }) => {
   return (
     <div className="max-w-5xl mx-auto p-8 font-sans">
       {/* Heading */}
@@ -76,19 +82,20 @@ const Rewards: React.FC<RewardsProps> = ({ rewardsData, investment, totalReward 
   );
 };
 
-export default function RewardsData() {
+const RewardsData : React.FC<CoursePageProps> = ({ course }) => {
   // Sample data for rewards
-  const rewardsData = [
-    { id: 1, title: "Course Overview", reward: "$5" },
-    { id: 2, title: "Completion Bonus", reward: "$10" },
-    { id: 3, title: "Referral Bonus", reward: "$15" },
-    { id: 4, title: "Course Overview", reward: "$50" },
-    { id: 5, title: "Completion Bonus", reward: "$100" },
-    { id: 6, title: "Referral Bonus", reward: "$1500" },
-  ];
+  const rewardsData = course.modules.map((module) => ({
+    key: module.moduleNumber,
+    id: module.moduleNumber,
+    title: `Module ${module.moduleNumber}`,
+    reward: module.reward
+  }));
 
-  const investment = "$100";
-  const totalReward = "$30";
 
-  return <Rewards rewardsData={rewardsData} investment={investment} totalReward={totalReward} />;
+  const investment = course.price.original;
+  const totalReward = course.rewards.totalReward;
+
+  return <Rewards rewardsData={rewardsData} investment={investment} totalReward={totalReward} course={course} />;
 }
+
+export default RewardsData;

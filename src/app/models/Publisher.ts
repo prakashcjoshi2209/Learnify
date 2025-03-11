@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 
 interface ICoursesPublished {
-    coursesPublished: number[];
+    publishedCourses: number[];
     totalCoursesPublished: number;
 }
 
@@ -10,6 +10,7 @@ export interface IPublisher extends Document {
     name: string;
     email: string;
     bio: string;
+    image: string;
     description: string;
     reviews: number;
     ratings: number;
@@ -27,6 +28,7 @@ const PublisherSchema: Schema = new Schema(
     {   name: {type: String, },
         email: { type: String, unique: true },
         bio: {type: String},
+        image: {type: String},
         description: {type: String},
         reviews: {type: Number, default: 0},
         ratings: {type: Number, default: 0},

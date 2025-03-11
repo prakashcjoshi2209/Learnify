@@ -50,7 +50,7 @@ const Login = () => {
         router.push(redirectPath);
       }
     } else {
-      const emailSent : boolean = await sendEmail(email);
+      const emailSent : boolean = await sendEmail(email, "verification");
       if(emailSent){
         setMessage("Email verification link is sent!");
         setMessageType("success");

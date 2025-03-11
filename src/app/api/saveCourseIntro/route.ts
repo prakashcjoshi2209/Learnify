@@ -21,6 +21,7 @@ try {
     const SubPointsArray = data["SubPointsArray"];
     const Category = data["Category"];
     const LargeDescription = data["Long Description"];
+    const CourseHeading = data["Course Heading"];
     const SelectLevel = data["Select Level"];
     const CertificateProvider = data["Certificate Provider"];
     const LifetimeAccess = data["Lifetime Access"];
@@ -38,6 +39,9 @@ try {
     // console.log("Value form the backend: Long Description: ",LargeDescription)
     // console.log("Value form the backend: Subtitles yes or no: ",Subtitles)
     // console.log("Value form the backend: Subtitles Language: ", SubtitlesLanguage);
+    
+    const uploadResponse = await cloudinary.uploader.upload(file);
+    const imageUrl = uploadResponse.secure_url;
 
     let publisher = await Publisher.findOne({ email: session?.user?.email });
 
@@ -58,13 +62,12 @@ try {
           totalPublishedCourses: 1,
         },
         studentsTaught: 0,
+        image: imageUrl,
       });
       await publisher.save();
     }
 
 
-    const uploadResponse = await cloudinary.uploader.upload(file);
-    const imageUrl = uploadResponse.secure_url;
     var ternary = false;
     if(Subtitles === "yes"){
       ternary = true;
@@ -72,6 +75,7 @@ try {
     const course = await Course.findOneAndUpdate({courseId: courseId}, {
       category: Category,
       level: SelectLevel,
+      courseHeading: CourseHeading,
       certificate: CertificateProvider,
       lifeTimeAccess: LifetimeAccess,
       authors: [
