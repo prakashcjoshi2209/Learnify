@@ -117,6 +117,7 @@ const CoursePage: React.FC = () => {
         title="Course Introduction"
         initialFields={[
           "Demo",
+          "Course Heading",
           "Long Description",
           "SubPoints",
           "Category",

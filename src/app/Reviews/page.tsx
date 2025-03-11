@@ -1,7 +1,12 @@
 import React from 'react';
 import ReviewCard from './RewardCard';
+import { ICourse } from '../models/Course';
 
-const ReviewsHome: React.FC = () => {
+interface CoursePageProps{
+  course: ICourse;
+}
+
+const ReviewsHome: React.FC<CoursePageProps> = ({ course }) => {
   const reviews = [
     {
       name: 'Ajay Shekhar',

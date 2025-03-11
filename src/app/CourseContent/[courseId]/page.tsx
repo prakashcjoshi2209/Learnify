@@ -13,36 +13,8 @@ import { ICourse } from "@/app/models/Course";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import makePayments from "@/lib/makePayments";
-import { AiFillHeart, AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
+import { AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
 import Rewards from "./Rewards"
-
-// declare global {
-//   interface Window {
-//     Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
-//   }
-// }
-
-// interface RazorpayOptions {
-//   key: string;
-//   amount: number;
-//   currency: string;
-//   name: string;
-//   description: string;
-//   order_id?: string;
-//   handler: (response: { razorpay_payment_id: string }) => void;
-//   prefill?: {
-//     name?: string;
-//     email?: string;
-//     contact?: number;
-//   };
-//   theme?: {
-//     color: string;
-//   };
-// }
-
-// interface RazorpayInstance {
-//   open: () => void;
-// }
 
 const CourseContentPage: React.FC = () => {
   // courses part

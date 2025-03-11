@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
       return {
         moduleNumber: Number(module.number),
-        moduleTitle: module.moduleTitle,
+        moduleTitle: module.topic,
         moduleDuration: Number(module.duration),
         subModulePart: Number(module.parts),
         reward,
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
           modules,
           rewards: {
             moduleRewards: rewardsArray,
-            totalRewards: sumOfRewards,
+            totalReward: sumOfRewards,
           },
           lastUpdated: new Date(),
         },

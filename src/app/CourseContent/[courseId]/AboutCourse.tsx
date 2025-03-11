@@ -1,7 +1,12 @@
-import React from "react";
+"use client";
+import sendEmail from "@/lib/sendEmail";
+import { useSession } from "next-auth/react";
+import React, { useState } from "react";
 import {
   FaDownload,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 // Define types for props
 type Feature = {
@@ -11,6 +16,7 @@ type Feature = {
 };
 
 type CourseDetailsProps = {
+  courseId: number;
   title: string;
   subtitle: string;
   description: string;
@@ -19,15 +25,31 @@ type CourseDetailsProps = {
 };
 
 const AboutCourse: React.FC<CourseDetailsProps> = ({
+  courseId,
   title,
   subtitle,
   description,
   details,
   features,
 }) => {
+  const {data: session} = useSession();
+  const [sending, setSending] = useState<boolean>(false);
 
+  const router = useRouter();
   const handleDownload = async()=>{
-    
+    setSending(true);
+    if(!session){
+      toast.info("Please Login first");
+      router.push("/login");
+    }
+    const email:string = session?.user?.email;
+    const result = await sendEmail(email,"Syllabus",courseId);
+    if(result){
+      toast.success("Syllabus download link sent to your email");
+    }
+    else{
+      toast.error("Error in sending mail");
+    }
   }
 
   return (
@@ -70,7 +92,7 @@ const AboutCourse: React.FC<CourseDetailsProps> = ({
         ))}
         <button onClick={handleDownload} className="w-full bg-white text-purple-700 py-3 border border-purple-600 rounded-lg font-semibold flex items-center justify-center hover:bg-gray-300 transition duration-300">
           <FaDownload className="mr-2 text-lg" />
-          Download Syllabus for Complete Details
+          {sending ? "Sending...": "Download Syllabus for Complete Details"}
         </button>
       </div>
     </div>

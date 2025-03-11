@@ -1,20 +1,37 @@
+"use client";
 import React from "react";
 import AboutCourse from "./AboutCourse";
 import { FaCertificate, FaCoins, FaInfinity, FaLevelUpAlt, FaClosedCaptioning } from "react-icons/fa";
 import { ICourse } from "@/app/models/Course";
 
-interface CoursePageProps{
+interface CoursePageProps {
   course: ICourse;
 }
 
-const CoursePage : React.FC<CoursePageProps> = ({ course }) => {
+const CoursePage: React.FC<CoursePageProps> = ({ course }) => {
+
+  const levelDescription = {
+    Beginner: "No prior experience required",
+    Intermediate: "Some experience recommended",
+    Advanced: "Strong understanding required",
+  }[course.level] || "Level information not available";
+
+  // Determine Subtitle Language
+  const subtitlesLang = {
+    English: "English",
+    Hindi: "Hindi",
+    Both: "English & Hindi",
+  }[course.subtitles?.[0]?.language] || "No subtitles available";
+
+  
   const courseData = {
-    title: "Covers pretty much everything you need to know about UX",
+    courseId: course.courseId,
+    title: course.courseHeading,
     subtitle: "About Course",
-    description: course.largeDescription.intro,
-    details: course.largeDescription.subPoints,
+    description: course.largeDescription?.intro,
+    details: course.largeDescription?.subPoints || [],
     features: [
-      {
+      course.certificate?.toLowerCase() === "yes" && {
         icon: <FaCertificate className="text-purple-600 text-xl" />,
         label: "Authentic Certificate",
         description: "Earn a Certificate of Completion",
@@ -24,20 +41,20 @@ const CoursePage : React.FC<CoursePageProps> = ({ course }) => {
         label: "Rewards",
         description: "Unlock rewards as you progress",
       },
-      {
+      course.lifeTimeAccess?.toLowerCase() === "yes" && {
         icon: <FaInfinity className="text-purple-600 text-xl" />,
         label: "Lifetime Access",
         description: "Set and manage your pace",
       },
       {
         icon: <FaLevelUpAlt className="text-purple-600 text-xl" />,
-        label: "Beginner Level",
-        description: "No prior experience required",
+        label: course.level,
+        description: levelDescription,
       },
-      {
+      course.subtitles?.[0]?.language.length>1 && {
         icon: <FaClosedCaptioning className="text-white-600 text-xl bg-purple-600" />,
         label: "Subtitles",
-        description: "English & Hindi",
+        description: subtitlesLang,
       },
     ],
   };
@@ -46,5 +63,3 @@ const CoursePage : React.FC<CoursePageProps> = ({ course }) => {
 };
 
 export default CoursePage;
-
-

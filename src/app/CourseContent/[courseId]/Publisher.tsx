@@ -1,6 +1,12 @@
 "use client";
+import { ICourse } from "@/app/models/Course";
+import { IPublisher } from "@/app/models/Publisher";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+interface CoursePageProps {
+  course: ICourse;
+}
 
 interface PublisherProps {
   name: string;
@@ -88,18 +94,39 @@ const Publisher: React.FC<PublisherProps> = ({
   );
 };
 
-const PublishHome: React.FC = () => {
+const PublishHome: React.FC<CoursePageProps> = ({ course }) => {
+  const [publisher, setPublisher] = useState<IPublisher>();
+  useEffect(()=>{
+    const fetchPublisher = async()=>{
+      const response = await fetch("/api/publisher", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({courseId: course.courseId})
+      });
+      if(response.ok){
+        const data = await response.json();
+        setPublisher(data.publishers);
+      }
+    }
+    fetchPublisher();
+  }, []);
+
+  if (!publisher) return <p>Loading...</p>;
+
+
   return (
     <div>
       <Publisher
-        name="Anudeep Ayyagari"
-        title="29-year UX + Design Veteran; Consultant, Author & Speaker"
-        description="Joe Natoli has launched five successful online courses with Udemy on the topics of User Experience (UX) and User Interface (UI) Design, with more than 180,000+ students enrolled to date. Through their dedication, patience, and passion, teachers not only impart knowledge but also instill values like discipline, empathy, and resilience. They adapt to the needs of every student, often going beyond their roles to provide support, motivation, and guidance."
-        instructorRating={4.5}
-        reviews={28707}
-        students={155242}
-        courses={8}
-        imageUrl="/signuppageimage.png"
+        name={publisher.name}
+        title={publisher.bio}
+        description={publisher.description}
+        instructorRating={publisher.ratings}
+        reviews={publisher.reviews}
+        students={publisher.studentsTaught}
+        courses={publisher.coursesPublished?.totalCoursesPublished}
+        imageUrl={publisher.image || "/signuppageimage.png"}
       />
     </div>
   );

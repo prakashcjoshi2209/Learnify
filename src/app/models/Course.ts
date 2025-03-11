@@ -66,6 +66,7 @@ export interface ICourse extends Document {
   courseId: number;
   name: string;
   image: string;
+  courseHeading: string;
   studentsEnrolled?: number;
   shortDescription?: string;
   authors: IAuthor[];
@@ -106,7 +107,7 @@ const LargeDescriptionSchema: Schema = new Schema({
 });
 
 const RewardsSchema: Schema = new Schema({
-  totalRewards: { type: Number, default: 0 },
+  totalReward: { type: Number, default: 0 },
   moduleRewards: { type: [Number], default: [] }
 });
 
@@ -159,6 +160,7 @@ export const CourseSchema: Schema = new Schema({
   courseId: { type: Number, unique: true },
   name: { type: String, },
   image: { type: String, },
+  courseHeading: {type: String},
   studentsEnrolled: { type: Number, default: 0 },
   shortDescription: { type: String,  },
   authors: { type: [AuthorSchema], },
