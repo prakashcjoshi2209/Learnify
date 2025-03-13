@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { CourseProvider } from "./Context/CourseContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,14 +28,16 @@ export default function RootLayout({
 }>) {
   return (
     <SessionProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-          <ToastContainer position="top-right" />
-        </body>
-      </html>
+      <CourseProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            {children}
+            <ToastContainer position="top-right" />
+          </body>
+        </html>
+      </CourseProvider>
     </SessionProvider>
   );
 }

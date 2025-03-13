@@ -22,10 +22,10 @@ export async function POST(req: NextRequest) {
     if (session) {
       const user = await User.findOne({ _id: session.user?.id });
 
-    //   const hasBoughtCourse = user?.coursesBought.includes(courseId);
-    //   if(!hasBoughtCourse){
-    //     return NextResponse.json({ message: 'User has not bought the course' }, { status: 400 });
-    //   }
+      const hasBoughtCourse = user?.coursesBought.includes(courseId);
+      if(!hasBoughtCourse){
+        return NextResponse.json({ message: 'User has not bought the course' }, { status: 400 });
+      }
       return NextResponse.json(
         {course},
         { status: 200 }

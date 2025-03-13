@@ -28,6 +28,7 @@ export interface IUser extends Document {
   email: string;
   phone?: number;
   verified: boolean;
+  otp?: number;
   password?: string; // Optional for OAuth users
   avatar?: string;
   githubId?: string;
@@ -73,6 +74,7 @@ const UserSchema: Schema = new Schema(
     email: { type: String, required: true, unique: true, index: true },
     phone: {type: Number, unique: true, sparse: true, default: null},
     verified: {type: Boolean, default: false, required: true},
+    otp: {type: Number},
     password: {
       type: String,
       required: function (this: IUser) {

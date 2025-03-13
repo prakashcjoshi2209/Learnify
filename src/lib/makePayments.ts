@@ -41,6 +41,7 @@ const makePayments = async (
   courseName: string,
   cId: number[] | number,      
   session: Session | null | undefined,
+  other?: string | undefined | null
   ) => {
   // const router = useRouter();
 
@@ -143,7 +144,8 @@ const makePayments = async (
             return resolve(false);
           }
 
-          const removeResponse = await fetch("/api/removeCartCourse", {
+          if(!other){
+            const removeResponse = await fetch("/api/removeCartCourse", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ courseId: cId }),
@@ -156,6 +158,9 @@ const makePayments = async (
           }
           toast.success("Payment Successful!", { autoClose: 5000 });
           resolve(true);
+        }
+        toast.success("Payment Successful!", { autoClose: 5000 });
+        resolve(true);
         }
         },
         modal: {

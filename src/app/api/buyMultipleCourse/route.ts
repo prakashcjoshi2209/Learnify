@@ -4,6 +4,7 @@ import connectDB from "@/lib/dbConnect";
 import Course from "@/app/models/Course";
 import { auth } from "../../../../auth";
 import User from "@/app/models/User";
+import Publisher from "@/app/models/Publisher";
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID!,
@@ -49,6 +50,16 @@ export async function POST(request: NextRequest) {
     await Course.updateMany(
       { courseId: { $in: newCourses } },
       { $inc: { studentsEnrolled: 1 } }
+    );
+
+    // const publishers = await Publisher.find({
+    //   "coursesPublished.publishedCourses": { $in: newCourses }
+    // });
+
+    // Update studentsTaught count for each publisher
+    await Publisher.updateMany(
+      { "coursesPublished.publishedCourses": { $in: newCourses } },
+      { $inc: { studentsTaught: 1 } }
     );
 
     return NextResponse.json(
