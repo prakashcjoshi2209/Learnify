@@ -14,12 +14,14 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import makePayments from "@/lib/makePayments";
 import { AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
-import Rewards from "./Rewards"
+import Rewards from "./Rewards";
+import { useCourse } from "@/app/Context/CourseContext";
 
 const CourseContentPage: React.FC = () => {
   // courses part
   const { data: session } = useSession();
   const { courseId } = useParams();
+  const { setCourseData } = useCourse();
 
   const [courseIncluded, setCourseIncluded] = useState(false);
   const [cartIncluded, setCartIncluded] = useState(false);
@@ -31,6 +33,7 @@ const CourseContentPage: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [isWishing, setIsWishing] = useState(false);
   const router = useRouter();
+
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -163,13 +166,19 @@ const CourseContentPage: React.FC = () => {
 
   const handlePayment = async () => {
     setIsProcessing(true);
-    const result = await makePayments(amount, courseName, cId, session);
-    if (result) {
-      setCourseIncluded(true);
-      toast.info("Redirecting you to Dashboard");
-      router.push("/DashBoard");
+
+    if (!session) {
+      setCourseData(course);
+      router.push("/Checkout");
     } else {
-      setIsProcessing(false);
+      const result = await makePayments(amount, courseName, cId, session);
+      if (result) {
+        setCourseIncluded(true);
+        toast.info("Redirecting you to Dashboard");
+        router.push("/DashBoard");
+      } else {
+        setIsProcessing(false);
+      }
     }
   };
 

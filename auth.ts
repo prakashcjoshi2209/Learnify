@@ -75,6 +75,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: profile?.name || profile?.login,
             email: profile?.email || `${profile?.id}@github.com`, // Fallback email
             avatar: profile?.avatar_url,
+            verified: true,
             githubId: profile?.id,
             coursesBought: [],
           });
@@ -91,6 +92,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: profile?.email,
             avatar: profile?.picture,
             googleId: profile?.sub,
+            verified: true,
             coursesBought: [],  
           });
           await newUser.save();

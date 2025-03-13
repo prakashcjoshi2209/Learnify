@@ -4,9 +4,10 @@ import crypto from "crypto";
 import connectDB from "./dbConnect";
 import Verify from "@/app/models/Verify";
 import Course from "@/app/models/Course";
+import User from "@/app/models/User";
 
 
-const sendEmail = async(email:string, task:string, courseId: null | undefined | number)=>{
+const sendEmail = async(email:string, task:string, other?: null | undefined | number | string)=>{
 
     await connectDB();
     try{
@@ -28,7 +29,35 @@ const sendEmail = async(email:string, task:string, courseId: null | undefined | 
           description = "We noticed that you requested a Email Verification link for your Learnify account. Click the button below to proceed. This link will expire in <strong>1 hour</strong>"
           buttonDesc = "Verify Email"
         }
+        else if(task === "Authentication"){
+          const code = Math.floor(100000 + Math.random() * 900000); //6 digit code
+          // console.log("Code is of type: ",typeof(code));
+          const user = await User.findOne({email});
+          if(!user){
+            return false;
+          }
+          try {
+            user.otp = code;
+            await user.save();
+            // console.log("OTP updated successfully:", user.otp);
+          } catch (err) {
+            console.error("Error saving OTP:", err);
+          }
+          subject = "Verify Your Email";
+          heading = "Verify Your Email";
+          description = `We noticed that you requested an email verification code for your Learnify account. To proceed with verifying your email, please use the following code: <strong>${code}</strong>`
+          buttonDesc = ""
+
+        }
+        else if(task === "PasswordSent"){
+          const password = other;
+          subject = "Password for Learnify";
+          heading = "Your Password";
+          description = `For logging in your Learnify account. Please use the following password: <strong>${password}</strong>`
+          buttonDesc = ""
+        }
         else{
+          const courseId = other;
           const course = await Course.findOne({courseId: courseId});
           if(!course) {
             return false;
@@ -65,11 +94,12 @@ const sendEmail = async(email:string, task:string, courseId: null | undefined | 
               <p style="color: #4b0082; font-weight: bold; text-align: center;">
                 ${description}.
               </p>
-              <div style="text-align: center; margin: 20px 0;">
-                <a href="${toDo}" style="background: #800080; color: #fff; text-decoration: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; display: inline-block;">
-                  ${buttonDesc}
-                </a>
-              </div>
+              ${buttonDesc ? `
+                <div style="text-align: center; margin: 20px 0;">
+                  <a href="${toDo}" style="background: #800080; color: #fff; text-decoration: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; display: inline-block;">
+                    ${buttonDesc}
+                  </a>
+                </div>` : ''}
               <p style="color: #555; text-align: center; margin-top: 20px;">
                 If you didn’t request it, you can safely ignore this email.
               </p>
