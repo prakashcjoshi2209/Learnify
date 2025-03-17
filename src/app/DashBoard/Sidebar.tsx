@@ -174,7 +174,7 @@ const Sidebar: React.FC = () => {
     if (isResizing.current) {
       let newWidth = e.clientX;
       if (newWidth < 200) newWidth = 200; // Minimum width
-      if (newWidth > 400) newWidth = 400; // Maximum width
+      if (newWidth > 400) newWidth = 500; // Maximum width
       setWidth(newWidth);
     }
   };

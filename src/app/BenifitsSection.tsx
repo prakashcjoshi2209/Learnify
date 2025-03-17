@@ -47,7 +47,7 @@ const benefits: Benefit[] = [
 
 const BenefitsSection: React.FC = () => {
   return (
-    <div className="py-8 bg-gray-50">
+    <div className="py-8 mb-6 bg-gray-50">
       <div className="container mx-auto px-6 text-center">
         {/* Title Section */}
         <h2 className="text-3xl text-left font-bold text-purple-700">Benefits</h2>

@@ -57,21 +57,21 @@ const AdminCoursePage: React.FC = () => {
         {/* Tab Content */}
         {activeTabIndex === 0 && (
           <div>
-            <h2 className="text-2xl font-bold text-purple-700 mb-4">Card Template</h2>
+            <h2 className="text-2xl font-bold text-purple-700 mb-4">Course Card Template</h2>
             <CardTemplateForm /> {/* Render the CardTemplateForm component */}
           </div>
         )}
 
         {activeTabIndex === 1 && (
           <div>
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Intro Page</h2>
+           
             <CoursePage />
           </div>
         )}
 
         {activeTabIndex === 2 && (
           <div>
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Breakdown</h2>
+            
             <Breakdown />
           </div>
         )}
