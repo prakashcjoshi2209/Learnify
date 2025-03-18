@@ -94,7 +94,7 @@ import React from "react";
 
 const Consist: React.FC = () => {
   return (
-    <section className="relative flex flex-col md:flex-row items-center justify-between px-6 md:px-10 pt-4 pb-12 bg-white rounded-lg shadow-lg border border-blue-300">
+    <section className="relative flex flex-col md:flex-row items-center justify-between px-6 md:px-10 pt-16 pb-12 bg-white rounded-lg shadow-lg border border-blue-300">
       {/* Left Content */}
       <div className="md:w-1/2 text-center md:text-left self-start">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mt-4">

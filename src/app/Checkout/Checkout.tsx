@@ -28,7 +28,7 @@ const signUpSchema = z.object({
 
 const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
   const [showOtpField, setShowOtpField] = useState(false);
-  const [otp, setOtp] = useState<number>();
+  const [otp, setOtp] = useState<number | "">(""); 
   const [email, setEmail] = useState("");
   const [isVerified, setIsVerified] = useState(false);
   const [savedPassword, setSavedPassword] = useState("");
@@ -262,7 +262,7 @@ const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
                 <Input
                   type="number"
                   value={otp}
-                  onChange={(e) => setOtp(Number(e.target.value))}
+                  onChange={(e) => setOtp(e.target.value ? Number(e.target.value) : "")}
                   required
                   className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 text-gray-700 mt-2"
                 />

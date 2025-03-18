@@ -40,7 +40,9 @@ const AboutCourse: React.FC<CourseDetailsProps> = ({
     setSending(true);
     if(!session){
       toast.info("Please Login first");
+      setSending(false);
       router.push("/login");
+      return;
     }
     const email:string = session?.user?.email;
     const result = await sendEmail(email,"Syllabus",courseId);
