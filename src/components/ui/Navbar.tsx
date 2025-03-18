@@ -34,7 +34,7 @@ const Navbar: React.FC<{ session?: Session | null }> = ({ session }) => {
   return (
     <>
       {/* Main Navbar */}
-      <nav className="bg-custom-gradient text-white py-4 px-6 shadow-lg">
+      <nav className="bg-custom-gradient text-white py-4 px-6 shadow-lg fixed top-0 left-0 w-full z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo Section */}
           <div

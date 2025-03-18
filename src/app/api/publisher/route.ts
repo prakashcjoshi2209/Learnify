@@ -1,9 +1,9 @@
 import connectDB from "@/lib/dbConnect";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 // import { auth } from "../../../../auth";
 import Publisher from "@/app/models/Publisher";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
 //   const session = await auth();
   const {courseId} = await req.json();
   try {

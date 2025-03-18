@@ -7,13 +7,14 @@ import { redirect } from "next/navigation";
 
 const Page = async ({ params }: { params: { id: string } }) => {
   const session = await auth();
+  const {id} = await params;
   if(!session){
     redirect("/login");
   }
   return (
     <div>
       <Navbar session={session} />
-      <LectureScreen courseId={params.id} />
+      <LectureScreen courseId={id} />
       <Footer />
     </div>
   );

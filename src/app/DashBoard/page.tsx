@@ -6,7 +6,7 @@ const Page = async () => {
   const session = await auth();
   return <>
     {/* (<UserActivityTracker /> */}
-   <Basic session={session} /> )
+   <Basic session={session} />
    </>;
 };
 

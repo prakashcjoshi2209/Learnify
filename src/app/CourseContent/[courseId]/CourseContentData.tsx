@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import courseData from "./course.json";
 import Link from "next/link";
 import { ICourse } from "@/app/models/Course";
+import formatDuration from "@/lib/formatDuration";
 
 interface CoursePageProps {
   course: ICourse;
 }
+
 
 const CourseContentData: React.FC<CoursePageProps> = ({ course }) => {
   const [expandedSections, setExpandedSections] = useState<number[]>([]);
@@ -15,26 +16,23 @@ const CourseContentData: React.FC<CoursePageProps> = ({ course }) => {
   course.modules.forEach((module) => {
     countLessons += module.subModulePart;
   });
-  // Toggle the section (expand or collapse)
+
   const toggleSection = (index: number) => {
-    setExpandedSections(
-      (prev) =>
-        prev.includes(index)
-          ? prev.filter((i) => i !== index) // Collapse
-          : [...prev, index] // Expand
+    setExpandedSections((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
 
   return (
     <div className="p-6 bg-gray-100">
       <div className="flex items-center mb-6">
-        <hr className="border-2 border-t-4 w-20 border-purple-600 " />
+        <hr className="border-2 border-t-4 w-20 border-purple-600" />
         <h2 className="text-2xl font-bold text-purple-700 ms-5 mb-3">
           Course Content
         </h2>
       </div>
       <h1 className="text-3xl font-semibold mb-4">
-        Our courses are balanced mix of videos & assignments
+        Our courses are a balanced mix of videos & assignments
       </h1>
       <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
         <Link href="#">{countLessons} Lessons</Link>
@@ -53,12 +51,12 @@ const CourseContentData: React.FC<CoursePageProps> = ({ course }) => {
                 <span>{module.moduleTitle}</span>
               </h3>
               <span className="text-gray-500">
-                {module.subModulePart} Sections, {module.moduleDuration}
+                {module.subModulePart} Sections, {formatDuration(module.moduleDuration)}
               </span>
             </div>
             {expandedSections.includes(moduleNumber) && (
               <div className="mt-4 space-y-2">
-                {(module.subModules).length > 0 ? (
+                {module.subModules.length > 0 ? (
                   module.subModules.map((submodule, sModuleNumber) => (
                     <div
                       key={sModuleNumber}
@@ -69,12 +67,14 @@ const CourseContentData: React.FC<CoursePageProps> = ({ course }) => {
                         <span>{submodule.sModuleTitle}</span>
                       </p>
                       <div className="flex items-center space-x-2">
-                        {submodule?.videoLecture && (
+                        {/* {submodule?.videoLecture && (
                           <a href="#" className="text-blue-500 underline">
                             {submodule.videoLecture}
                           </a>
-                        )}
-                        <span className="text-gray-500">{submodule.sModuleDuration}</span>
+                        )} */}
+                        <span className="text-gray-500">
+                          {formatDuration(submodule.sModuleDuration, true)}
+                        </span>
                       </div>
                     </div>
                   ))

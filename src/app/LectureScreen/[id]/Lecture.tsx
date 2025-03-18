@@ -1,6 +1,7 @@
 "use client";
 
 import { ICourse } from "@/app/models/Course";
+import formatDuration from "@/lib/formatDuration";
 import React, { useEffect, useState } from "react";
 
 interface ParamsId {
@@ -100,7 +101,7 @@ const LectureScreen: React.FC<ParamsId> = ({ courseId }) => {
                           <span>{module.moduleTitle}</span>
                         </h3>
                         <span className="text-gray-500">
-                          {module.subModulePart} Sections, {module.moduleDuration}
+                          {module.subModulePart} Sections, {formatDuration(module.moduleDuration)}
                         </span>
                       </div>
                       {expandedSections.includes(moduleNumber) && (
@@ -129,7 +130,7 @@ const LectureScreen: React.FC<ParamsId> = ({ courseId }) => {
                                   <span>{submodule.sModuleTitle}</span>
                                 </p>
                                 <span className="text-gray-500">
-                                  {submodule.sModuleDuration}
+                                {formatDuration(submodule.sModuleDuration, true)}
                                 </span>
                               </div>
                             ))
