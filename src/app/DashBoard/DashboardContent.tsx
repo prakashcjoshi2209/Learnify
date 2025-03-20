@@ -47,16 +47,18 @@ const DashboardContent = () => {
       {/* Main Content */}
       <div className="flex-1 p-4 md:pl-8">
         {/* Top Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
+        {/* <div className="flex flex-col sm:flex-row justify-between mr-2 ml-2 w-1/3 items-center mb-6 space-y-4 sm:space-y-0"> */}
+        <div className="flex flex-col sm:flex-row justify-center items-center mx-auto w-1/3 mb-6 space-y-4 sm:space-y-0">
+
           <input
             type="text"
             placeholder="Search your Course here..."
-            className="w-full sm:w-auto flex-1 p-3 rounded-lg border border-gray-300 focus:outline-none"
+            className="w-full sm:w-auto flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none"
           />
         </div>
 
         {/* Header Section */}
-        <div className="bg-purple-600 text-white p-4 rounded-lg mb-6 flex justify-between items-center">
+        {/* <div className="bg-purple-600 text-white p-4 rounded-lg mb-6 flex justify-between items-center">
           <h2 className="text-xl font-bold mb-4">
             Elevate Your Skills with Expert-Led Courses!
           </h2>
@@ -69,13 +71,13 @@ const DashboardContent = () => {
           >
             {loading ? "Loading..." : "More Courses"}
           </button>
-        </div>
+        </div> */}
 
         {/* Offers Courses Section */}
         <OffersSection />
 
         {/* Enrolled Courses Section */}
-        <h3 className="text-xl font-semibold mt-6 mb-6">Enrolled Courses</h3>
+        <h3 className="text-xl font-semibold mt-6 ml-8 mb-6">Enrolled Courses</h3>
         {isEmpty ? (
           <NoCoursesAvailable />
         ) : (

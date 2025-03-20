@@ -71,8 +71,13 @@ const OffersSection: React.FC = () => {
     setStartIndex((prev) => (prev - itemsPerSlide + courses.length) % courses.length);
   };
 
+   // Function to truncate text
+   const truncateText = (text: string, maxLength: number = 50) => {
+    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+  };
+
   return (
-    <div className="mt-8 px-6 py-8 bg-gradient-to-r from-purple-50 to-indigo-100 shadow-lg rounded-lg w-full max-w-6xl mx-auto flex flex-col items-center overflow-hidden">
+    <div className="relative mt-8 px-6 py-8 bg-gradient-to-r from-purple-50 to-indigo-100 shadow-lg rounded-lg w-full max-w-6xl mx-auto flex flex-col items-center overflow-hidden">
       <p className="text-center text-2xl font-bold text-purple-700 mb-6" style={{ fontFamily: "'Irish Grover', cursive" }}>
         Something Special Just for You! 🎉
       </p>
@@ -81,27 +86,27 @@ const OffersSection: React.FC = () => {
       {error && <p className="text-center text-red-500">{error}</p>}
 
       <div  
-        className="relative w-full max-w-5xl flex items-center justify-center"
+        className="relative flex items-center w-full max-w-6xl"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <button
           onClick={prevSlide}
-          className="absolute left-0 z-10 p-1 text-purple-600 rounded-full shadow-md hover:bg-purple-300 transition-all duration-300 focus:outline-none"
+          className="absolute left-0 z-10 p-3 bg-purple-200 text-white rounded-full shadow-md hover:bg-purple-300 transition-all duration-300 focus:outline-none"
         >
           <FaChevronLeft size={24} />
         </button>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {courses.slice(startIndex, startIndex + itemsPerSlide).map((course) => (
-            <motion.div
-              key={course.courseId}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="w-full"
-            >
+        <div className="w-full flex justify-center px-12">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+             {courses.slice(startIndex, startIndex + itemsPerSlide).map((course) => (
+              <motion.div
+                key={course.courseId}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}                className="w-full"
+              >
               <Card className="relative flex flex-col shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden transform hover:scale-105 h-[320px]">
                 <div className="relative w-full h-1/3 flex-shrink-0">
                   <Image src={course.image} alt={course.name} layout="fill" objectFit="cover" className="rounded-t-lg" />
@@ -111,7 +116,14 @@ const OffersSection: React.FC = () => {
                 </div>
                 <CardHeader className="flex-grow p-4 flex flex-col justify-between">
                   <CardTitle className="text-lg font-semibold text-gray-800">{course.name}</CardTitle>
-                  <CardDescription className="text-sm text-gray-600 mt-2">{course.shortDescription}</CardDescription>
+                  <CardDescription className="text-sm text-gray-600 mt-2">
+                     {course.shortDescription ? 
+                     (course.shortDescription.length > 50 
+                     ? `${course.shortDescription.slice(0, 50)}...` 
+                     : course.shortDescription) 
+                     : ""}
+                  </CardDescription>
+
                   <div className="flex justify-between items-center mt-4">
                     <p className="text-xs font-medium text-gray-500">By {course.authors.map(author => author.name).join(", ")}</p>
                     <button 
@@ -129,10 +141,11 @@ const OffersSection: React.FC = () => {
             </motion.div>
           ))}
         </div>
+        </div>
 
         <button
           onClick={nextSlide}
-          className="absolute right-0 z-10 p-1 text-purple-600 rounded-full shadow-md hover:bg-purple-300 transition-all duration-300 focus:outline-none"
+          className="absolute right-0 z-10 p-3 bg-purple-200 text-white rounded-full shadow-md hover:bg-purple-300 transition-all duration-300 focus:outline-none"
         >
           <FaChevronRight size={24} />
         </button>
@@ -142,3 +155,168 @@ const OffersSection: React.FC = () => {
 };
 
 export default OffersSection;
+
+
+// "use client";
+
+// import React, { useState, useEffect } from "react";
+// import { motion } from "framer-motion";
+// import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+// import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+// import Image from "next/image";
+// import { useRouter } from "next/navigation";
+// import { ICourse } from "../models/Course";
+
+// const OffersSection: React.FC = () => {
+//   const [courses, setCourses] = useState<ICourse[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [navigating, setNavigating] = useState(false);
+//   const [error, setError] = useState<string | null>(null);
+//   const [startIndex, setStartIndex] = useState(0);
+//   const [itemsPerSlide, setItemsPerSlide] = useState(3);
+//   const [isHovered, setIsHovered] = useState(false);
+//   const router = useRouter();
+
+//     useEffect(() => {
+//     const fetchCourses = async () => {
+//       try {
+//         const response = await fetch("/api/courseOffers");
+//         if (!response.ok) throw new Error("Failed to fetch course offers");
+
+//         const data = await response.json();
+//         console.log("Fetched courses:", data);
+//         setCourses(data.data || []); // Fallback to empty array
+//         setLoading(false);
+//       } catch (err: unknown) {
+//         setError("Failed to load offers. Please try again.");
+//         setLoading(false);
+//       }
+//     };
+//     setLoading(true);
+//     fetchCourses();
+//   }, []);
+
+//   useEffect(() => {
+//     if (!isHovered && courses.length > 0) {
+//       const interval = setInterval(() => {
+//         setStartIndex((prev) => (prev + itemsPerSlide) % courses.length);
+//       }, 3000);
+
+//       return () => clearInterval(interval);
+//     }
+//   }, [startIndex, isHovered, itemsPerSlide, courses.length]);
+
+
+//   useEffect(() => {
+//     const updateItemsPerSlide = () => {
+//       const width = window.innerWidth;
+//       let newItemsPerSlide = 3;
+//       if (width < 640) newItemsPerSlide = 1;
+//       else if (width < 1024) newItemsPerSlide = 2;
+//       setItemsPerSlide(newItemsPerSlide);
+//     };
+
+//     updateItemsPerSlide();
+//     window.addEventListener("resize", updateItemsPerSlide);
+//     return () => window.removeEventListener("resize", updateItemsPerSlide);
+//   }, []);
+
+//   const nextSlide = () => {
+//     setStartIndex((prev) => (prev + itemsPerSlide) % courses.length);
+//   };
+
+//   const prevSlide = () => {
+//     setStartIndex((prev) => (prev - itemsPerSlide + courses.length) % courses.length);
+//   };
+
+//   // Auto-slide functionality
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       nextSlide();
+//     }, 5000);
+
+//     return () => clearInterval(interval);
+//   }, [startIndex, courses.length]);
+
+//   return (
+//     <div className="relative mt-8 px-6 py-8 bg-gradient-to-r from-purple-50 to-indigo-100 shadow-lg rounded-lg w-full max-w-6xl mx-auto flex flex-col items-center overflow-hidden">
+//       {/* Heading */}
+//       <p className="text-center text-2xl font-bold text-purple-700 mb-6" style={{ fontFamily: "'Irish Grover', cursive" }}>
+//         Something Special Just for You! 🎉
+//       </p>
+
+//       {loading && <p className="text-center text-gray-600">Loading offers...</p>}
+//       {error && <p className="text-center text-red-500">{error}</p>}
+
+//       {/* Wrapper for Cards & Buttons */}
+//       <div className="relative flex items-center w-full max-w-6xl"
+//            onMouseEnter={() => setIsHovered(true)}
+//            onMouseLeave={() => setIsHovered(false)}>
+//         {/* Left Button */}
+//         <button
+//           onClick={prevSlide}
+//           className="absolute left-0 z-10 p-3 bg-purple-200 text-white rounded-full shadow-md hover:bg-purple-300 transition-all duration-300 focus:outline-none"
+//         >
+//           <FaChevronLeft size={24} />
+//         </button>
+
+//         {/* Cards Container */}
+//         <div className="w-full flex justify-center px-12">
+//           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+//             {courses.slice(startIndex, startIndex + itemsPerSlide).map((course) => (
+//               <motion.div
+//                 key={course.courseId}
+//                 initial={{ opacity: 0, x: 50 }}
+//                 animate={{ opacity: 1, x: 0 }}
+//                 exit={{ opacity: 0, x: -50 }}
+//                 transition={{ duration: 0.6, ease: "easeInOut" }}
+//                 className="w-full"
+//               >
+//                 <Card className="relative flex flex-col shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 bg-white rounded-lg overflow-hidden transform hover:scale-105 h-[320px]">
+//                   <div className="relative w-full h-1/3 flex-shrink-0">
+//                     <Image src={course.image} alt={course.name} layout="fill" objectFit="cover" className="rounded-t-lg" />
+//                     <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
+//                       {course.price.discountPercentage}% OFF
+//                     </span>
+//                   </div>
+//                   <CardHeader className="flex-grow p-4 flex flex-col justify-between">
+//                     <CardTitle className="text-lg font-semibold text-gray-800">{course.name}</CardTitle>
+//                     <CardDescription className="text-sm text-gray-600 mt-2">
+//                       {course.shortDescription ? 
+//                       (course.shortDescription.length > 50 
+//                       ? `${course.shortDescription.slice(0, 50)}...` 
+//                       : course.shortDescription) 
+//                       : ""}
+//                     </CardDescription>
+//                     <div className="flex justify-between items-center mt-4">
+//                       <p className="text-xs font-medium text-gray-500">By {course.authors.map(author => author.name).join(", ")}</p>
+//                       <button 
+//                         onClick={() => {
+//                           setNavigating(true);
+//                           router.push(`/CourseContent/${course.courseId}`); 
+//                         }} 
+//                         className="py-2 px-4 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-all duration-300 shadow-md"
+//                       >
+//                         {navigating ? "Loading..." : "Enroll Now!"}
+//                       </button>
+//                     </div>
+//                   </CardHeader>
+//                 </Card>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Right Button */}
+//         <button
+//           onClick={nextSlide}
+//           className="absolute right-0 z-10 p-3 bg-purple-200 text-white rounded-full shadow-md hover:bg-purple-300 transition-all duration-300 focus:outline-none"
+//         >
+//           <FaChevronRight size={24} />
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default OffersSection;
