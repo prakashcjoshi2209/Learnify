@@ -41,7 +41,7 @@ const Basic = ({ session }: { session: Session | null}) => {
       </div>
 
       {/* Sidebar for Desktop */}
-      <div className="hidden md:block w-64 bg-white text-gray-800 border-r border-gray-200">
+      <div className="hidden md:block  bg-white text-gray-800 border-r border-gray-200">
         <Sidebar />
       </div>
 
@@ -86,7 +86,7 @@ const Basic = ({ session }: { session: Session | null}) => {
       </div>
 
       {/* Profile Section for Desktop (Always Visible) */}
-      <div className="hidden md:block w-1/4 p-4 bg-gray-100 border-l">
+      <div className="hidden md:block  p-1 mr-2 bg-gray-100 border-l">
         {session ? <ProfileSection session={session} /> : <p>Loading...</p>}
       </div>
     </div>

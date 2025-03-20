@@ -105,7 +105,7 @@ const Consist: React.FC = () => {
         </p>
 
         {/* CTA Heading */}
-        <div className="z-10 mt-4 p-3 w-full max-w-xs sm:max-w-md bg-learnify text-white shadow-lg rounded-lg">
+        <div className="z-10 mt-28 p-3 w-full max-w-xs sm:max-w-md bg-learnify text-white shadow-lg rounded-lg">
           <h2 className="text-xl md:text-2xl font-semibold text-center">
             Learn with <span className="custom-font-style">Learnify</span>
           </h2>
@@ -127,10 +127,10 @@ const Consist: React.FC = () => {
 
       {/* New Heading Below Image - Perfectly Centered */}
       <div className="absolute bottom-8 pb-1 pt-2  left-1/2 transform -translate-x-1/2 text-center w-full px-6">
-        <h2 className="text-2xl md:text-lg font-bold text-indigo-400">
+        <h2 className="text-2xl md:text-xl font-bold text-indigo-400">
           All the skills you need in one place.
         </h2>
-        <p className="mt-2 text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+        <p className="mt-2 text-gray-600 text-base md:text-sm max-w-2xl mx-auto">
         From critical skills to technical topics, Learnify supports your professional development.
         </p>
       </div>
