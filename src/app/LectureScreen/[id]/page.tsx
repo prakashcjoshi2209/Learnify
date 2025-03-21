@@ -12,7 +12,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
     redirect("/login");
   }
   return (
-    <div>
+    <div className="pt-[64px]">
       <Navbar session={session} />
       <LectureScreen courseId={id} />
       <Footer />

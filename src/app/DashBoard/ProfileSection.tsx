@@ -218,7 +218,7 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
 
     const getISTHour = () => {
       const now = new Date();
-      const istOffset = 5.5 * 60 * 60 * 1000;
+      const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
       const istTime = new Date(now.getTime() + istOffset);
       return istTime.getUTCHours();
     };
@@ -274,22 +274,12 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
 
   return (
     <div className="relative">
-      {/* Profile Icon on Right */}
+      {/* Profile Icon on Right (Static Image) */}
       <div
         className="absolute top-4 right-4 cursor-pointer"
         onClick={() => setIsProfileOpen(true)}
       >
-        {profileImage ? (
-          <Image
-            src={profileImage}
-            alt="Profile"
-            width={40}
-            height={40}
-            className="rounded-full border-2 border-gray-300"
-          />
-        ) : (
-          <FaUserCircle className="w-10 h-10 text-purple-600" />
-        )}
+        <FaUserCircle className="w-10 h-10 text-purple-600" />
       </div>
 
       {/* Profile Sidebar */}
@@ -369,8 +359,6 @@ const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
               ))}
             </div>
           </div>
-
-          
         </div>
       )}
     </div>
