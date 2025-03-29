@@ -10,7 +10,6 @@ export async function POST(req: Request){
     try {
         await connectDB();
         const {email} = await req.json();
-        // console.log("Email recieved in backend: ",email);
         if(!email){
             return NextResponse.json({error: `Email is required!`}, {status: 400});
         }
@@ -38,15 +37,23 @@ export async function POST(req: Request){
                     return NextResponse.json({error: "Error at sending mail"}, {status: 400});
                 }
         }
-        else if(!user.verified){
+        else if(user && user.verified){
             const result = await sendEmail(email, "Authentication");
-                if(result){
-                    return NextResponse.json({message: "OTP sent to your mail", Password: password}, {status: 200});
-                }
-                else{
-                    return NextResponse.json({error: "Error at sending mail"}, {status: 400});
-                }
+            if (result) {
+              return NextResponse.json({ message: "OTP sent to your mail" }, { status: 200 });
+            } else {
+              return NextResponse.json({ error: "Error at sending mail" }, { status: 400 });
+            }
         }
+        // else if(user && !user.verified){
+        //     const result = await sendEmail(email, "Authentication");
+        //         if(result){
+        //             return NextResponse.json({message: "OTP sent to your mail", Password: password}, {status: 200});
+        //         }
+        //         else{
+        //             return NextResponse.json({error: "Error at sending mail"}, {status: 400});
+        //         }
+        // }
         else{
             return NextResponse.json({error: "Email is already in use"}, {status: 400});
         }

@@ -13,6 +13,8 @@ const razorpay = new Razorpay({
 export async function POST(request: NextRequest){
     const {amt} = await request.json();
 
+    console.log("Amount Recieved in backend for : ", amt);
+
     if (!amt || amt <= 0) {
         return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
       }

@@ -108,11 +108,13 @@ const makePayments = async (
               },
               body: JSON.stringify({ cId, paymentId }),
             });
-            // const dta = await resp.json();
+            const dta = await resp.json();
             if (resp.ok) {
               console.log("Payment successful!", response);
             } else {
+              toast.error(dta.error);
               console.log("Payment Problem!", response);
+              return resolve(false);
             }
             const removeResponse = await fetch("/api/removeMultipleCartCourse", {
               method: "POST",
@@ -127,6 +129,7 @@ const makePayments = async (
             }
   
             toast.success("Payment Successful for all Cart Courses!", { autoClose: 5000 });
+            resolve(true);
         } else if (typeof cId === "number") {
 
           const resp = await fetch("/api/buyCourse", {
@@ -136,11 +139,12 @@ const makePayments = async (
             },
             body: JSON.stringify({ cId, paymentId }),
           });
-          // const dta = await resp.json();
+          const dta = await resp.json();
           if (resp.ok) {
             console.log("Payment successful!", response);
           } else {
-            toast.error("Payment processing error.");
+            toast.error(dta.error);
+            // toast.error("Payment processing error.");
             return resolve(false);
           }
 

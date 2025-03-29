@@ -151,7 +151,7 @@ const MediaContentSchema: Schema = new Schema({
 });
 
 const SubtitleSchema : Schema = new Schema({
-  availability: {type: String,},
+  available: {type: String,},
   language: {type: String, }
 })
 

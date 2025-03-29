@@ -32,14 +32,15 @@
 //   }
 // }
 
-
 import connectDB from "@/lib/dbConnect";
 import Course from "@/app/models/Course";
 import { NextResponse } from "next/server";
+import { auth } from "../../../../auth";
+import User from "@/app/models/User";
 
 export async function POST(req: Request) {
+  const session = await auth();
   try {
-
     const { query } = await req.json();
     // console.log("This is the query from the backend: ", query);
     await connectDB();
@@ -48,28 +49,53 @@ export async function POST(req: Request) {
     // const query = searchParams.get("query");
 
     let courses;
-    if (query) {
-      // Case-insensitive search on course name and description
-      courses = await Course.find({
-        $or: [
-          { name: { $regex: query, $options: "i" } },
-          { description: { $regex: query, $options: "i" } },
-          { category: { $regex: query, $options: "i" } },
-          { tags: { $in: [new RegExp(query, "i")] } },
-        ],
-      })
-        .lean()
-        .select("_id name image courseId"); // Select only required fields
+
+    if (session) {
+      if (query) {
+        const user = await User.findOne({ email: session?.user?.email });
+
+        courses = await Course.find({
+          $and: [
+            {
+              $or: [
+                { name: { $regex: query, $options: "i" } },
+                { description: { $regex: query, $options: "i" } },
+                { category: { $regex: query, $options: "i" } },
+                { tags: { $in: [new RegExp(query, "i")] } },
+              ],
+            },
+            { courseId: { $nin: user?.coursesBought || [] } },
+          ],
+        })
+          .lean()
+          .select("_id name image courseId");
+      } else {
+        const user = await User.findOne({ email: session?.user?.email });
+
+        courses = await Course.find({
+          courseId: { $nin: user?.coursesBought || [] }, // Exclude bought courses
+        })
+          .lean()
+          .select("_id name image courseId");
+      }
     } else {
-      courses = await Course.find({}).lean().select("_id name image courseId");
+      if (query) {
+        courses = await Course.find({
+          $or: [
+            { name: { $regex: query, $options: "i" } },
+            { description: { $regex: query, $options: "i" } },
+            { category: { $regex: query, $options: "i" } },
+            { tags: { $in: [new RegExp(query, "i")] } },
+          ],
+        })
+          .lean()
+          .select("_id name image courseId");
+      } else {
+        courses = await Course.find({})
+          .lean()
+          .select("_id name image courseId");
+      }
     }
-
-    // Convert MongoDB _id to id for frontend compatibility
-    // const formattedCourses = courses.map(course => ({
-    //   id: course._id.toString(),
-    //   name: course.name,
-    // }));
-
     return NextResponse.json({ success: true, data: courses });
   } catch (error) {
     console.error("Error searching courses:", error);

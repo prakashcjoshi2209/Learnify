@@ -7,11 +7,11 @@ import { auth } from "../../../../auth";
 
 export async function POST(req: Request) {
   const session = await auth();
-try {
+  try {
     await connectDB();
 
     // calculating the last entered course id in continuation with saveCardTemplate;
-    const courseId:number = await Course.countDocuments();
+    const courseId: number = await Course.countDocuments();
 
     const data = await req.json();
 
@@ -35,13 +35,12 @@ try {
     const file = data["Publisher Profile Image"];
     const NoOfAssignment = data["No. of Assignment"];
     const NoOfVideoLectures = data["No. of Video Lectures"];
-    
-    // console.log("Value form the backend: Long Description: ",LargeDescription)
-    // console.log("Value form the backend: Subtitles yes or no: ",Subtitles)
-    // console.log("Value form the backend: Subtitles Language: ", SubtitlesLanguage);
-    
+
     const uploadResponse = await cloudinary.uploader.upload(file);
     const imageUrl = uploadResponse.secure_url;
+
+    // console.log("Subtitles value: ", Subtitles);
+    // console.log("Subtiles Language: ", SubtitlesLanguage);
 
     let publisher = await Publisher.findOne({ email: session?.user?.email });
 
@@ -67,57 +66,56 @@ try {
       await publisher.save();
     }
 
-
-    var ternary = false;
-    if(Subtitles === "yes"){
-      ternary = true;
-    }
-    const course = await Course.findOneAndUpdate({courseId: courseId}, {
-      category: Category,
-      level: SelectLevel,
-      courseHeading: CourseHeading,
-      certificate: CertificateProvider,
-      lifeTimeAccess: LifetimeAccess,
-      authors: [
-        {
-          name: PublisherName,
-          bio: PublisherBio,
-          description: PublisherDescription,
-          profileImage: imageUrl,
+    const course = await Course.findOneAndUpdate(
+      { courseId: courseId },
+      {
+        category: Category,
+        level: SelectLevel,
+        courseHeading: CourseHeading,
+        certificate: CertificateProvider,
+        lifeTimeAccess: LifetimeAccess,
+        authors: [
+          {
+            name: PublisherName,
+            bio: PublisherBio,
+            description: PublisherDescription,
+            profileImage: imageUrl,
+          },
+        ],
+        largeDescription: {
+          intro: LargeDescription,
+          subPoints: SubPointsArray || [],
         },
-      ],
-      largeDescription: {
-        intro: LargeDescription,
-        subPoints: SubPointsArray || [],
+        requirements: RequirementArray || [],
+        prerequisites: PrerequisiteArray || [],
+        subtitles: [
+          {
+            available: Subtitles,
+            language: Subtitles === "yes" ? SubtitlesLanguage : "",
+          },
+        ],
+        totalAssignments: NoOfAssignment || 0,
+        totalVideoLectures: NoOfVideoLectures || 0,
+        tags: TagsArray || [],
+        syllabus: Syllabus,
+        mediaContent: [
+          {
+            type: "video",
+            url: Demo,
+          },
+        ],
+        ratings: {
+          average: 0,
+          totalRatings: 0,
+        },
+        lastUpdated: new Date(),
       },
-      requirements: RequirementArray || [],
-      prerequisites: PrerequisiteArray || [],
-      subtitles: [
-        {
-          available: Subtitles,
-          language: ternary ? "" : SubtitlesLanguage,
-        },
-      ],
-      totalAssignments: NoOfAssignment || 0,
-      totalVideoLectures: NoOfVideoLectures || 0,
-      tags: TagsArray || [],
-      syllabus: Syllabus,
-      mediaContent: [
-        {
-          type: "video",
-          url: Demo,
-        },
-      ],
-      ratings: {
-        average: 0,
-        totalRatings: 0 ,
-      },
-      lastUpdated: new Date(),
-    })
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
     return NextResponse.json({ message: "Course details updated successfully", course: course }, { status: 201 });
-} catch (error) {
+  } catch (error) {
     console.error("Error saving course:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
-}
+  }
 }

@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         }
 
         const { cId } = await req.json();
-        console.log(cId);
+        // console.log(cId);
 
         // const user = await User.findOne({ email: "kunaltyagi00000@gmail.com" });
         const user = await User.findOne({ email: session.user.email });
