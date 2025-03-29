@@ -165,7 +165,7 @@ import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import Image from "next/image";
 
-const ProfileSection: React.FC<{ session: Session | null }> = ({ session }) => {
+const ProfileSection: React.FC<{ session: Session | null| undefined }> = ({ session }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);

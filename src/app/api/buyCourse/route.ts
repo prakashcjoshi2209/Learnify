@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import connectDB from "@/lib/dbConnect";
 import Course from "@/app/models/Course";
+import Publisher from "@/app/models/Publisher";
 import { auth } from "../../../../auth";
 import User from "@/app/models/User";
 
@@ -20,12 +21,18 @@ export async function POST(request: NextRequest) {
     if (!course) {
         return NextResponse.json({ error: "Invalid course ID." }, { status: 400 });
     }
+    const publisher = await Publisher.findOne({
+        "coursesPublished.publishedCourses": { $in: [cId] }
+    });
 
+    if(!publisher){
+        return NextResponse.json({ error: "Publisher not found." }, { status: 404 });
+    }
     const user = await User.findOne({ _id: session?.user?.id });
     if (!user) {
         return NextResponse.json({ error: "User not found." }, { status: 404 });
     }
-    
+
     try {
         const paymentDetails = await razorpay.payments.fetch(paymentId);
         if (paymentDetails.status === "captured") {
@@ -34,6 +41,8 @@ export async function POST(request: NextRequest) {
                 await user.save();
                 course.studentsEnrolled +=1;
                 await course.save();
+                publisher.studentsTaught +=1;
+                await publisher.save();
             }
             return NextResponse.json({ message: `Payment successful and ${course.name} course added.` }, { status: 200 });
         } else {

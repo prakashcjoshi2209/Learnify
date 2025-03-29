@@ -12,40 +12,16 @@ import Loader from "@/components/ui/Loader";
 import { ICourse } from "@/app/models/Course";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-declare global {
-  interface Window {
-    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
-  }
-}
-
-interface RazorpayOptions {
-  key: string;
-  amount: number;
-  currency: string;
-  name: string;
-  description: string;
-  order_id?: string;
-  handler: (response: { razorpay_payment_id: string }) => void;
-  prefill?: {
-    name?: string;
-    email?: string;
-    contact?: number;
-  };
-  theme?: {
-    color: string;
-  };
-}
-
-interface RazorpayInstance {
-  open: () => void;
-}
+import makePayments from "@/lib/makePayments";
+import { AiOutlineHeart, AiOutlineShoppingCart } from "react-icons/ai";
+import Rewards from "./Rewards";
+import { useCourse } from "@/app/Context/CourseContext";
 
 const CourseContentPage: React.FC = () => {
   // courses part
   const { data: session } = useSession();
   const { courseId } = useParams();
+  const { setCourseData } = useCourse();
 
   const [courseIncluded, setCourseIncluded] = useState(false);
   const [cartIncluded, setCartIncluded] = useState(false);
@@ -57,6 +33,7 @@ const CourseContentPage: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [isWishing, setIsWishing] = useState(false);
   const router = useRouter();
+
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -76,6 +53,7 @@ const CourseContentPage: React.FC = () => {
         setCourse(data.course);
         setCourseIncluded(data.courseIncluded);
         setCartIncluded(data.cartIncluded);
+        setWishlistIncluded(data.wishlistIncluded);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
@@ -164,7 +142,6 @@ const CourseContentPage: React.FC = () => {
     }
   };
 
-
   if (loading) {
     return (
       <div>
@@ -185,106 +162,23 @@ const CourseContentPage: React.FC = () => {
   // Payments part
   const amount = course.price.current; // constant amount in INR
   const courseName = course.name;
-  const cId = courseId;
-
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
+  const cId: number | number[] = Number(courseId);
 
   const handlePayment = async () => {
     setIsProcessing(true);
 
     if (!session) {
-      const currentPath = window.location.pathname;
-      router.push(`/login?redirect=${currentPath}`);
-      return;
-    }
-
-    try {
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        throw new Error("Failed to load Razorpay script.");
+      setCourseData(course);
+      router.push("/Checkout");
+    } else {
+      const result = await makePayments(amount, courseName, cId, session);
+      if (result) {
+        setCourseIncluded(true);
+        toast.info("Redirecting you to Dashboard");
+        router.push("/DashBoard");
+      } else {
+        setIsProcessing(false);
       }
-
-      // Create order
-      const response = await fetch("/api/createOrder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amt: amount }),
-      });
-
-      const data = await response.json();
-
-      if (!window.Razorpay) {
-        throw new Error("Razorpay is not available.");
-      }
-
-      // Initialize Razorpay
-      const options: RazorpayOptions = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
-        amount: amount * 100,
-        currency: "INR",
-        name: "Learnify",
-        description: `Buying course ${courseName}`,
-        order_id: data.orderId,
-        handler: async function (response: { razorpay_payment_id: string }) {
-          const paymentId = response.razorpay_payment_id;
-          console.log("Payment successful!", response);
-
-          // Save course to user account
-          const resp = await fetch("/api/buyCourse", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ cId, paymentId }),
-          });
-
-          const dta = await resp.json();
-          if (resp.ok) {
-            toast.success(`${dta.message}`, {
-              autoClose: 5000,
-            });
-            // alert(`${dta.message}`);
-            setCourseIncluded(true);
-            router.push("/DashBoard");
-          } else {
-            // alert(`Error: ${dta.error}`);
-            toast.error(`Error: ${dta.error}`);
-          }
-        },
-        prefill: {
-          name: session?.user?.name || "Guest User",
-          email: session?.user?.email || "guest@example.com",
-          contact: (session?.user as {phone?: number})?.phone,
-        },
-        theme: {
-          color: "#8A2BE2",
-        },
-      };
-
-      const rzp1 = new window.Razorpay(options);
-      rzp1.open();
-    } catch (error: unknown) {
-      console.error(
-        "Payment Failed: ",
-        error instanceof Error ? error.message : error
-      );
-    } finally {
-      setIsProcessing(false);
     }
   };
 
@@ -296,9 +190,7 @@ const CourseContentPage: React.FC = () => {
   };
   return (
     <>
-      {/* {session && <Script src="https://checkout.razorpay.com/v1/checkout.js" />} */}
-  <div className="bg-dark-blue text-white">
-        
+      <div className="bg-dark-blue text-white">
         <header className="text-center py-8 flex">
           <div className="max-w-4xl mx-auto">
             <p className="text-sm text-gray-300">
@@ -331,7 +223,19 @@ const CourseContentPage: React.FC = () => {
                     className="border border-gray-400 rounded-md px-4 py-2 hover:bg-gray-800"
                     onClick={addToCart}
                   >
-                    {isAdding ? "Adding..." : "Cart"}
+                    {isAdding ? (
+                      "Adding..."
+                    ) : (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px",
+                        }}
+                      >
+                        <AiOutlineShoppingCart /> Cart
+                      </span>
+                    )}
                   </button>
                 ) : (
                   <button
@@ -348,14 +252,26 @@ const CourseContentPage: React.FC = () => {
                     className="border border-gray-400 rounded-md px-4 py-2 hover:bg-gray-800"
                     onClick={addToWishlist}
                   >
-                    {isWishing ? "Adding..." : "Wishlist"}
+                    {isWishing ? (
+                      "Adding..."
+                    ) : (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "5px",
+                        }}
+                      >
+                        <AiOutlineHeart /> Wishlist
+                      </span>
+                    )}
                   </button>
                 ) : (
                   <button
                     className="bg-green-500 text-white px-4 py-2 rounded-md"
                     disabled
                   >
-                    Added to Wishlist
+                    Wishlisted
                   </button>
                 )
               ) : null}
@@ -424,6 +340,12 @@ const CourseContentPage: React.FC = () => {
               About Publisher
             </button>
             <button
+              onClick={() => handleScroll("rewards")}
+              className="hover:underline"
+            >
+              Rewards
+            </button>
+            <button
               onClick={() => handleScroll("faq")}
               className="hover:underline"
             >
@@ -434,19 +356,23 @@ const CourseContentPage: React.FC = () => {
       </div>
 
       <section id="about-course">
-        <CoursePage />
+        <CoursePage course={course} />
       </section>
 
       <section id="course-content">
-        <CourseContentData />
+        <CourseContentData course={course} />
       </section>
 
       <section id="about-publisher">
-        <PublishHome />
+        <PublishHome course={course} />
+      </section>
+
+      <section id="rewards">
+        <Rewards course={course} />
       </section>
 
       <section id="faq">
-        <ReviewsHome />
+        <ReviewsHome course={course} />
       </section>
 
       <Footer />

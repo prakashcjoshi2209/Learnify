@@ -2,10 +2,19 @@
 import React, { useState } from "react";
 import courseData from "./course.json";
 import Link from "next/link";
+import { ICourse } from "@/app/models/Course";
 
-const CourseContentData: React.FC = () => {
+interface CoursePageProps {
+  course: ICourse;
+}
+
+const CourseContentData: React.FC<CoursePageProps> = ({ course }) => {
   const [expandedSections, setExpandedSections] = useState<number[]>([]);
+  let countLessons = 0;
 
+  course.modules.forEach((module) => {
+    countLessons += module.subModulePart;
+  });
   // Toggle the section (expand or collapse)
   const toggleSection = (index: number) => {
     setExpandedSections(
@@ -21,53 +30,51 @@ const CourseContentData: React.FC = () => {
       <div className="flex items-center mb-6">
         <hr className="border-2 border-t-4 w-20 border-purple-600 " />
         <h2 className="text-2xl font-bold text-purple-700 ms-5 mb-3">
-          {courseData.title}
+          Course Content
         </h2>
       </div>
-      <h1 className="text-3xl font-semibold mb-4">{courseData.description}</h1>
+      <h1 className="text-3xl font-semibold mb-4">
+        Our courses are balanced mix of videos & assignments
+      </h1>
       <div className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
-        <Link href="#">{courseData.summary.lessons} Lessons</Link>
-        <Link href="#">• {courseData.summary.videos} Videos</Link>
-        <Link href="#">• {courseData.summary.articles} Articles</Link>
-        <Link href="#">• {courseData.summary.assignments} Assignments</Link>
-        <Link href="#">
-          • {courseData.summary.completionTime} Completion Time
-        </Link>
+        <Link href="#">{countLessons} Lessons</Link>
+        <Link href="#">• {course.totalVideoLectures} Videos</Link>
+        <Link href="#">• {course.totalAssignments} Assignments</Link>
       </div>
       <div className="space-y-4">
-        {courseData.sections.map((section, index) => (
-          <div key={index} className="bg-white p-4 rounded shadow">
+        {course.modules.map((module, moduleNumber) => (
+          <div key={moduleNumber} className="bg-white p-4 rounded shadow">
             <div
               className="flex justify-between items-center cursor-pointer"
-              onClick={() => toggleSection(index)}
+              onClick={() => toggleSection(moduleNumber)}
             >
               <h3 className="font-semibold flex items-center space-x-2">
-                <span>{expandedSections.includes(index) ? "–" : "+"}</span>
-                <span>{section.title}</span>
+                <span>{expandedSections.includes(moduleNumber) ? "–" : "+"}</span>
+                <span>{module.moduleTitle}</span>
               </h3>
               <span className="text-gray-500">
-                {section.sections} Sections, {section.duration}
+                {module.subModulePart} Sections, {module.moduleDuration}
               </span>
             </div>
-            {expandedSections.includes(index) && (
+            {expandedSections.includes(moduleNumber) && (
               <div className="mt-4 space-y-2">
-                {section.lessons.length > 0 ? (
-                  section.lessons.map((lesson, lessonIndex) => (
+                {(module.subModules).length > 0 ? (
+                  module.subModules.map((submodule, sModuleNumber) => (
                     <div
-                      key={lessonIndex}
+                      key={sModuleNumber}
                       className="flex justify-between items-center border-t pt-2"
                     >
                       <p className="flex items-center space-x-2">
                         <span className="text-blue-500">•</span>
-                        <span>{lesson.title}</span>
+                        <span>{submodule.sModuleTitle}</span>
                       </p>
                       <div className="flex items-center space-x-2">
-                        {lesson?.link && (
+                        {submodule?.videoLecture && (
                           <a href="#" className="text-blue-500 underline">
-                            {lesson.link}
+                            {submodule.videoLecture}
                           </a>
                         )}
-                        <span className="text-gray-500">{lesson.duration}</span>
+                        <span className="text-gray-500">{submodule.sModuleDuration}</span>
                       </div>
                     </div>
                   ))

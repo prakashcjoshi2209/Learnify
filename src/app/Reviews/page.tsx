@@ -1,7 +1,12 @@
 import React from 'react';
 import ReviewCard from './RewardCard';
+import { ICourse } from '../models/Course';
 
-const ReviewsHome: React.FC = () => {
+interface CoursePageProps{
+  course: ICourse;
+}
+
+const ReviewsHome: React.FC<CoursePageProps> = ({ course }) => {
   const reviews = [
     {
       name: 'Ajay Shekhar',
@@ -51,8 +56,8 @@ const ReviewsHome: React.FC = () => {
     <div className="p-6 sm:p-8 bg-gray-100">
       {/* Section Header */}
       <div className="flex items-center mb-6">
-        <hr className="border-2 border-purple-600 w-14 sm:w-20" />
-        <h2 className="text-xl sm:text-2xl font-bold text-purple-700 ml-4">Reviews</h2>
+        <hr className="w-12 h-1 bg-purple-600 rounded-full mr-2" />
+        <h2 className="text-2xl font-bold text-purple-700 ms-5 mb-3">Reviews</h2>
       </div>
 
       {/* Reviews Grid - Responsive Layout */}

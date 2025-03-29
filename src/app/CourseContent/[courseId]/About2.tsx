@@ -1,21 +1,37 @@
+"use client";
 import React from "react";
 import AboutCourse from "./AboutCourse";
 import { FaCertificate, FaCoins, FaInfinity, FaLevelUpAlt, FaClosedCaptioning } from "react-icons/fa";
+import { ICourse } from "@/app/models/Course";
 
-const CoursePage = () => {
+interface CoursePageProps {
+  course: ICourse;
+}
+
+const CoursePage: React.FC<CoursePageProps> = ({ course }) => {
+
+  const levelDescription = {
+    Beginner: "No prior experience required",
+    Intermediate: "Some experience recommended",
+    Advanced: "Strong understanding required",
+  }[course.level] || "Level information not available";
+
+  // Determine Subtitle Language
+  const subtitlesLang = {
+    English: "English",
+    Hindi: "Hindi",
+    Both: "English & Hindi",
+  }[course.subtitles?.[0]?.language] || "No subtitles available";
+
+  
   const courseData = {
-    title: "Covers pretty much everything you need to know about UX",
+    courseId: course.courseId,
+    title: course.courseHeading,
     subtitle: "About Course",
-    description:
-      "This course will teach you everything you need to know about UX, including design, content, and coding. You'll learn from the ground up, so it doesn't matter how much experience you have when you start.",
-    details: [
-      "Apply UX strategies to a site's content & design",
-      "Understand Information Architecture to enhance the content on your website",
-      "Know what dictates how your website should look",
-      "Design and code a B2B website, a B2C blog, and an eCommerce site",
-    ],
+    description: course.largeDescription?.intro,
+    details: course.largeDescription?.subPoints || [],
     features: [
-      {
+      course.certificate?.toLowerCase() === "yes" && {
         icon: <FaCertificate className="text-purple-600 text-xl" />,
         label: "Authentic Certificate",
         description: "Earn a Certificate of Completion",
@@ -25,20 +41,20 @@ const CoursePage = () => {
         label: "Rewards",
         description: "Unlock rewards as you progress",
       },
-      {
+      course.lifeTimeAccess?.toLowerCase() === "yes" && {
         icon: <FaInfinity className="text-purple-600 text-xl" />,
         label: "Lifetime Access",
         description: "Set and manage your pace",
       },
       {
         icon: <FaLevelUpAlt className="text-purple-600 text-xl" />,
-        label: "Beginner Level",
-        description: "No prior experience required",
+        label: course.level,
+        description: levelDescription,
       },
-      {
+      course.subtitles?.[0]?.language.length>1 && {
         icon: <FaClosedCaptioning className="text-white-600 text-xl bg-purple-600" />,
         label: "Subtitles",
-        description: "English & Hindi",
+        description: subtitlesLang,
       },
     ],
   };
@@ -47,5 +63,3 @@ const CoursePage = () => {
 };
 
 export default CoursePage;
-
-

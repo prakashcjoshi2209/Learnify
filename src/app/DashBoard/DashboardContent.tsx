@@ -56,7 +56,7 @@ const DashboardContent = () => {
         </div>
 
         {/* Header Section */}
-        <div className="bg-purple-600 text-white p-4 rounded-lg mb-6">
+        <div className="bg-purple-600 text-white p-4 rounded-lg mb-6 flex justify-between items-center">
           <h2 className="text-xl font-bold mb-4">
             Elevate Your Skills with Expert-Led Courses!
           </h2>
