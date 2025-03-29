@@ -15,8 +15,9 @@ export async function GET() {
         const courses = await Course.find({
             courseId: { $nin: user.coursesBought },
             "price.discountPercentage": { $gt: 0 },
-          });
-          
+          }).lean();
+
+        // console.log("Returning courses for user:", courses);
         return NextResponse.json({ success: true, data: courses });
       }
       return NextResponse.json({ success: false, message: "User not found." }, { status: 500 });

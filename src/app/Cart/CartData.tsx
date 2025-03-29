@@ -57,7 +57,7 @@ const CartPage : React.FC<{ session?: Session | null }> = ({ session }) => {
     }
     try {
       const result = await makePayments(amount, courseName, courseId, session);
-      console.log("Result came from the backend makePayments function: ", result);
+
       if(result){
       const idsToRemove = Array.isArray(courseId) ? courseId : [courseId];
       const updatedCart = cart.filter(
@@ -105,12 +105,12 @@ const CartPage : React.FC<{ session?: Session | null }> = ({ session }) => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
-      <div className="w-full md:w-1/4 p-6 bg-white shadow-lg flex flex-col items-center">
+      <div className="md:w-1/4 w-full p-6 bg-white shadow-lg flex flex-col items-center">
         <ProfileSection session={session} />
       </div>
 
       {/* Cart Section */}
-      <div className="w-3/4 p-8">
+      <div className="w-3/4 p-2">
         <h2 className="text-4xl font-extrabold text-gray-800 mb-6">
           Shopping Cart
         </h2>

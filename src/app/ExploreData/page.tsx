@@ -8,7 +8,7 @@ dotenv.config();
 const page = async () => {
   const session = await auth();
   return (
-    <div>
+    <div className="pt-[64px]">
       <Navbar session = {session}/>
       <Courses session={session} />
     </div>

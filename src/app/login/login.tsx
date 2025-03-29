@@ -29,7 +29,6 @@ const Login = () => {
     // setMessage("");
     setIsProcessing(true);
     const verified: number = await verifyUser(email);
-    // console.log("VerifyUser returned value: ", verified);
     if (verified) {
       const result = await signIn("credentials", {
         email,
@@ -49,15 +48,15 @@ const Login = () => {
         console.log("Login successful!");
         router.push(redirectPath);
       }
-    } else {
-      const emailSent : boolean = await sendEmail(email, "verification");
+    } else if(!verified) {
+      const emailSent : boolean = await sendEmail(email, "Verification");
       if(emailSent){
         setMessage("Email verification link is sent!");
         setMessageType("success");
         setIsProcessing(false);
       }
       else{
-        setMessage("Please verify your Email first!");
+        setMessage("Error in sending verification Email");
         setMessageType("error");
         setIsProcessing(false);
       }

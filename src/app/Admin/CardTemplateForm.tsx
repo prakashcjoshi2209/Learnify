@@ -1,4 +1,3 @@
-
 // "use client";
 
 // import React, { useState } from "react";
@@ -39,8 +38,8 @@
 //     { id: 3, name: "Topic", type: "text", placeholder: "Enter Topic", value: "" },
 //     { id: 4, name: "Short Description", type: "text", placeholder: "Enter Description", value: "" },
 //     // Removed "Price" field but kept subfields
-//     { 
-//       id: 5, 
+//     {
+//       id: 5,
 //       name: "Pricing Details",
 //       subFields: [
 //         { id: 51, name: "Current Price", type: "number", placeholder: "Enter Current Price", value: "" },
@@ -211,7 +210,6 @@
 
 // export default CardTemplateForm;
 
-
 "use client";
 
 import React, { useState } from "react";
@@ -223,7 +221,7 @@ interface SubField {
   type: string;
   placeholder: string;
   value?: string;
-  disabled?: boolean; 
+  disabled?: boolean;
 }
 
 interface Field {
@@ -250,22 +248,64 @@ const CardTemplateForm: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<Field[]>([
     { id: 1, name: "Hero IMG", type: "file", placeholder: "", value: "" },
-    { id: 2, name: "Duration", type: "number", placeholder: "Enter Duration", value: "" },
-    { id: 3, name: "Topic", type: "text", placeholder: "Enter Topic", value: "" },
-    { id: 4, name: "Short Description", type: "text", placeholder: "Enter Description", value: "" },
-    { 
-      id: 5, 
+    {
+      id: 2,
+      name: "Duration",
+      type: "number",
+      placeholder: "Enter Duration in minutes for complete course",
+      value: "",
+    },
+    {
+      id: 3,
+      name: "Topic",
+      type: "text",
+      placeholder: "Enter Topic",
+      value: "",
+    },
+    {
+      id: 4,
+      name: "Short Description",
+      type: "text",
+      placeholder: "Enter Description",
+      value: "",
+    },
+    {
+      id: 5,
       name: "Pricing Details",
       subFields: [
-        { id: 51, name: "Current Price", type: "number", placeholder: "Enter Current Price", value: "" },
-        { id: 52, name: "Original Price", type: "number", placeholder: "Enter Original Price", value: "" },
-        { id: 53, name: "Discount Percentage", type: "number", placeholder: "Enter Discount %", value: "", disabled: true },
+        {
+          id: 51,
+          name: "Current Price",
+          type: "number",
+          placeholder: "Enter Current Price",
+          value: "",
+        },
+        {
+          id: 52,
+          name: "Original Price",
+          type: "number",
+          placeholder: "Enter Original Price",
+          value: "",
+        },
+        {
+          id: 53,
+          name: "Discount Percentage",
+          type: "number",
+          placeholder:
+            "Enter Current Price for automatic disocount calculation: ",
+          disabled: true,
+        },
       ],
     },
   ]);
 
   // Handle input change
-  const handleChange = (id: number, value: string, isSubField: boolean = false, parentId?: number) => {
+  const handleChange = (
+    id: number,
+    value: string,
+    isSubField: boolean = false,
+    parentId?: number
+  ) => {
     setFormData((prevData) =>
       prevData.map((field) => {
         if (isSubField && field.subFields && field.id === parentId) {
@@ -274,14 +314,22 @@ const CardTemplateForm: React.FC = () => {
           );
 
           // Automatically calculate discount if both prices are provided
-          const currentPrice = Number(updatedSubFields.find(f => f.id === 51)?.value) || 0;
-          const originalPrice = Number(updatedSubFields.find(f => f.id === 52)?.value) || 0;
+          const currentPrice =
+            Number(updatedSubFields.find((f) => f.id === 51)?.value) || 0;
+          const originalPrice =
+            Number(updatedSubFields.find((f) => f.id === 52)?.value) || 0;
 
-          if (currentPrice > 0 && originalPrice > 0 && originalPrice > currentPrice) {
-            const discount = ((originalPrice - currentPrice) / originalPrice) * 100;
-            updatedSubFields.find(f => f.id === 53)!.value = discount.toFixed(2);
+          if (
+            currentPrice > 0 &&
+            originalPrice > 0 &&
+            originalPrice > currentPrice
+          ) {
+            const discount =
+              ((originalPrice - currentPrice) / originalPrice) * 100;
+            updatedSubFields.find((f) => f.id === 53)!.value =
+              discount.toFixed(2);
           } else {
-            updatedSubFields.find(f => f.id === 53)!.value = "";
+            updatedSubFields.find((f) => f.id === 53)!.value = "";
           }
 
           return { ...field, subFields: updatedSubFields };
@@ -306,16 +354,36 @@ const CardTemplateForm: React.FC = () => {
   // Extract real form data before submission
   const extractRealFormData = async (): Promise<FormData | null> => {
     const name = formData.find((f) => f.name === "Topic")?.value || "";
-    const shortDescription = formData.find((f) => f.name === "Short Description")?.value || "";
-    const duration = Number(formData.find((f) => f.name === "Duration")?.value) || 0;
-
+    const shortDescription =
+      formData.find((f) => f.name === "Short Description")?.value || "";
+    const duration = 
+      (Number(formData.find((f) => f.name === "Duration")?.value) || 0) / 60;
+    
     // Extract price subfields
     const priceField = formData.find((f) => f.name === "Pricing Details");
-    const current = Number(priceField?.subFields?.find((f) => f.name === "Current Price")?.value) || 0;
-    const original = Number(priceField?.subFields?.find((f) => f.name === "Original Price")?.value) || 0;
-    const discountPercentage = Number(priceField?.subFields?.find((f) => f.name === "Discount Percentage")?.value) || 0;
+    const current =
+      Number(
+        priceField?.subFields?.find((f) => f.name === "Current Price")?.value
+      ) || 0;
+    const original =
+      Number(
+        priceField?.subFields?.find((f) => f.name === "Original Price")?.value
+      ) || 0;
+    const discountPercentage = Math.round(
+      Number(
+        priceField?.subFields?.find((f) => f.name === "Discount Percentage")
+          ?.value
+      ) || 0
+    );
 
-    if (!name || !shortDescription || !duration || !current || !original || !imageFile) {
+    if (
+      !name ||
+      !shortDescription ||
+      !duration ||
+      !current ||
+      !original ||
+      !imageFile
+    ) {
       toast.error("Please fill all required fields.");
       return null;
     }
@@ -365,33 +433,71 @@ const CardTemplateForm: React.FC = () => {
     } catch (error) {
       console.error("Error:", error);
       toast.error("Failed to save the data");
-    }
-    finally {
+    } finally {
       setIsSaving(false); // Reset saving state after operation
     }
   };
 
   return (
-    
     <div className="bg-white shadow-md p-6 rounded-lg">
-       {/* Info Section */}
-       <div className="mb-6 p-4 bg-purple-100 border border-blue-300 rounded-lg">
-               <h2 className="text-lg font-bold text-blue-800 flex items-center">
-               <svg className="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-               <path fillRule="evenodd" d="M18 10A8 8 0 114 10a8 8 0 0114 0zm-9-3a1 1 0 112 0v4a1 1 0 11-2 0V7zm1 6a1 1 0 110 2 1 1 0 010-2z" clipRule="evenodd" />
-               </svg>
-                How to Fill Out This Page 
-              </h2>
-              <p className="text-sm text-blue-700 mt-2">
-              This form helps you structure your course modules. Fill in all the required fields marked with <span className="text-red-500 font-bold">*</span>.
-              </p>
-             <ul className="list-disc pl-5 mt-2 text-sm text-blue-700">
-               <li><strong>Module Topic:</strong> Enter the main subject of the module.</li>
-               <li><strong>Parts:</strong> Specify how many sub-sections the module has because the number you assign , that many sub-section you may only add.</li>
-               <li><strong>Reward:</strong> Assign reward points for completing this module.</li>
-               <li><strong>Part Details:</strong> Fill in each part’s name and duration in minutes.</li>
+      {/* Info Section */}
+      <div className="mb-6 p-4 bg-purple-100 border border-blue-300 rounded-lg">
+        <h2 className="text-lg font-bold text-blue-800 flex items-center">
+          <svg
+            className="w-5 h-5 mr-2 text-blue-600"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M18 10A8 8 0 114 10a8 8 0 0114 0zm-9-3a1 1 0 112 0v4a1 1 0 11-2 0V7zm1 6a1 1 0 110 2 1 1 0 010-2z"
+              clipRule="evenodd"
+            />
+          </svg>
+          How to Fill Out This Page
+        </h2>
+        <p className="text-sm text-blue-700 mt-2">
+          This form helps you structure your course card. Fill in all the
+          required fields marked with{" "}
+          <span className="text-red-500 font-bold">*</span>.
+        </p>
+
+        <ul className="list-disc pl-5 mt-2 text-sm text-blue-700">
+          <li>
+            <strong>Hero Image:</strong> Upload an image that represents your
+            course. This image will be used as the course card image visible to
+            users.
+          </li>
+          <li>
+            <strong>Duration:</strong> Enter the total duration of the course in
+            minutes.
+          </li>
+          <li>
+            <strong>Topic:</strong> Specify the main subject of the course.
+          </li>
+          <li>
+            <strong>Short Description:</strong> Provide a brief description of
+            the course to give users an overview.
+          </li>
+          <li>
+            <strong>Pricing Details:</strong>
+            <ul className="list-disc pl-5">
+              <li>
+                <strong>Current Price:</strong> Enter the price at which the
+                course is currently being sold.
+              </li>
+              <li>
+                <strong>Original Price:</strong> Enter the original price before
+                any discount.
+              </li>
+              <li>
+                <strong>Discount Percentage:</strong> This will be
+                auto-calculated based on the original and current price.
+              </li>
             </ul>
-          </div>
+          </li>
+        </ul>
+      </div>
 
       <table className="w-full text-left border-collapse border border-gray-200 mb-4">
         <thead>
@@ -404,7 +510,9 @@ const CardTemplateForm: React.FC = () => {
           {formData.map((field) => (
             <React.Fragment key={field.id}>
               <tr>
-                <td className="p-2 border border-gray-200">{field.name} <span className="text-red-500">*</span></td>
+                <td className="p-2 border border-gray-200">
+                  {field.name} <span className="text-red-500">*</span>
+                </td>
                 <td className="p-2 border border-gray-200">
                   {field.type === "file" ? (
                     <input
@@ -436,7 +544,14 @@ const CardTemplateForm: React.FC = () => {
                         value={subField.value || ""}
                         className="border p-2 rounded w-full"
                         disabled={subField.id === 53}
-                        onChange={(e) => handleChange(subField.id, e.target.value, true, field.id)}
+                        onChange={(e) =>
+                          handleChange(
+                            subField.id,
+                            e.target.value,
+                            true,
+                            field.id
+                          )
+                        }
                       />
                     </td>
                   </tr>
@@ -455,18 +570,18 @@ const CardTemplateForm: React.FC = () => {
         </button>
       </div> */}
       <div className="flex justify-center mt-8">
-             <button
-              onClick={handleSubmit}
-              disabled={isSaving}
-              className={`px-6 py-3 font-bold rounded-md text-white ${
-               isSaving
-                ? "bg-green-800 cursor-not-allowed"
-                : "bg-gradient-to-r from-green-500 to-green-600 hover:bg-green-600"
-              }`}
-             > 
-            {isSaving ? "Saving..." : "Save"}
-           </button>
-         </div>
+        <button
+          onClick={handleSubmit}
+          disabled={isSaving}
+          className={`px-6 py-3 font-bold rounded-md text-white ${
+            isSaving
+              ? "bg-green-800 cursor-not-allowed"
+              : "bg-gradient-to-r from-green-500 to-green-600 hover:bg-green-600"
+          }`}
+        >
+          {isSaving ? "Saving..." : "Save"}
+        </button>
+      </div>
     </div>
   );
 };

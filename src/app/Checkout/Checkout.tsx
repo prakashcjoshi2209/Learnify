@@ -21,6 +21,7 @@ import makePayments from "@/lib/makePayments";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
 import { useCourse } from "../Context/CourseContext";
+import verifyUser from "@/lib/verifyUser";
 
 const signUpSchema = z.object({
   email: z.string().email("Email should be valid"),
@@ -28,13 +29,14 @@ const signUpSchema = z.object({
 
 const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
   const [showOtpField, setShowOtpField] = useState(false);
-  const [otp, setOtp] = useState<number>();
+  const [otp, setOtp] = useState<number | "">("");
   const [email, setEmail] = useState("");
   const [isVerified, setIsVerified] = useState(false);
   const [savedPassword, setSavedPassword] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [message, setMessage] = useState<string>("");
   const [showPayNowButton, setShowPayNowButton] = useState(false);
+  const [userVerification, setUserVerification] = useState(false);
   const { courseData: course } = useCourse();
   const router = useRouter();
 
@@ -45,11 +47,16 @@ const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
     },
   });
 
-  useEffect(()=>{
-    console.log("Details rearding the courseData from courseData: ",course?.price.current, course?.name, course?.courseId, session)
-  })
+  // useEffect(()=>{
+  //   console.log("Details rearding the courseData from courseData: ",course?.price.current, course?.name, course?.courseId, session)
+  // })
 
   const handleContinue = async (data: z.infer<typeof signUpSchema>) => {
+    const response = await verifyUser(data.email);
+    console.log("Is user verified in database ? : ", response);
+    if (response === 1) {
+      setUserVerification(true);
+    }
     setIsProcessing(true);
     try {
       setEmail(data.email);
@@ -76,7 +83,7 @@ const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
     }
   };
 
-  const handleOAuth = async (provider: string)=>{
+  const handleOAuth = async (provider: string) => {
     const callbackUrl = window.location.href;
     await signIn(provider, { callbackUrl });
     const result = await makePayments(
@@ -92,62 +99,85 @@ const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
     } else {
       setShowPayNowButton(true);
     }
-  }
+  };
 
   const handleVerifyOtp = async () => {
     if (!otp) {
       toast.error("OTP must be provided");
       return;
     }
-    if (!email || !savedPassword) {
-      toast.error("Email and savedPassword must be provided");
-      return;
-    }
+    // if (!email || !savedPassword) {
+    //   toast.error("Email and savedPassword must be provided");
+    //   return;
+    // }
     setIsProcessing(true);
     try {
-      // console.log(
-      //   "All fields that are sent to verifyOtp field:",
-      //   otp,
-      //   savedPassword,
-      //   email
-      // );
-      const isValid = await fetch("/api/verifyOtp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ otp, savedPassword, email }),
-      });
-      const data = await isValid.json();
-      if (isValid.ok) {
-        toast.success("OTP verified successfully!");
-        setIsVerified(true);
-        const result = await signIn("credentials", {
+      if (userVerification) {
+        console.log("User Verification: ", email, otp)
+        const loggedIn = await signIn("otp", {
           redirect: false,
           email: email,
-          password: savedPassword,
+          otp: otp,
         });
-        if (result?.error) {
-          console.error("Login failed", result.error);
-          // console.log(result);
-          setMessage("Invalid Credentials");
+        if (loggedIn?.error) {
+          toast.error("OTP is wrong!");
+          console.error("OTP is Wrong!", loggedIn.error);
+        }
+        toast.success("Otp successfully verified");
+        setIsVerified(true);
+        const result = await makePayments(
+          course?.price.current,
+          course?.name,
+          course?.courseId,
+          session,
+          "other"
+        );
+        if (result) {
+          toast.info("Redirecting to DashBoard");
+          router.push("/DashBoard");
         } else {
-          const result = await makePayments(
-            course?.price.current,
-            course?.name,
-            course?.courseId,
-            session,
-            "other"
-          );
-          if (result) {
-            toast.info("Redirecting to DashBoard");
-            router.push("/DashBoard");
-          } else {
-            setShowPayNowButton(true);
-          }
+          setShowPayNowButton(true);
+          return;
         }
       } else {
-        toast.error(data.error);
+        const isValid = await fetch("/api/verifyOtp", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ otp, savedPassword, email }),
+        });
+        const data = await isValid.json();
+        if (isValid.ok) {
+          toast.success("OTP verified successfully!");
+          setIsVerified(true);
+          const result = await signIn("credentials", {
+            redirect: false,
+            email: email,
+            password: savedPassword,
+          });
+          if (result?.error) {
+            console.error("Login failed", result.error);
+            // console.log(result);
+            setMessage("Invalid Credentials");
+          } else {
+            const result = await makePayments(
+              course?.price.current,
+              course?.name,
+              course?.courseId,
+              session,
+              "other"
+            );
+            if (result) {
+              toast.info("Redirecting to DashBoard");
+              router.push("/DashBoard");
+            } else {
+              setShowPayNowButton(true);
+            }
+          }
+        } else {
+          toast.error(data.error);
+        }
       }
     } catch (error: unknown) {
       console.error("OTP verification error:", error);
@@ -191,7 +221,7 @@ const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
             <div className="flex space-x-4 mt-3">
               <button
                 type="button"
-                onClick={()=>handleOAuth("google")}
+                onClick={() => handleOAuth("google")}
                 className="flex items-center border border-gray-300 px-4 py-2 rounded-lg w-1/2 justify-center hover:bg-gray-100 transition"
               >
                 <FcGoogle size={24} className="mr-2" />
@@ -200,7 +230,7 @@ const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
               <button
                 type="button"
                 className="flex items-center border border-gray-300 px-4 py-2 rounded-lg w-1/2 justify-center hover:bg-gray-100 transition"
-                onClick={()=>handleOAuth("github")}
+                onClick={() => handleOAuth("github")}
               >
                 <FaGithub size={24} className="mr-2" />
                 GitHub
@@ -262,7 +292,9 @@ const Checkout: React.FC<{ session?: Session | null }> = ({ session }) => {
                 <Input
                   type="number"
                   value={otp}
-                  onChange={(e) => setOtp(Number(e.target.value))}
+                  onChange={(e) =>
+                    setOtp(e.target.value ? Number(e.target.value) : "")
+                  }
                   required
                   className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500 text-gray-700 mt-2"
                 />

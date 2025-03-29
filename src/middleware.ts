@@ -51,29 +51,29 @@ export async function middleware(req: NextRequest) {
   // const session = await auth();
   // console.log("Middleware Debug - Token:", token);
   // console.log("Middleware Debug - Token:", session);
-  console.log("Request Path:", req.nextUrl.pathname);
+  // console.log("Request Path:", req.nextUrl.pathname);
 
 
   // const isAuth = !!token; // Check if the user has a valid token
-  const isAuth = false;
+  // const isAuth = false;
   // const isAuth = !!session; // Check if the user has a valid token
-  const isLoginPage = req.nextUrl.pathname === '/login';
-  const isForgetPasswordPage = req.nextUrl.pathname=== '/ForgetPassword';
+  // const isLoginPage = req.nextUrl.pathname === '/login';
+  // const isForgetPasswordPage = req.nextUrl.pathname=== '/ForgetPassword';
   // const isDashboardPage = req.nextUrl.pathname === '/DashBoard';
   // const isCart = req.nextUrl.pathname === "/Cart";
   // const isWishlist = req.nextUrl.pathname === "/Wishlist";
 
   // If the user is authenticated and tries to access the login page, redirect them to the dashboard
-  if (isAuth && isLoginPage) {
-    console.log("User tries to access the login pages while he/she is successfully registered.");
-    return NextResponse.redirect(new URL('/DashBoard', req.url));
-  }
+  // if (isAuth && isLoginPage) {
+  //   console.log("User tries to access the login pages while he/she is successfully registered.");
+  //   return NextResponse.redirect(new URL('/DashBoard', req.url));
+  // }
   
   // If the user is authenticated and tries to access the Forget Password page, redirect them to the dashboard
-  if (isAuth && isForgetPasswordPage) {
-    console.log("Redirecting to /dashboard");
-    return NextResponse.redirect(new URL('/DashBoard', req.url));
-  }
+  // if (isAuth && isForgetPasswordPage) {
+  //   console.log("Redirecting to /dashboard");
+  //   return NextResponse.redirect(new URL('/DashBoard', req.url));
+  // }
 
   // If the user is not authenticated and tries to access a protected route, redirect them to the login page
   // if (!isAuth && isDashboardPage) {
@@ -92,9 +92,9 @@ export async function middleware(req: NextRequest) {
   // }
 
   // For testing purposes
-  if (!isAuth && req.nextUrl.pathname.startsWith('/pay')) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
+  // if (!isAuth && req.nextUrl.pathname.startsWith('/pay')) {
+  //   return NextResponse.redirect(new URL('/login', req.url));
+  // }
 
   // Allow the request to proceed
   return NextResponse.next();

@@ -41,6 +41,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return null; // Invalid credentials
       },
     }),
+    // For OTP authentication
+    CredentialsProvider({
+      name: 'OTP',
+      credentials: {
+        email: { label: 'Email', type: 'text' },
+        otp: { label: 'OTP', type: 'number' },
+      },
+      async authorize(credentials, req) {
+        
+        const { email, otp } = credentials || {};
+
+        if (!email || !otp) {
+          console.log("Missing OTP or Email!");
+          return null;
+        }
+
+        await dbConnect();
+
+        // Find the user in the database
+        const user = await User.findOne({ email });
+
+        if (!user || user.otp !== otp) {
+          console.log("Invalid OTP!");
+          return null;
+        }
+
+        // Clear the OTP after successful verification
+        user.otp = undefined;
+        user.verified = true;
+        await user.save();
+
+        return { id: user._id.toString(), name: user.name, email: user.email };
+      },
+    }),
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,

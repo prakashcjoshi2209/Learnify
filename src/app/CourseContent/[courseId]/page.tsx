@@ -73,6 +73,7 @@ const CourseContentPage: React.FC = () => {
   const addToCart = async () => {
     setIsAdding(true);
     if (!session) {
+      console.log("Session not available according to the condition: ",session);
       const currentPath = window.location.pathname;
       router.push(`/login?redirect=${currentPath}`);
       return;

@@ -65,7 +65,7 @@ const Publisher: React.FC<PublisherProps> = ({
             </p>
             <p>
               <span className="text-purple-500 mr-2">📚</span>
-              {courses} Courses
+              {courses || 0} Courses
             </p>
           </div>
         </div>
