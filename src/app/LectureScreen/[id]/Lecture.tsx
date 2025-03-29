@@ -3,6 +3,10 @@
 import { ICourse } from "@/app/models/Course";
 import formatDuration from "@/lib/formatDuration";
 import React, { useEffect, useState } from "react";
+import Question from "./Q&A";
+import Reviews from "./Reviews"
+import Announcement from "./Announcement";
+import NotesPage from "./Notes";
 
 interface ParamsId {
   courseId: string | null | undefined;
@@ -143,6 +147,14 @@ const LectureScreen: React.FC<ParamsId> = ({ courseId }) => {
                   ))}
                 </div>
               )}
+                {/* Reviews Section */}
+                {activeTab === "Reviews" && <Reviews />}
+              {/* Q&A Section */}
+              {activeTab === "Q&A" && <Question />}
+                {/* Announcement Section */}
+                {activeTab === "Announcements" && <Announcement />}
+                 {/* Notes Section */}
+              {activeTab === "Notes" && <NotesPage />}
               <div className="mt-5 flex flex-wrap gap-4 text-sm text-gray-600">
                 <span className="font-semibold text-yellow-500">
                   ⭐ {lectureData.ratings.average}
@@ -160,3 +172,4 @@ const LectureScreen: React.FC<ParamsId> = ({ courseId }) => {
 };
 
 export default LectureScreen;
+
