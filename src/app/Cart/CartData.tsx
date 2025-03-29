@@ -57,7 +57,7 @@ const CartPage : React.FC<{ session?: Session | null }> = ({ session }) => {
     }
     try {
       const result = await makePayments(amount, courseName, courseId, session);
-      console.log("Result came from the backend makePayments function: ", result);
+
       if(result){
       const idsToRemove = Array.isArray(courseId) ? courseId : [courseId];
       const updatedCart = cart.filter(
